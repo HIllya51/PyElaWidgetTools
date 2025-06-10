@@ -7,6 +7,7 @@ from ExamplePage.T_Icon import *
 from ExamplePage.T_BaseComponents import *
 from ExamplePage.T_About import *
 from ExamplePage.T_Setting import *
+from ExamplePage.T_Popup import *
 
 
 class MainWindow(ElaWindow):
@@ -175,7 +176,7 @@ class MainWindow(ElaWindow):
         self._baseComponentsPage = T_BaseComponents(self);
         self._graphicsPage = QWidget()  # T_Graphics(self);
         self._navigationPage = QWidget()  # T_Navigation(self);
-        self._popupPage = QWidget()  # T_Popup(self);
+        self._popupPage = T_Popup(self);
         self._cardPage = QWidget()  # T_Card(self);
         self._listViewPage = QWidget()  # T_ListView(self);
         self._tableViewPage = QWidget()  # T_TableView(self);

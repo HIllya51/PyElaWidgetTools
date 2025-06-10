@@ -10,6 +10,8 @@ from ExamplePage.T_Setting import *
 from ExamplePage.T_Popup import *
 from ExamplePage.T_Navigation import *
 from ExamplePage.T_Card import *
+from ExamplePage.T_Graphics import *
+from ExamplePage.T_UpdateWidget import *
 
 
 class MainWindow(ElaWindow):
@@ -161,7 +163,7 @@ class MainWindow(ElaWindow):
         self.resizeDocks([logDockWidget], [200], Qt.Orientation.Horizontal)
 
         updateDockWidget = ElaDockWidget("更新内容", self)
-        updateDockWidget.setWidget(QWidget(self))  # T_UpdateWidget(self));
+        updateDockWidget.setWidget(T_UpdateWidget(self))
         self.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, updateDockWidget)
         self.resizeDocks([updateDockWidget], [200], Qt.Orientation.Horizontal)
 
@@ -174,16 +176,16 @@ class MainWindow(ElaWindow):
     def initContent(self):
         self._homePage = QWidget()  # T_Home(self);
         self._elaScreenPage = QWidget()  # T_ElaScreen(self);
-        self._iconPage = T_Icon(self);
-        self._baseComponentsPage = T_BaseComponents(self);
-        self._graphicsPage = QWidget()  # T_Graphics(self);
-        self._navigationPage = T_Navigation(self);
-        self._popupPage = T_Popup(self);
-        self._cardPage = T_Card(self);
+        self._iconPage = T_Icon(self)
+        self._baseComponentsPage = T_BaseComponents(self)
+        self._graphicsPage = T_Graphics(self)
+        self._navigationPage = T_Navigation(self)
+        self._popupPage = T_Popup(self)
+        self._cardPage = T_Card(self)
         self._listViewPage = QWidget()  # T_ListView(self);
         self._tableViewPage = QWidget()  # T_TableView(self);
         self._treeViewPage = QWidget()  # T_TreeView(self);
-        self._settingPage = T_Setting(self);
+        self._settingPage = T_Setting(self)
 
         self.addPageNode("HOME", self._homePage, ElaIconType.IconName.House)
         # ifdef Q_OS_WIN
@@ -220,7 +222,9 @@ class MainWindow(ElaWindow):
             "ElaNavigation", self._navigationPage, ElaIconType.IconName.LocationArrow
         )
         self.addPageNode("ElaPopup", self._popupPage, ElaIconType.IconName.Envelope)
-        self.addPageNodeKeyPoints("ElaIcon", self._iconPage, 99, ElaIconType.IconName.FontCase)
+        self.addPageNodeKeyPoints(
+            "ElaIcon", self._iconPage, 99, ElaIconType.IconName.FontCase
+        )
         _, testKey_2 = self.addExpanderNode("TEST4", ElaIconType.IconName.Acorn)
         _, testKey_1 = self.addExpanderNode(
             "TEST5", testKey_2, ElaIconType.IconName.Acorn

@@ -34,6 +34,7 @@ class T_BasePage(ElaScrollPage):
         documentationMenu.addElaIconAction(
             ElaIconType.IconName.EarthAmericas, "EarthAmericas"
         )
+        self._documentationMenu = documentationMenu
         documentationButton.setMenu(documentationMenu)
 
         sourceButton = ElaToolButton(self)
@@ -45,6 +46,7 @@ class T_BasePage(ElaScrollPage):
         sourceMenu = ElaMenu(self)
         sourceMenu.addElaIconAction(ElaIconType.IconName.FireBurner, "FireBurner")
         sourceMenu.addElaIconAction(ElaIconType.IconName.Galaxy, "Galaxy~~~~")
+        self._sourceMenu = sourceMenu
         sourceButton.setMenu(sourceMenu)
 
         themeButton = ElaToolButton(self)

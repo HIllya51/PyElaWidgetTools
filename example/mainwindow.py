@@ -11,6 +11,7 @@ from ExamplePage.T_Popup import *
 from ExamplePage.T_Navigation import *
 from ExamplePage.T_Card import *
 from ExamplePage.T_Graphics import *
+from ExamplePage.T_ListView import *
 from ExamplePage.T_UpdateWidget import *
 
 
@@ -182,7 +183,7 @@ class MainWindow(ElaWindow):
         self._navigationPage = T_Navigation(self)
         self._popupPage = T_Popup(self)
         self._cardPage = T_Card(self)
-        self._listViewPage = QWidget()  # T_ListView(self);
+        self._listViewPage = T_ListView(self)
         self._tableViewPage = QWidget()  # T_TableView(self);
         self._treeViewPage = QWidget()  # T_TreeView(self);
         self._settingPage = T_Setting(self)
@@ -191,7 +192,11 @@ class MainWindow(ElaWindow):
         # ifdef Q_OS_WIN
         _, testKey_1 = self.addExpanderNode("ElaDxgi", ElaIconType.IconName.TvMusic)
         self.addPageNodeKeyPoints(
-            "ElaScreen", self._elaScreenPage, 3, ElaIconType.IconName.ObjectGroup
+            "ElaScreen",
+            self._elaScreenPage,
+            testKey_1,
+            3,
+            ElaIconType.IconName.ObjectGroup,
         )
         # endif
         self.addPageNode(

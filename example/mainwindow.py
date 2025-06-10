@@ -6,6 +6,7 @@ from PyQt5ElaWidgetTools import *
 from ExamplePage.T_Icon import *
 from ExamplePage.T_BaseComponents import *
 from ExamplePage.T_About import *
+from ExamplePage.T_Setting import *
 
 
 class MainWindow(ElaWindow):
@@ -179,7 +180,7 @@ class MainWindow(ElaWindow):
         self._listViewPage = QWidget()  # T_ListView(self);
         self._tableViewPage = QWidget()  # T_TableView(self);
         self._treeViewPage = QWidget()  # T_TreeView(self);
-        self._settingPage = QWidget()  # T_Setting(self);
+        self._settingPage = T_Setting(self);
 
         self.addPageNode("HOME", self._homePage, ElaIconType.IconName.House)
         # ifdef Q_OS_WIN

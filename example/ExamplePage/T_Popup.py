@@ -27,6 +27,7 @@ class T_Popup(T_BasePage):
         menu = ElaMenu(self)
         menu.addElaIconAction(ElaIconType.IconName.JackOLantern, "JackOLantern")
         menu.addElaIconAction(ElaIconType.IconName.LacrosseStick, "LacrosseStick")
+        self._menu = menu
         _toolButton.setMenu(menu)
         _toolButton.setElaIcon(ElaIconType.IconName.Broom)
 

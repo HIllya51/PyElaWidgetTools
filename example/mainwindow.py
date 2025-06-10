@@ -4,6 +4,7 @@ from PyQt5.QtWidgets import *
 
 from PyQt5ElaWidgetTools import *
 from ExamplePage.T_Icon import *
+from ExamplePage.T_BaseComponents import *
 from ExamplePage.T_About import *
 
 
@@ -170,7 +171,7 @@ class MainWindow(ElaWindow):
         self._homePage = QWidget()  # T_Home(self);
         self._elaScreenPage = QWidget()  # T_ElaScreen(self);
         self._iconPage = T_Icon(self);
-        self._baseComponentsPage = QWidget()  # T_BaseComponents(self);
+        self._baseComponentsPage = T_BaseComponents(self);
         self._graphicsPage = QWidget()  # T_Graphics(self);
         self._navigationPage = QWidget()  # T_Navigation(self);
         self._popupPage = QWidget()  # T_Popup(self);

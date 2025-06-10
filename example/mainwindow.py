@@ -13,6 +13,7 @@ from ExamplePage.T_Card import *
 from ExamplePage.T_Graphics import *
 from ExamplePage.T_ListView import *
 from ExamplePage.T_UpdateWidget import *
+from ExamplePage.T_TableView import *
 
 
 class MainWindow(ElaWindow):
@@ -184,7 +185,7 @@ class MainWindow(ElaWindow):
         self._popupPage = T_Popup(self)
         self._cardPage = T_Card(self)
         self._listViewPage = T_ListView(self)
-        self._tableViewPage = QWidget()  # T_TableView(self);
+        self._tableViewPage = T_TableView(self)
         self._treeViewPage = QWidget()  # T_TreeView(self);
         self._settingPage = T_Setting(self)
 

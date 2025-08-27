@@ -1,0 +1,16 @@
+name: Build
+
+on:
+  push:
+    paths: [ '.github/workflows/build.yml','.github/workflows/build_internal.yml','scripts/**','src/**']
+  pull_request:
+    paths: [ '.github/workflows/build.yml','.github/workflows/build_internal.yml','scripts/**','src/**']
+
+jobs:
+  build:
+    permissions:
+      id-token: write
+      attestations: write
+      contents: write
+    uses: ./.github/workflows/build_internal.yml
+  

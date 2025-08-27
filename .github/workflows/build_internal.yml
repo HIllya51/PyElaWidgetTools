@@ -1,0 +1,56 @@
+name: _
+
+on:
+  workflow_call:
+    inputs: 
+      createrelease:
+        type: boolean
+        default: false
+        required: false 
+jobs:
+  build:
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        include:
+          - qtarch: win32_msvc2019
+            version: 5.15.2
+            pythonversion: 3.7.9
+            arch: x86
+          - qtarch: win64_msvc2019_64
+            version: 5.15.2
+            pythonversion: 3.7.9
+            arch: x64
+          - qtarch: win64_msvc2019_64
+            version: 6.7.3
+            pythonversion: 3.12.10
+            arch: x64
+    permissions:
+      id-token: write
+      attestations: write
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: jurplel/install-qt-action@v4
+        with:
+          version: ${{matrix.version}}
+          arch: ${{matrix.qtarch}}
+          host: windows
+          target: desktop
+      
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{matrix.pythonversion}}
+          architecture: ${{ matrix.arch }}
+      
+      - uses: seanmiddleditch/gha-setup-vsdevenv@master
+        with:
+          arch: ${{ matrix.arch }}
+      - run: python scripts/dobuild.py ${{matrix.pythonversion}} ${{ matrix.qtarch }}  ${{ matrix.version }} ${{ matrix.arch }} 
+      - uses: actions/attest-build-provenance@v2.2.0
+        with:
+            subject-path: scripts/objects
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.version }}_${{ matrix.arch }}
+          path: scripts/objects

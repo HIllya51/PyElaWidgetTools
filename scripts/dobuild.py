@@ -68,7 +68,7 @@ shutil.copy("ElaWidgetTools.pyi", "objects")
 shutil.copytree("sip", "objects/sip")
 
 
-dirname = f"PyQt{qtversion[0]}-ElaWidgetTools"
+dirname = f"PyQt{qtversion[0]}ElaWidgetTools"
 os.mkdir(rf"wheel\{dirname}")
 shutil.copy(r".\build\ElaWidgetTools\ElaWidgetTools.pyd", rf"wheel\{dirname}")
 shutil.copy(r"ElaWidgetTools.pyi", rf"wheel\{dirname}")
@@ -76,9 +76,9 @@ shutil.copy(r"wheel\__init__.py", rf"wheel\{dirname}")
 
 os.chdir("wheel")
 
-subprocess.run(f"python -m pip install setuptools wheel")
+subprocess.run(f"{sys.executable} -m pip install setuptools wheel")
 subprocess.run(
-    f"python setup.py bdist_wheel {('','32')[arch == 'x86']} {('','5')[qtversion[0]=='5']}"
+    f"{sys.executable} setup.py bdist_wheel {('','32')[arch == 'x86']} {('','5')[qtversion[0]=='5']}"
 )
 
 os.chdir("..")

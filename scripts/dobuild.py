@@ -68,7 +68,7 @@ shutil.copy("ElaWidgetTools.pyi", "objects")
 shutil.copytree("sip", "objects/sip")
 
 
-dirname = f"PyQt{qtversion[0]}ElaWidgetTools"
+dirname = f"PyQt{qtversion[0]}-ElaWidgetTools"
 os.mkdir(rf"wheel\{dirname}")
 shutil.copy(r".\build\ElaWidgetTools\ElaWidgetTools.pyd", rf"wheel\{dirname}")
 shutil.copy(r"ElaWidgetTools.pyi", rf"wheel\{dirname}")

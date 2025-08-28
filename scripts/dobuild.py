@@ -1,5 +1,5 @@
 import sys, os, subprocess, shutil
-
+print(sys.executable)
 rootDir = os.path.dirname(__file__)
 if not rootDir:
     rootDir = os.path.abspath(".")
@@ -15,6 +15,7 @@ arch = sys.argv[4]
 
 
 # 准备环境
+pyPathEx = f"C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\python.exe"
 pyDir = f"C:\\hostedtoolcache\\windows\\Python\\{pythonversion}\\{arch}"
 pyPath = f"{pyDir}\\python.exe"
 subprocess.run(f"{pyPath} -m pip install --upgrade pip")
@@ -76,9 +77,10 @@ shutil.copy(r"wheel\__init__.py", rf"wheel\{dirname}")
 
 os.chdir("wheel")
 
-subprocess.run(f"{sys.executable} -m pip install setuptools wheel")
+print(sys.executable)
+subprocess.run(f"{pyPathEx} -m pip install setuptools wheel")
 subprocess.run(
-    f"{sys.executable} setup.py bdist_wheel {('','32')[arch == 'x86']} {('','5')[qtversion[0]=='5']}"
+    f"{pyPathEx} setup.py bdist_wheel {('','32')[arch == 'x86']} {('','5')[qtversion[0]=='5']}"
 )
 
 os.chdir("..")

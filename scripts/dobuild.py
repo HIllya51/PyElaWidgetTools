@@ -49,7 +49,7 @@ archA = ("win32", "x64")[arch == "x64"]
 subprocess.run(
     f'cmake ./ElaWidgetTools/CMakeLists.txt -G "Visual Studio 17 2022" -A {archA} -T host={arch}'
 )
-subprocess.run(f"cmake --build ./ --config Release --target ALL_BUILD -j 14")
+subprocess.run(f"cmake --build ./ --config Release --target ALL_BUILD -j {os.cpu_count()}")
 
 os.mkdir("sip")
 subprocess.run(f"python gen_Def.sip.py")

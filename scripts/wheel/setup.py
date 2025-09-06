@@ -22,7 +22,7 @@ class BinaryDistribution(Distribution):
 
 setup(
     name=f"PyQt{QtVer}-ElaWidgetTools",
-    version="0.0.4",
+    version="0.0.5",
     author="HIllya51",
     license="MIT",
     install_requires=[f"""{['PyQt6>=6.7','PyQt5>=5.15'][QtVer=="5"]}"""],

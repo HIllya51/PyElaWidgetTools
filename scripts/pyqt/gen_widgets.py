@@ -322,35 +322,36 @@ def generate_sip_for_class__1(header_content, filename=""):
     # --- Properties ---
     # Q_PROPERTY_CREATE_Q_H(type, Name)
     # Assumes getter: Name() or isName() for bool, Setter: setName(type)
-    prop_pattern = re.compile(r"Q_PROPERTY_CREATE_Q_H\((.*?),\s*(\w+)\)")
-    has_public_section_for_props = False  # To add "public:" if props are first
+    for pt in ("Q_PROPERTY_CREATE", "Q_PROPERTY_CREATE_Q_H"):
+        prop_pattern = re.compile(rf"{pt}\((.*?),\s*(\w+)\)")
+        has_public_section_for_props = False  # To add "public:" if props are first
 
-    for match in prop_pattern.finditer(header_content):
-        if not has_public_section_for_props:
-            # Properties are usually public in SIP even if members are private
-            # sip_lines.append("public:") # Not strictly needed for %Property
-            has_public_section_for_props = True
+        for match in prop_pattern.finditer(header_content):
+            if not has_public_section_for_props:
+                # Properties are usually public in SIP even if members are private
+                # sip_lines.append("public:") # Not strictly needed for %Property
+                has_public_section_for_props = True
 
-        prop_type_raw = match.group(1).strip()
-        prop_name = match.group(2)
+            prop_type_raw = match.group(1).strip()
+            prop_name = match.group(2)
 
-        sip_prop_type = prop_type_raw
+            sip_prop_type = prop_type_raw
 
-        # Determine getter/setter names based on convention
-        getter_name = f"get{prop_name}"
-        setter_name = f"set{prop_name}"
+            # Determine getter/setter names based on convention
+            getter_name = f"get{prop_name}"
+            setter_name = f"set{prop_name}"
 
-        # Check if these methods actually exist as public methods later
-        # For now, assume they follow the macro's convention
-        # sip_lines.append(f"  // Property: {prop_name}")
-        # sip_lines.append(f"  %Property({sip_prop_type} {prop_name.lower()} READ {getter_name} WRITE {setter_name})\n")
-        sip_lines.append(f"public: Q_SIGNAL void p{prop_name}Changed();")
-        sip_lines.append(
-            f"  void {setter_name}({(prop_type_raw)} {prop_name});"
-        )  # Use input version of type
-        sip_lines.append(
-            f"  {(prop_type_raw)} {getter_name}() const;"
-        )  # Use return version
+            # Check if these methods actually exist as public methods later
+            # For now, assume they follow the macro's convention
+            # sip_lines.append(f"  // Property: {prop_name}")
+            # sip_lines.append(f"  %Property({sip_prop_type} {prop_name.lower()} READ {getter_name} WRITE {setter_name})\n")
+            sip_lines.append(f"public: Q_SIGNAL void p{prop_name}Changed();")
+            sip_lines.append(
+                f"  void {setter_name}({(prop_type_raw)} {prop_name});"
+            )  # Use input version of type
+            sip_lines.append(
+                f"  {(prop_type_raw)} {getter_name}() const;"
+            )  # Use return version
 
     # --- Methods ---
     # This regex is a starting point and might need refinement for complex signatures

@@ -50,7 +50,6 @@ add_custom_command(
 )
 
 file(GLOB SHIBOKEN_GENERATED_SOURCES_1 "${SHIBOKEN_OUTPUT_FOLDER}/ElaWidgetTools/*.cpp" "${SHIBOKEN_OUTPUT_FOLDER}/ElaWidgetTools/*.h")
-message("SHIBOKEN_GENERATED_SOURCES_1 ${SHIBOKEN_GENERATED_SOURCES_1}")
 
 target_sources(
     ElaWidgetTools
@@ -58,6 +57,7 @@ target_sources(
     ${CMAKE_CURRENT_SOURCE_DIR}/wrapper.hpp
     ${SHIBOKEN_GENERATED_SOURCES_1}
 )
+message("SHIBOKEN_GENERATED_SOURCES_1 ${SHIBOKEN_GENERATED_SOURCES_1}")
 
 # A bit ugly:
 # - include paths to python installation

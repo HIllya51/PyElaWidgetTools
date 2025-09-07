@@ -103,7 +103,10 @@ elif binding.lower().startswith("pyside"):
     subprocess.run(f'python gen_widgets.py {int(qtversion.startswith("5"))}')
     subprocess.run(f'python gen_pyi_from_sip.py {int(qtversion.startswith("5"))}')
     pyipath = os.getcwd()
-    __parsefile("ElaWidgetTools.pyi", lambda c: c.replace("PyQt6", "PySide6"))
+    __parsefile(
+        "ElaWidgetTools.pyi",
+        lambda c: c.replace("PyQt6", "PySide6").replace("pyqtSignal", "Signal"),
+    )
     ###
     os.chdir(cwd)
     os.chdir("pyside6")

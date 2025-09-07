@@ -68,6 +68,7 @@ subprocess.run(
     f"cmake --build ./ --config Release --target ALL_BUILD -j {os.cpu_count()}"
 )
 if binding == "pyqt":
+    os.chdir('pyqt')
     os.mkdir("sip")
     subprocess.run(f"python gen_Def.sip.py")
     subprocess.run(f'python gen_widgets.py {int(qtversion.startswith("5"))}')
@@ -80,10 +81,11 @@ if binding == "pyqt":
     # for _dir, _, _fs in os.walk(r"."):
     #     for _f in _fs:
     #         print(_dir, _f)
+    os.chdir('..')
     os.mkdir("objects")
-    shutil.copy(r".\build\ElaWidgetTools\ElaWidgetTools.pyd", "objects")
-    shutil.copy("ElaWidgetTools.pyi", "objects")
-    shutil.copytree("sip", "objects/sip")
+    shutil.copy(r"pyqt\build\ElaWidgetTools\ElaWidgetTools.pyd", "objects")
+    shutil.copy(r"pyqt\ElaWidgetTools.pyi", "objects")
+    shutil.copytree(r"pyqt\sip", "objects/sip")
 
 
     dirname = f"PyQt{qtversion[0]}ElaWidgetTools"

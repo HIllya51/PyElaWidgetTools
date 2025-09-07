@@ -2,11 +2,39 @@ import os
 
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
-
 eladir = "../../ElaWidgetTools/ElaWidgetTools"
 
 
 import re
+
+
+def cast_h_to_sip(filename):
+    with open(filename, "r", encoding="utf-8") as f:
+        content = f.read()
+    _ = re.findall(r"class ELA_EXPORT ([\w]*)", content)
+    ___ = ""
+    for __ in _:
+
+        ___ += f'<object-type name="{__}" />'
+    return ___
+
+
+def gen_widgets(eladir: str):
+
+    hs = []
+    xmls = []
+    for f in os.listdir(eladir):
+        if f.startswith("ElaDef"):
+            continue
+        if f.startswith("ElaProperty"):
+            continue
+        if f.startswith("ElaSingleton"):
+            continue
+        if f.startswith("Ela") and f.endswith(".h"):
+            xmls.append(cast_h_to_sip(eladir + "/" + f))
+            hs.append(f"#include<{os.path.basename(f)}>")
+
+    return "\n".join(xmls), "\n".join(hs)
 
 
 def gen_defs():
@@ -79,6 +107,7 @@ def gen_defs():
     return output
 
 
+xml, h = gen_widgets(eladir)
 xmlinternal = gen_defs()
 xmlbase = """<?xml version="1.0"?>
 <typesystem package="ElaWidgetTools">
@@ -89,7 +118,7 @@ xmlbase = """<?xml version="1.0"?>
 
 </typesystem>"""
 with open("bindings.xml", "w", encoding="utf8") as ff:
-    ff.write(xmlbase.format(internal=xmlinternal))
+    ff.write(xmlbase.format(internal=xmlinternal + xml))
 
 
 wrapperbase = """
@@ -106,4 +135,4 @@ wrapperbase = """
 
 H_internal = """ #include <ElaDef.h> """
 with open("wrapper.hpp", "w", encoding="utf8") as ff:
-    ff.write(wrapperbase.format(internal=H_internal))
+    ff.write(wrapperbase.format(internal=H_internal + "\n" + h))

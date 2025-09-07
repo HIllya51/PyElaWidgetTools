@@ -40,7 +40,7 @@ add_custom_command(
         --generator-set=shiboken
         --output-directory=OUTPUTDIR
         -I${ELA_INCLUDE_PATH}
-        -I${MY_QT_INSTALL}/include -I${MY_QT_INSTALL}/include/QtCore
+        -I${MY_QT_INSTALL}/include -I${MY_QT_INSTALL}/include/QtCore -I${MY_QT_INSTALL}/include/QtGui -I${MY_QT_INSTALL}/include/QtWidgets
         --typesystem-paths=${MY_SITE_PACKAGES_PATH}/PySide6/typesystems
         --enable-pyside-extensions
         --avoid-protected-hack
@@ -76,7 +76,6 @@ target_include_directories(
     "${MY_SITE_PACKAGES_PATH}/PySide6/include/QtWidgets"
     "${MY_SITE_PACKAGES_PATH}/PySide6/include/QtGui"
     "${MY_SITE_PACKAGES_PATH}/PySide6/include/QtCore"
-    "${MY_SITE_PACKAGES_PATH}/PySide6/include/QtPrintSupport"
     "${MY_SITE_PACKAGES_PATH}/shiboken6_generator/include"
 )
 

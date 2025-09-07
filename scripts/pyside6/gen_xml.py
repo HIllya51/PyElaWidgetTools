@@ -32,11 +32,11 @@ def specialfuns(const=True):
             %CPPSELF.addFooterNode(%1, footerKey, %3, %4);
 
         PyObject* pyRes = Shiboken::Conversions::copyToPython(
-            SbkElaWidgetToolsTypeConverters[SBK_ELANAVIGATIONTYPE_NODEOPERATERETURNTYPE_IDX],
+            SbkElaWidgetToolsTypeConverters[SBK_ElaNavigationType_NodeOperateReturnType_IDX],
             &amp;cppRes);
 
         PyObject* pyFooterKey = Shiboken::Conversions::copyToPython(
-            Shiboken::Module::get(SbkPySide6_QtCoreTypeStructs[SBK_QSTRING_IDX]),
+            Shiboken::Module::get(SbkPySide6_QtCoreTypeStructs[SBK_QString_IDX]),
             &amp;footerKey);
 
         return Py_BuildValue("(NN)", pyRes, pyFooterKey);
@@ -52,11 +52,11 @@ def specialfuns(const=True):
             %CPPSELF.addFooterNode(%1, %2, footerKey, %4, %5);
 
         PyObject* pyRes = Shiboken::Conversions::copyToPython(
-            SbkElaWidgetToolsTypeConverters[SBK_ELANAVIGATIONTYPE_NODEOPERATERETURNTYPE_IDX],
+            SbkElaWidgetToolsTypeConverters[SBK_ElaNavigationType_NodeOperateReturnType_IDX],
             &amp;cppRes);
 
         PyObject* pyFooterKey = Shiboken::Conversions::copyToPython(
-            Shiboken::Module::get(SbkPySide6_QtCoreTypeStructs[SBK_QSTRING_IDX]),
+            Shiboken::Module::get(SbkPySide6_QtCoreTypeStructs[SBK_QString_IDX]),
             &amp;footerKey);
 
         return Py_BuildValue("(NN)", pyRes, pyFooterKey);
@@ -72,11 +72,11 @@ def specialfuns(const=True):
             %CPPSELF.addExpanderNode(%1, footerKey, %3);
 
         PyObject* pyRes = Shiboken::Conversions::copyToPython(
-            SbkElaWidgetToolsTypeConverters[SBK_ELANAVIGATIONTYPE_NODEOPERATERETURNTYPE_IDX],
+            SbkElaWidgetToolsTypeConverters[SBK_ElaNavigationType_NodeOperateReturnType_IDX],
             &amp;cppRes);
 
         PyObject* pyFooterKey = Shiboken::Conversions::copyToPython(
-            Shiboken::Module::get(SbkPySide6_QtCoreTypeStructs[SBK_QSTRING_IDX]),
+            Shiboken::Module::get(SbkPySide6_QtCoreTypeStructs[SBK_QString_IDX]),
             &amp;footerKey);
 
         return Py_BuildValue("(NN)", pyRes, pyFooterKey);
@@ -92,11 +92,11 @@ def specialfuns(const=True):
             %CPPSELF.addExpanderNode(%1, footerKey, %3, %4);
 
         PyObject* pyRes = Shiboken::Conversions::copyToPython(
-            SbkElaWidgetToolsTypeConverters[SBK_ELANAVIGATIONTYPE_NODEOPERATERETURNTYPE_IDX],
+            SbkElaWidgetToolsTypeConverters[SBK_ElaNavigationType_NodeOperateReturnType_IDX],
             &amp;cppRes);
 
         PyObject* pyFooterKey = Shiboken::Conversions::copyToPython(
-            Shiboken::Module::get(SbkPySide6_QtCoreTypeStructs[SBK_QSTRING_IDX]),
+            Shiboken::Module::get(SbkPySide6_QtCoreTypeStructs[SBK_QString_IDX]),
             &amp;footerKey);
 
         return Py_BuildValue("(NN)", pyRes, pyFooterKey);

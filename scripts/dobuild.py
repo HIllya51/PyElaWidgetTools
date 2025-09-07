@@ -87,8 +87,8 @@ if binding == "pyqt":
 
     dirname = f"PyQt{qtversion[0]}ElaWidgetTools"
     os.mkdir(rf"wheel\{dirname}")
-    shutil.copy(r".\build\ElaWidgetTools\ElaWidgetTools.pyd", rf"wheel\{dirname}")
-    shutil.copy(r"ElaWidgetTools.pyi", rf"wheel\{dirname}")
+    shutil.copy(r"objects\ElaWidgetTools.pyd", rf"wheel\{dirname}")
+    shutil.copy(r"objects\ElaWidgetTools.pyi", rf"wheel\{dirname}")
     shutil.copy(r"wheel\__init__.py", rf"wheel\{dirname}")
 
     os.chdir("wheel")
@@ -96,7 +96,7 @@ if binding == "pyqt":
     print(sys.executable)
     subprocess.run(f"{pyPathEx} -m pip install setuptools wheel")
     subprocess.run(
-        f"{pyPathEx} setup.py bdist_wheel {('','32')[arch == 'x86']} {('','5')[qtversion[0]=='5']}"
+        f"{pyPathEx} setup.py bdist_wheel {('64','32')[arch == 'x86']} {('PyQt6','PyQt5')[qtversion[0]=='5']}"
     )
 
     os.chdir("..")
@@ -117,4 +117,24 @@ elif binding == "pyside":
         f"cmake --build ./ --config Release --target ALL_BUILD -j {os.cpu_count()}"
     )
 
+    os.chdir("..")
     os.mkdir("objects")
+    shutil.copy(r"pyside6\Release\ElaWidgetTools.pyd", "objects")
+    dirname = f"PySide6ElaWidgetTools"
+    os.mkdir(rf"wheel\{dirname}")
+    shutil.copy(r"objects\ElaWidgetTools.pyd", rf"wheel\{dirname}")
+    shutil.copy(r"wheel\__init__.py", rf"wheel\{dirname}")
+    
+    os.chdir("wheel")
+    subprocess.run(f"{pyPathEx} -m pip install setuptools wheel")
+    subprocess.run(
+        f"{pyPathEx} setup.py bdist_wheel {('64','32')[arch == 'x86']} PySide6"
+    )
+
+
+    os.chdir("..")
+
+    shutil.copytree("wheel/dist", "objects/wheel")
+
+    for f in os.listdir("objects/wheel"):
+        shutil.move("objects/wheel/" + f, "objects/wheel/" + f.lower())

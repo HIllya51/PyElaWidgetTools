@@ -394,7 +394,7 @@ if __name__ == "__main__":
 
     content = "\n".join(
         (
-            "from typing import Any, List, Tuple, Callable, Optional, Union, TypeAlias",
+            "from typing import List, Tuple, TypeAlias",
             "from enum import IntEnum",  # Using IntEnum for all enums for simplicity
             # Common Qt imports - adjust for your binding (PyQt5, PyQt6, PySide2, PySide6)
             f"from PyQt{pyqtVer}.QtCore import *",  # pyqtSignal is often aliased to Signal

@@ -107,8 +107,10 @@ elif binding.lower().startswith("pyside"):
     ###
     os.chdir(cwd)
     os.chdir("pyside6")
+    print(os.getcwd())
 
     subprocess.run(f"python gen_xml.py")
+    print(os.listdir())
 
     archA = ("win32", "x64")[arch == "x64"]
     subprocess.run(

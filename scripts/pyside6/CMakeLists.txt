@@ -3,16 +3,16 @@ project(my_wrapper)
 cmake_minimum_required(VERSION 3.18)
 
 # Main tuning variables:
-set(ELA_INCLUDE_PATH "${CMAKE_SOURCE_DIR}/src/include")
-set(ELA_LIB_PATH "${CMAKE_SOURCE_DIR}/src/lib/ElaWidgetTools.lib")
-set(MY_PYTHON_INSTALL_PATH "C:/Users/11737/AppData/Local/Programs/Python/Python312")
-set(MY_SITE_PACKAGES_PATH "${MY_PYTHON_INSTALL_PATH}/Lib/site-packages")
-set(MY_QT_INSTALL c:/tmp/6.8.3/msvc2022_64)
+set(ELA_INCLUDE_PATH "C:/Users/11737/Documents/GitHub/PyElaWidgetTools/ElaWidgetTools/ElaWidgetTools" CACHE STRING "ELA_INCLUDE_PATH")
+set(ELA_LIB_PATH "C:/Users/11737/Documents/GitHub/PyElaWidgetTools/ElaWidgetTools/build/ElaWidgetTools/Release/ElaWidgetTools.lib" CACHE STRING "ELA_LIB_PATH")
+set(MY_PYTHON_INSTALL_PATH "C:/Users/11737/AppData/Local/Programs/Python/Python312" CACHE STRING "MY_PYTHON_INSTALL_PATH")
+set(MY_QT_INSTALL c:/tmp/6.8.3/msvc2022_64 CACHE STRING "MY_QT_INSTALL")
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_PREFIX_PATH ${MY_QT_INSTALL})
 set(CMAKE_BUILD_TYPE Release)
+set(MY_SITE_PACKAGES_PATH "${MY_PYTHON_INSTALL_PATH}/Lib/site-packages")
 
 message(STATUS "Python3_ROOT_DIR: ${Python3_ROOT_DIR}")
 message(STATUS "Python3_EXECUTABLE: ${Python3_EXECUTABLE}")
@@ -64,7 +64,7 @@ target_include_directories(
     ElaWidgetTools
     PRIVATE
     "src"
-    "src/include"
+    "${ELA_INCLUDE_PATH}"
     "${MY_PYTHON_INSTALL_PATH}/include"
     "${MY_SITE_PACKAGES_PATH}/PySide6/include"
     "${MY_SITE_PACKAGES_PATH}/PySide6/include/QtWidgets"

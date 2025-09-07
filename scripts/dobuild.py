@@ -15,6 +15,8 @@ qtversion = sys.argv[3]
 arch = sys.argv[4]
 binding = sys.argv[5]
 
+qtarchdir = qtarch[qtarch.find("_") + 1 :]
+
 # 准备环境
 pyPathEx = f"C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\python.exe"
 pyDir = f"C:\\hostedtoolcache\\windows\\Python\\{pythonversion}\\{arch}"
@@ -43,10 +45,7 @@ def __parsefile(fn, cb):
 
 __parsefile(
     "../ElaWidgetTools/CMakeLists.txt",
-    lambda cml: cml.replace(
-        "add_subdirectory(ElaWidgetTools)",
-        'option(ELAWIDGETTOOLS_BUILD_STATIC_LIB "Build static library." ON)\nadd_subdirectory(ElaWidgetTools)',
-    ).replace("add_subdirectory(ElaWidgetToolsExample)", ""),
+    lambda cml: cml.replace("add_subdirectory(ElaWidgetToolsExample)", ""),
 )
 __parsefile(
     r"..\ElaWidgetTools\ElaWidgetTools\CMakeLists.txt",
@@ -62,31 +61,29 @@ __parsefile(
 
 archA = ("win32", "x64")[arch == "x64"]
 subprocess.run(
-    f'cmake ../ElaWidgetTools/CMakeLists.txt -G "Visual Studio 17 2022" -A {archA} -T host={arch}'
+    f'cmake -DELAWIDGETTOOLS_BUILD_STATIC_LIB=ON ../ElaWidgetTools/CMakeLists.txt -G "Visual Studio 17 2022" -A {archA} -T host={arch}'
 )
 subprocess.run(
     f"cmake --build ./ --config Release --target ALL_BUILD -j {os.cpu_count()}"
 )
 if binding == "pyqt":
-    os.chdir('pyqt')
+    os.chdir("pyqt")
     os.mkdir("sip")
     subprocess.run(f"python gen_Def.sip.py")
     subprocess.run(f'python gen_widgets.py {int(qtversion.startswith("5"))}')
     subprocess.run(f'python gen_pyi_from_sip.py {int(qtversion.startswith("5"))}')
     subprocess.run(f"{pyPath} sip_code_fix.py")
-    qtarchdir = qtarch[qtarch.find("_") + 1 :]
     subprocess.run(
         rf"{pyDir}\Scripts\sip-build --verbose --qmake D:\a\PyElaWidgetTools\Qt\{qtversion}\{qtarchdir}\bin\qmake.exe"
     )
     # for _dir, _, _fs in os.walk(r"."):
     #     for _f in _fs:
     #         print(_dir, _f)
-    os.chdir('..')
+    os.chdir("..")
     os.mkdir("objects")
     shutil.copy(r"pyqt\build\ElaWidgetTools\ElaWidgetTools.pyd", "objects")
     shutil.copy(r"pyqt\ElaWidgetTools.pyi", "objects")
     shutil.copytree(r"pyqt\sip", "objects/sip")
-
 
     dirname = f"PyQt{qtversion[0]}ElaWidgetTools"
     os.mkdir(rf"wheel\{dirname}")
@@ -108,3 +105,16 @@ if binding == "pyqt":
 
     for f in os.listdir("objects/wheel"):
         shutil.move("objects/wheel/" + f, "objects/wheel/" + f.lower())
+
+elif binding == "pyside":
+    os.chdir("pyside6")
+
+    archA = ("win32", "x64")[arch == "x64"]
+    subprocess.run(
+        f'cmake -DMY_QT_INSTALL=D:/a/PyElaWidgetTools/Qt/{qtversion}/{qtarchdir} -DMY_PYTHON_INSTALL_PATH={pyDir.replace("\\", "/")} -DELA_LIB_PATH={os.path.abspath("../ElaWidgetTools/Release/ElaWidgetTools.lib").replace("\\", "/")} -DELA_INCLUDE_PATH={os.path.abspath("../../ElaWidgetTools/ElaWidgetTools").replace("\\", "/")} ./CMakeLists.txt -G "Visual Studio 17 2022" -A {archA} -T host={arch}'
+    )
+    subprocess.run(
+        f"cmake --build ./ --config Release --target ALL_BUILD -j {os.cpu_count()}"
+    )
+
+    os.mkdir("objects")

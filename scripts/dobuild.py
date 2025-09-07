@@ -1,4 +1,5 @@
 import sys, os, subprocess, shutil
+
 print(sys.executable)
 rootDir = os.path.dirname(__file__)
 if not rootDir:
@@ -12,79 +13,96 @@ pythonversion = sys.argv[1]
 qtarch = sys.argv[2]
 qtversion = sys.argv[3]
 arch = sys.argv[4]
-
+binding = sys.argv[5]
 
 # 准备环境
 pyPathEx = f"C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\python.exe"
 pyDir = f"C:\\hostedtoolcache\\windows\\Python\\{pythonversion}\\{arch}"
 pyPath = f"{pyDir}\\python.exe"
 subprocess.run(f"{pyPath} -m pip install --upgrade pip")
-if qtversion.startswith("6"):
-    subprocess.run(f"{pyPath} -m pip install pyqt6 PyQt-builder sip")
-else:
-    subprocess.run(f"{pyPath} -m pip install pyqt5==5.15.9 PyQt-builder==1.15 sip==6.7")
+if binding == "pyqt":
+    if qtversion.startswith("6"):
+        subprocess.run(f"{pyPath} -m pip install pyqt6 PyQt-builder sip")
+    else:
+        subprocess.run(
+            f"{pyPath} -m pip install pyqt5==5.15.9 PyQt-builder==1.15 sip==6.7"
+        )
+elif binding == "pyside":
+    subprocess.run(
+        f"{pyPath} -m pip install pyside6=={qtversion} shiboken6=={qtversion} shiboken6_generator=={qtversion}"
+    )
+
 
 # 编译ela
-with open("../ElaWidgetTools/CMakeLists.txt", "r", encoding="utf8") as ff:
-    cml = ff.read()
-with open("../ElaWidgetTools/CMakeLists.txt", "w", encoding="utf8") as ff:
-    ff.write(
-        cml.replace(
-            "add_subdirectory(ElaWidgetTools)",
-            'option(ELAWIDGETTOOLS_BUILD_STATIC_LIB "Build static library." ON)\nadd_subdirectory(ElaWidgetTools)',
-        ).replace("add_subdirectory(ElaWidgetToolsExample)", "")
-    )
-with open(r"..\ElaWidgetTools\ElaWidgetTools\ElaProperty.h", "r", encoding="utf8") as ff:
-    cml = ff.read()
-with open(r"..\ElaWidgetTools\ElaWidgetTools\ElaProperty.h", "w", encoding="utf8") as ff:
-    ff.write(
-        cml.replace(
-            "Q_DECL_EXPORT",
-            "",
-        ).replace("Q_DECL_IMPORT", "")
-    )
+def __parsefile(fn, cb):
+    with open(fn, "r", encoding="utf8") as ff:
+        cml = ff.read()
+    with open(fn, "w", encoding="utf8") as ff:
+        ff.write(cb(cml))
+
+
+__parsefile(
+    "../ElaWidgetTools/CMakeLists.txt",
+    lambda cml: cml.replace(
+        "add_subdirectory(ElaWidgetTools)",
+        'option(ELAWIDGETTOOLS_BUILD_STATIC_LIB "Build static library." ON)\nadd_subdirectory(ElaWidgetTools)',
+    ).replace("add_subdirectory(ElaWidgetToolsExample)", ""),
+)
+__parsefile(
+    r"..\ElaWidgetTools\ElaWidgetTools\CMakeLists.txt",
+    lambda cml: cml.replace("qt_add_library", "add_library"),  # qt6.8以上
+)
+__parsefile(
+    r"..\ElaWidgetTools\ElaWidgetTools\ElaProperty.h",
+    lambda cml: cml.replace(
+        "Q_DECL_EXPORT",
+        "",
+    ).replace("Q_DECL_IMPORT", ""),
+)
 
 archA = ("win32", "x64")[arch == "x64"]
 subprocess.run(
     f'cmake ../ElaWidgetTools/CMakeLists.txt -G "Visual Studio 17 2022" -A {archA} -T host={arch}'
 )
-subprocess.run(f"cmake --build ./ --config Release --target ALL_BUILD -j {os.cpu_count()}")
-
-os.mkdir("sip")
-subprocess.run(f"python gen_Def.sip.py")
-subprocess.run(f'python gen_widgets.py {int(qtversion.startswith("5"))}')
-subprocess.run(f'python gen_pyi_from_sip.py {int(qtversion.startswith("5"))}')
-subprocess.run(f"{pyPath} sip_code_fix.py")
-qtarchdir = qtarch[qtarch.find("_") + 1 :]
 subprocess.run(
-    rf"{pyDir}\Scripts\sip-build --verbose --qmake D:\a\PyElaWidgetTools\Qt\{qtversion}\{qtarchdir}\bin\qmake.exe"
+    f"cmake --build ./ --config Release --target ALL_BUILD -j {os.cpu_count()}"
 )
-# for _dir, _, _fs in os.walk(r"."):
-#     for _f in _fs:
-#         print(_dir, _f)
-os.mkdir("objects")
-shutil.copy(r".\build\ElaWidgetTools\ElaWidgetTools.pyd", "objects")
-shutil.copy("ElaWidgetTools.pyi", "objects")
-shutil.copytree("sip", "objects/sip")
+if binding == "pyqt":
+    os.mkdir("sip")
+    subprocess.run(f"python gen_Def.sip.py")
+    subprocess.run(f'python gen_widgets.py {int(qtversion.startswith("5"))}')
+    subprocess.run(f'python gen_pyi_from_sip.py {int(qtversion.startswith("5"))}')
+    subprocess.run(f"{pyPath} sip_code_fix.py")
+    qtarchdir = qtarch[qtarch.find("_") + 1 :]
+    subprocess.run(
+        rf"{pyDir}\Scripts\sip-build --verbose --qmake D:\a\PyElaWidgetTools\Qt\{qtversion}\{qtarchdir}\bin\qmake.exe"
+    )
+    # for _dir, _, _fs in os.walk(r"."):
+    #     for _f in _fs:
+    #         print(_dir, _f)
+    os.mkdir("objects")
+    shutil.copy(r".\build\ElaWidgetTools\ElaWidgetTools.pyd", "objects")
+    shutil.copy("ElaWidgetTools.pyi", "objects")
+    shutil.copytree("sip", "objects/sip")
 
 
-dirname = f"PyQt{qtversion[0]}ElaWidgetTools"
-os.mkdir(rf"wheel\{dirname}")
-shutil.copy(r".\build\ElaWidgetTools\ElaWidgetTools.pyd", rf"wheel\{dirname}")
-shutil.copy(r"ElaWidgetTools.pyi", rf"wheel\{dirname}")
-shutil.copy(r"wheel\__init__.py", rf"wheel\{dirname}")
+    dirname = f"PyQt{qtversion[0]}ElaWidgetTools"
+    os.mkdir(rf"wheel\{dirname}")
+    shutil.copy(r".\build\ElaWidgetTools\ElaWidgetTools.pyd", rf"wheel\{dirname}")
+    shutil.copy(r"ElaWidgetTools.pyi", rf"wheel\{dirname}")
+    shutil.copy(r"wheel\__init__.py", rf"wheel\{dirname}")
 
-os.chdir("wheel")
+    os.chdir("wheel")
 
-print(sys.executable)
-subprocess.run(f"{pyPathEx} -m pip install setuptools wheel")
-subprocess.run(
-    f"{pyPathEx} setup.py bdist_wheel {('','32')[arch == 'x86']} {('','5')[qtversion[0]=='5']}"
-)
+    print(sys.executable)
+    subprocess.run(f"{pyPathEx} -m pip install setuptools wheel")
+    subprocess.run(
+        f"{pyPathEx} setup.py bdist_wheel {('','32')[arch == 'x86']} {('','5')[qtversion[0]=='5']}"
+    )
 
-os.chdir("..")
+    os.chdir("..")
 
-shutil.copytree("wheel/dist", "objects/wheel")
+    shutil.copytree("wheel/dist", "objects/wheel")
 
-for f in os.listdir("objects/wheel"):
-    shutil.move("objects/wheel/" + f, "objects/wheel/" + f.lower())
+    for f in os.listdir("objects/wheel"):
+        shutil.move("objects/wheel/" + f, "objects/wheel/" + f.lower())

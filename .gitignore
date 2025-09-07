@@ -1,3 +1,4 @@
 *.pyc
 scripts/sip
 scripts/ElaWidgetTools
+scripts/pyside6/build

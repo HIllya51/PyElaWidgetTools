@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+
+<typesystem package="ElaWidgetTools">
+    <load-typesystem name="typesystem_widgets.xml" generate="no"/>
+    <load-typesystem name="typesystem_gui.xml" generate="no"/>
+    <load-typesystem name="typesystem_printsupport.xml" generate="no"/>
+
+    <namespace-type name="ElaApplicationType">
+        <enum-type name="WindowDisplayMode" />
+    </namespace-type>
+
+</typesystem>

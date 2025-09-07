@@ -17,14 +17,22 @@ jobs:
             version: 5.15.2
             pythonversion: 3.7.9
             arch: x86
+            binding: pyqt
           - qtarch: win64_msvc2019_64
             version: 5.15.2
             pythonversion: 3.7.9
             arch: x64
+            binding: pyqt
           - qtarch: win64_msvc2019_64
             version: 6.7.3
             pythonversion: 3.12.10
             arch: x64
+            binding: pyqt
+          - qtarch: win64_msvc2019_64
+            version: 6.8.3
+            pythonversion: 3.12.10
+            arch: x64
+            binding: pyside
     permissions:
       id-token: write
       attestations: write
@@ -52,7 +60,7 @@ jobs:
       - uses: seanmiddleditch/gha-setup-vsdevenv@master
         with:
           arch: ${{ matrix.arch }}
-      - run: python scripts/dobuild.py ${{matrix.pythonversion}} ${{ matrix.qtarch }}  ${{ matrix.version }} ${{ matrix.arch }} 
+      - run: python scripts/dobuild.py ${{matrix.pythonversion}} ${{ matrix.qtarch }}  ${{ matrix.version }} ${{ matrix.arch }}  ${{matrix.binding}}
       - uses: actions/attest-build-provenance@v2.2.0
         with:
             subject-path: scripts/objects

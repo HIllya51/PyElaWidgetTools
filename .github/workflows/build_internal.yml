@@ -17,22 +17,22 @@ jobs:
             version: 5.15.2
             pythonversion: 3.7.9
             arch: x86
-            binding: pyqt
+            binding: PyQt5
           - qtarch: win64_msvc2019_64
             version: 5.15.2
             pythonversion: 3.7.9
             arch: x64
-            binding: pyqt
+            binding: PyQt5
           - qtarch: win64_msvc2019_64
             version: 6.7.3
             pythonversion: 3.12.10
             arch: x64
-            binding: pyqt
+            binding: PyQt6
           - qtarch: win64_msvc2022_64
             version: 6.8.3
             pythonversion: 3.12.10
             arch: x64
-            binding: pyside
+            binding: PySide6
     permissions:
       id-token: write
       attestations: write
@@ -66,5 +66,5 @@ jobs:
             subject-path: scripts/objects
       - uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.version }}_${{ matrix.arch }}
+          name: ${{ matrix.binding }}_${{ matrix.arch }}
           path: scripts/objects

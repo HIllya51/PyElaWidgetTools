@@ -22,14 +22,14 @@ pyPathEx = f"C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\python.exe"
 pyDir = f"C:\\hostedtoolcache\\windows\\Python\\{pythonversion}\\{arch}"
 pyPath = f"{pyDir}\\python.exe"
 subprocess.run(f"{pyPath} -m pip install --upgrade pip")
-if binding == "pyqt":
+if binding.lower().startswith("pyqt"):
     if qtversion.startswith("6"):
         subprocess.run(f"{pyPath} -m pip install pyqt6 PyQt-builder sip")
     else:
         subprocess.run(
             f"{pyPath} -m pip install pyqt5==5.15.9 PyQt-builder==1.15 sip==6.7"
         )
-elif binding == "pyside":
+elif binding.lower().startswith("pyside"):
     subprocess.run(
         f"{pyPath} -m pip install pyside6=={qtversion} shiboken6=={qtversion} shiboken6_generator=={qtversion}"
     )
@@ -66,7 +66,7 @@ subprocess.run(
 subprocess.run(
     f"cmake --build ./ --config Release --target ALL_BUILD -j {os.cpu_count()}"
 )
-if binding == "pyqt":
+if binding.lower().startswith("pyqt"):
     os.chdir("pyqt")
     os.mkdir("sip")
     subprocess.run(f"python gen_Def.sip.py")
@@ -96,7 +96,7 @@ if binding == "pyqt":
     print(sys.executable)
     subprocess.run(f"{pyPathEx} -m pip install setuptools wheel")
     subprocess.run(
-        f"{pyPathEx} setup.py bdist_wheel {('64','32')[arch == 'x86']} {('PyQt6','PyQt5')[qtversion[0]=='5']}"
+        f"{pyPathEx} setup.py bdist_wheel {('64','32')[arch == 'x86']} {binding}"
     )
 
     os.chdir("..")
@@ -106,7 +106,7 @@ if binding == "pyqt":
     for f in os.listdir("objects/wheel"):
         shutil.move("objects/wheel/" + f, "objects/wheel/" + f.lower())
 
-elif binding == "pyside":
+elif binding.lower().startswith("pyside"):
     os.chdir("pyside6")
 
     archA = ("win32", "x64")[arch == "x64"]
@@ -128,7 +128,7 @@ elif binding == "pyside":
     os.chdir("wheel")
     subprocess.run(f"{pyPathEx} -m pip install setuptools wheel")
     subprocess.run(
-        f"{pyPathEx} setup.py bdist_wheel {('64','32')[arch == 'x86']} PySide6"
+        f"{pyPathEx} setup.py bdist_wheel {('64','32')[arch == 'x86']} {binding}"
     )
 
 

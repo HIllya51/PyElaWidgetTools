@@ -589,10 +589,7 @@ def cast_h_to_sip(filename):
         ls = [_ for _ in ls if "QList<QVariantMap>" not in _]  # 不支持的类型转换
         bad = ("long *", "qintptr *")[forQt5]
         ls = [_ for _ in ls if bad not in _]  # 这个是Qt5的条件编译，Qt6的话要删掉另一条
-        if filename == "ElaMenuBar":
-            # 这个函数tm的没实现。
-            # QAction* ElaMenuBar::addElaIconAction(ElaIconType::IconName icon, const QString& text, const QKeySequence& shortcut);
-            ls = [_ for _ in ls if "QKeySequence" not in _]
+        
         final_output = "\n".join(ls)
 
         with open(output_sip_file, "w", encoding="utf-8") as f:

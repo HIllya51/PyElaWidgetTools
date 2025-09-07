@@ -36,7 +36,7 @@ def specialfuns(const=True):
             &amp;cppRes);
 
         PyObject* pyFooterKey = Shiboken::Conversions::copyToPython(
-            SbkPySide6_QtCoreTypes[SBK_QSTRING_IDX],
+            Shiboken::Module::get(SbkPySide6_QtCoreTypeStructs[SBK_QSTRING_IDX]),
             &amp;footerKey);
 
         return Py_BuildValue("(NN)", pyRes, pyFooterKey);
@@ -56,7 +56,7 @@ def specialfuns(const=True):
             &amp;cppRes);
 
         PyObject* pyFooterKey = Shiboken::Conversions::copyToPython(
-            SbkPySide6_QtCoreTypes[SBK_QSTRING_IDX],
+            Shiboken::Module::get(SbkPySide6_QtCoreTypeStructs[SBK_QSTRING_IDX]),
             &amp;footerKey);
 
         return Py_BuildValue("(NN)", pyRes, pyFooterKey);
@@ -76,7 +76,7 @@ def specialfuns(const=True):
             &amp;cppRes);
 
         PyObject* pyFooterKey = Shiboken::Conversions::copyToPython(
-            SbkPySide6_QtCoreTypes[SBK_QSTRING_IDX],
+            Shiboken::Module::get(SbkPySide6_QtCoreTypeStructs[SBK_QSTRING_IDX]),
             &amp;footerKey);
 
         return Py_BuildValue("(NN)", pyRes, pyFooterKey);
@@ -96,7 +96,7 @@ def specialfuns(const=True):
             &amp;cppRes);
 
         PyObject* pyFooterKey = Shiboken::Conversions::copyToPython(
-            SbkPySide6_QtCoreTypes[SBK_QSTRING_IDX],
+            Shiboken::Module::get(SbkPySide6_QtCoreTypeStructs[SBK_QSTRING_IDX]),
             &amp;footerKey);
 
         return Py_BuildValue("(NN)", pyRes, pyFooterKey);

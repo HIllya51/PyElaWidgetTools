@@ -1,16 +1,6 @@
 import re, sys
 from pathlib import Path
-from typing import List, Dict, Tuple, Optional, Set
 import os
-from pathlib import Path
-from typing import (
-    List,
-    Dict,
-    Tuple,
-    Optional,
-    Set,
-    Any as TypingAny,
-)  # Renamed Any to TypingAny to avoid clash
 
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 # --- Type Mapping (C++ to Python) ---
@@ -414,6 +404,6 @@ if __name__ == "__main__":
         )
     ) + content.replace(".None", ".None_")
 
-    content=content.replace(' TabPosition', ' QTabWidget.TabPosition')
+    content = content.replace(" TabPosition", " QTabWidget.TabPosition")
     with open("ElaWidgetTools.pyi", "w", encoding="utf8") as ff:
         ff.write(content)

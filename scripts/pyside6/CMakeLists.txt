@@ -26,12 +26,8 @@ qt_standard_project_setup()
 set(SHIBOKEN_OUTPUT_FOLDER "${CMAKE_CURRENT_BINARY_DIR}/OUTPUTDIR")
 
 # Do not use a GLOB here, to allow for usage as OUTPUT in custom command
-set(SHIBOKEN_GENERATED_SOURCES
-    "${SHIBOKEN_OUTPUT_FOLDER}/ElaWidgetTools/elawidgettools_module_wrapper.cpp"
-    "${SHIBOKEN_OUTPUT_FOLDER}/ElaWidgetTools/elawidgettools_python.h"
-    "${SHIBOKEN_OUTPUT_FOLDER}/ElaWidgetTools/elaapplicationtype_wrapper.cpp"
-    "${SHIBOKEN_OUTPUT_FOLDER}/ElaWidgetTools/elaapplicationtype_wrapper.h"
-)
+file(GLOB SHIBOKEN_GENERATED_SOURCES "${SHIBOKEN_OUTPUT_FOLDER}/ElaWidgetTools/*.cpp" "${SHIBOKEN_OUTPUT_FOLDER}/ElaWidgetTools/*.h")
+
 
 add_custom_command(
     COMMAND shiboken6 
@@ -42,18 +38,18 @@ add_custom_command(
         --typesystem-paths=${MY_SITE_PACKAGES_PATH}/PySide6/typesystems
         --enable-pyside-extensions
         --avoid-protected-hack
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/wrapper.hpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/bindings.xml
-    DEPENDS src/bindings.xml src/wrapper.hpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/wrapper.hpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/bindings.xml
+    DEPENDS bindings.xml wrapper.hpp
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
     OUTPUT ${SHIBOKEN_GENERATED_SOURCES}
-    COMMENT "Running shiboken6 generator for src/bindings.xml"
+    COMMENT "Running shiboken6 generator for bindings.xml"
 )
 
 add_library(
     ElaWidgetTools
     SHARED
-    src/wrapper.hpp
+    wrapper.hpp
     ${SHIBOKEN_GENERATED_SOURCES}
 )
 

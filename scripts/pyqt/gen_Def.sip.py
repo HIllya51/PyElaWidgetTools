@@ -1,4 +1,4 @@
-import sys, os, ctypes
+import os
 
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
@@ -6,7 +6,6 @@ with open(r"../../ElaWidgetTools/ElaWidgetTools\ElaDef.h", "r", encoding="utf8")
     content = ff.read()
 
 import re
-import sys
 
 
 def parse_def_h_to_sip(header_content):
@@ -65,7 +64,9 @@ def parse_def_h_to_sip(header_content):
             members_str = re.sub(r"#if\s+defined\([^)]+\)", "", members_str)
             members_str = re.sub(r"#endif", "", members_str)
 
-            sip_output.append(f"    enum {enum_name}")#(f"    enum {enum_name} /PyName={enum_name}/")
+            sip_output.append(
+                f"    enum {enum_name}"
+            )  # (f"    enum {enum_name} /PyName={enum_name}/")
             sip_output.append("    {")
 
             found_members = []
@@ -117,7 +118,9 @@ def parse_def_h_to_sip(header_content):
             # The current structure implies base_enum_full_name will be just the EnumName.
             base_enum_name_simple = base_enum_full_name.split("::")[-1]
 
-            sip_output.append(f"    typedef QFlags<{class_name}::{base_enum_name_simple}> {flags_name};")
+            sip_output.append(
+                f"    typedef QFlags<{class_name}::{base_enum_name_simple}> {flags_name};"
+            )
             sip_output.append("")  # Newline
 
         sip_output.append(f"}}; // namespace {class_name}")
@@ -136,5 +139,5 @@ def parse_def_h_to_sip(header_content):
 
 sip = parse_def_h_to_sip(content)
 with open("sip/ElaDef.sip", "w", encoding="utf8") as ff:
-    ff.write('''%Import QtCore/QtCoremod.sip\n''')
+    ff.write("""%Import QtCore/QtCoremod.sip\n""")
     ff.write(sip)

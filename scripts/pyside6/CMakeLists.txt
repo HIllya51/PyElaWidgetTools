@@ -43,7 +43,7 @@ add_custom_command(
         ${CMAKE_CURRENT_SOURCE_DIR}/bindings.xml
     DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/bindings.xml ${CMAKE_CURRENT_SOURCE_DIR}/wrapper.hpp
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-    OUTPUT ${SHIBOKEN_GENERATED_SOURCES}
+    OUTPUT ${SHIBOKEN_OUTPUT_FOLDER}/ElaWidgetTools # ${SHIBOKEN_GENERATED_SOURCES}
     COMMENT "Running shiboken6 generator for bindings.xml"
 )
 

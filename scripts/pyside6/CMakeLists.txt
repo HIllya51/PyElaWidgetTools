@@ -28,6 +28,7 @@ set(SHIBOKEN_OUTPUT_FOLDER "${CMAKE_CURRENT_BINARY_DIR}/OUTPUTDIR")
 # Do not use a GLOB here, to allow for usage as OUTPUT in custom command
 file(GLOB SHIBOKEN_GENERATED_SOURCES "${SHIBOKEN_OUTPUT_FOLDER}/ElaWidgetTools/*.cpp" "${SHIBOKEN_OUTPUT_FOLDER}/ElaWidgetTools/*.h")
 
+message("${SHIBOKEN_GENERATED_SOURCES}")
 
 add_custom_command(
     COMMAND shiboken6 

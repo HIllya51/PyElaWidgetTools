@@ -37,7 +37,7 @@ def specialfuns(const=True):
 
         PyObject* pyFooterKey = Shiboken::Conversions::copyToPython(
             SbkPySide6_QtCoreTypes[SBK_QSTRING_IDX],
-            &amp;footerKey;);
+            &amp;footerKey);
 
         return Py_BuildValue("(NN)", pyRes, pyFooterKey);
     </inject-code>
@@ -57,7 +57,7 @@ def specialfuns(const=True):
 
         PyObject* pyFooterKey = Shiboken::Conversions::copyToPython(
             SbkPySide6_QtCoreTypes[SBK_QSTRING_IDX],
-            &amp;footerKey;);
+            &amp;footerKey);
 
         return Py_BuildValue("(NN)", pyRes, pyFooterKey);
     </inject-code>
@@ -77,7 +77,7 @@ def specialfuns(const=True):
 
         PyObject* pyFooterKey = Shiboken::Conversions::copyToPython(
             SbkPySide6_QtCoreTypes[SBK_QSTRING_IDX],
-            &amp;footerKey;);
+            &amp;footerKey);
 
         return Py_BuildValue("(NN)", pyRes, pyFooterKey);
     </inject-code>
@@ -97,7 +97,7 @@ def specialfuns(const=True):
 
         PyObject* pyFooterKey = Shiboken::Conversions::copyToPython(
             SbkPySide6_QtCoreTypes[SBK_QSTRING_IDX],
-            &amp;footerKey;);
+            &amp;footerKey);
 
         return Py_BuildValue("(NN)", pyRes, pyFooterKey);
     </inject-code>

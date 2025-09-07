@@ -2,7 +2,7 @@ import sys, os, ctypes
 
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
-with open(r"../ElaWidgetTools/ElaWidgetTools\ElaDef.h", "r", encoding="utf8") as ff:
+with open(r"../../ElaWidgetTools/ElaWidgetTools\ElaDef.h", "r", encoding="utf8") as ff:
     content = ff.read()
 
 import re

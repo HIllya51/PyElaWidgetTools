@@ -89,22 +89,10 @@ if binding.lower().startswith("pyqt"):
     os.mkdir(rf"wheel\{dirname}")
     shutil.copy(r"objects\ElaWidgetTools.pyd", rf"wheel\{dirname}")
     shutil.copy(r"objects\ElaWidgetTools.pyi", rf"wheel\{dirname}")
-    shutil.copy(r"wheel\__init__.py", rf"wheel\{dirname}")
-
-    os.chdir("wheel")
-
-    print(sys.executable)
-    subprocess.run(f"{pyPathEx} -m pip install setuptools wheel")
-    subprocess.run(
-        f"{pyPathEx} setup.py bdist_wheel {('64','32')[arch == 'x86']} {binding}"
-    )
-
-    os.chdir("..")
-
-    shutil.copytree("wheel/dist", "objects/wheel")
-
-    for f in os.listdir("objects/wheel"):
-        shutil.move("objects/wheel/" + f, "objects/wheel/" + f.lower())
+    with open(r"wheel\__init__.py", "r") as ff:
+        init = ff.read()
+    with open(rf"wheel\{dirname}\__init__.py", "r") as ff:
+        ff.write(f"from {binding} import QtCore\n" + init)
 
 elif binding.lower().startswith("pyside"):
     os.chdir("pyside6")
@@ -123,18 +111,20 @@ elif binding.lower().startswith("pyside"):
     dirname = f"PySide6ElaWidgetTools"
     os.mkdir(rf"wheel\{dirname}")
     shutil.copy(r"objects\ElaWidgetTools.pyd", rf"wheel\{dirname}")
-    shutil.copy(r"wheel\__init__.py", rf"wheel\{dirname}")
-    
-    os.chdir("wheel")
-    subprocess.run(f"{pyPathEx} -m pip install setuptools wheel")
-    subprocess.run(
-        f"{pyPathEx} setup.py bdist_wheel {('64','32')[arch == 'x86']} {binding}"
-    )
+    with open(r"wheel\__init__.py", "r") as ff:
+        init = ff.read()
+    with open(rf"wheel\{dirname}\__init__.py", "r") as ff:
+        ff.write("from PySide6 import QtCore, QtWidgets, QtGui\n" + init)
 
+#
+os.chdir("wheel")
+subprocess.run(f"{pyPathEx} -m pip install setuptools wheel")
+subprocess.run(
+    f"{pyPathEx} setup.py bdist_wheel {('64','32')[arch == 'x86']} {binding}"
+)
+os.chdir("..")
 
-    os.chdir("..")
+shutil.copytree("wheel/dist", "objects/wheel")
 
-    shutil.copytree("wheel/dist", "objects/wheel")
-
-    for f in os.listdir("objects/wheel"):
-        shutil.move("objects/wheel/" + f, "objects/wheel/" + f.lower())
+for f in os.listdir("objects/wheel"):
+    shutil.move("objects/wheel/" + f, "objects/wheel/" + f.lower())

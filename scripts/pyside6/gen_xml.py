@@ -32,7 +32,7 @@ def specialfuns(const=True):
             %CPPSELF.addFooterNode(%1, footerKey, %3, %4);
 
         PyObject* pyRes = Shiboken::Conversions::copyToPython(
-            SbkElaNavigationTypeTypes[SBK_ELANAVIGATIONTYPE_NODEOPERATERETURNTYPE_IDX],
+            SbkElaWidgetToolsTypeStructs[SBK_ELANAVIGATIONTYPE_NODEOPERATERETURNTYPE_IDX],
             &amp;cppRes);
 
         PyObject* pyFooterKey = Shiboken::Conversions::copyToPython(
@@ -52,7 +52,7 @@ def specialfuns(const=True):
             %CPPSELF.addFooterNode(%1, %2, footerKey, %4, %5);
 
         PyObject* pyRes = Shiboken::Conversions::copyToPython(
-            SbkElaNavigationTypeTypes[SBK_ELANAVIGATIONTYPE_NODEOPERATERETURNTYPE_IDX],
+            SbkElaWidgetToolsTypeStructs[SBK_ELANAVIGATIONTYPE_NODEOPERATERETURNTYPE_IDX],
             &amp;cppRes);
 
         PyObject* pyFooterKey = Shiboken::Conversions::copyToPython(
@@ -72,7 +72,7 @@ def specialfuns(const=True):
             %CPPSELF.addExpanderNode(%1, footerKey, %3);
 
         PyObject* pyRes = Shiboken::Conversions::copyToPython(
-            SbkElaNavigationTypeTypes[SBK_ELANAVIGATIONTYPE_NODEOPERATERETURNTYPE_IDX],
+            SbkElaWidgetToolsTypeStructs[SBK_ELANAVIGATIONTYPE_NODEOPERATERETURNTYPE_IDX],
             &amp;cppRes);
 
         PyObject* pyFooterKey = Shiboken::Conversions::copyToPython(
@@ -92,7 +92,7 @@ def specialfuns(const=True):
             %CPPSELF.addExpanderNode(%1, footerKey, %3, %4);
 
         PyObject* pyRes = Shiboken::Conversions::copyToPython(
-            SbkElaNavigationTypeTypes[SBK_ELANAVIGATIONTYPE_NODEOPERATERETURNTYPE_IDX],
+            SbkElaWidgetToolsTypeStructs[SBK_ELANAVIGATIONTYPE_NODEOPERATERETURNTYPE_IDX],
             &amp;cppRes);
 
         PyObject* pyFooterKey = Shiboken::Conversions::copyToPython(

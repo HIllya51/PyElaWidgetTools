@@ -1,5 +1,17 @@
-import os
+import os, subprocess, sys
 
+print(sys.argv)
+if len(sys.argv) > 1:
+    ELA_INCLUDE_PATH = sys.argv[1]
+    MY_QT_INSTALL = sys.argv[2]
+    MY_PYTHON_INSTALL_PATH = sys.argv[3]
+else:
+    ELA_INCLUDE_PATH = (
+        "C:/Users/11737/Documents/GitHub/PyElaWidgetTools/ElaWidgetTools/ElaWidgetTools"
+    )
+    MY_QT_INSTALL = "c:/tmp/6.8.3/msvc2022_64"
+    MY_PYTHON_INSTALL_PATH = "C:/Users/11737/AppData/Local/Programs/Python/Python312"
+MY_SITE_PACKAGES_PATH = MY_PYTHON_INSTALL_PATH + "/Lib/site-packages"
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 eladir = "../../ElaWidgetTools/ElaWidgetTools"
@@ -136,3 +148,19 @@ wrapperbase = """
 H_internal = """ #include <ElaDef.h> """
 with open("wrapper.hpp", "w", encoding="utf8") as ff:
     ff.write(wrapperbase.format(internal=H_internal + "\n" + h))
+
+
+os.system(
+    f"""shiboken6
+        --generator-set=shiboken
+        --output-directory=OUTPUTDIR
+        -I{ELA_INCLUDE_PATH}
+        -I{MY_QT_INSTALL}/include -I{MY_QT_INSTALL}/include/QtCore -I{MY_QT_INSTALL}/include/QtGui -I{MY_QT_INSTALL}/include/QtWidgets
+        --typesystem-paths={MY_SITE_PACKAGES_PATH}/PySide6/typesystems
+        --enable-pyside-extensions
+        --avoid-protected-hack
+        wrapper.hpp
+        bindings.xml""".replace(
+        "\n", " "
+    )
+)

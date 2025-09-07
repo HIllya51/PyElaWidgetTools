@@ -5,3 +5,4 @@ scripts/pyside6/build
 scripts/pyqt/sip
 scripts/pyside6/bindings.xml
 scripts/pyside6/wrapper.hpp
+scripts/pyside6/OUTPUTDIR

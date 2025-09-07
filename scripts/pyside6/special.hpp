@@ -1,6 +1,8 @@
 static const char msgInvalidParameterAdd[] =
     "Invalid parameter None passed to addLayoutOwnership().";
 
+void addLayoutOwnership(QLayout *layout, QLayoutItem *item);
+
 #ifndef _RETRIEVEOBJECTNAME_
 #define _RETRIEVEOBJECTNAME_ // Guard for jumbo builds
 static QByteArray retrieveObjectName(PyObject *obj)

@@ -53,6 +53,7 @@ add_custom_command(
 )
 
 file(GLOB SHIBOKEN_GENERATED_SOURCES_1 "${SHIBOKEN_OUTPUT_FOLDER}/ElaWidgetTools/*.cpp" "${SHIBOKEN_OUTPUT_FOLDER}/ElaWidgetTools/*.h")
+message("SHIBOKEN_GENERATED_SOURCES_1 ${SHIBOKEN_GENERATED_SOURCES_1}")
 
 add_library(
     ElaWidgetTools

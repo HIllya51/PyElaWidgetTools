@@ -1,4 +1,4 @@
-import os, subprocess, sys
+import os, re, sys
 
 print(sys.argv)
 if len(sys.argv) > 1:
@@ -16,8 +16,13 @@ os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 eladir = "../../ElaWidgetTools/ElaWidgetTools"
 
+with open(eladir + "/ElaProperty.h", "r", encoding="utf8") as ff:
+    pro = ff.read()
 
-import re
+pro = re.sub(r"Q_SIGNAL(.*?)\\", r"signals:\1public:\\", pro)
+
+with open(eladir + "/ElaProperty.h", "w", encoding="utf8") as ff:
+    ff.write(pro)
 
 
 def specialfuns(const=True):
@@ -107,31 +112,9 @@ def specialfuns(const=True):
     return ___
 
 
-def findsignals(header_content):
-    # Extract class name and base class
-    class_match = re.search(
-        r"class\s+(ELA_EXPORT\s+)?(\w+)\s*:\s*public\s+(\w+)", header_content
-    )
-    if not class_match:
-        return
-
-    # --- Properties ---
-    # Q_PROPERTY_CREATE_Q_H(type, Name)
-    # Assumes getter: Name() or isName() for bool, Setter: setName(type)
-    prop_pattern = re.compile(r"Q_PROPERTY_CREATE_Q_H\((.*?),\s*(\w+)\)")
-    signals = []
-    for match in prop_pattern.finditer(header_content):
-
-        prop_name = match.group(2)
-
-        signals.append(f"p{prop_name}Changed")
-    return signals
-
-
 def cast_h_to_sip(filename):
     with open(filename, "r", encoding="utf-8") as f:
         content = f.read()
-    signals = findsignals(content)
     _ = re.findall(r"class ELA_EXPORT ([\w]*)", content)
     ___ = ""
     # 目前看起来，只有第一个类里面有signal，所以暂时懒得做更复杂的处理了。

@@ -11,28 +11,32 @@ static QByteArray retrieveObjectName(PyObject *obj)
 #endif
 inline void addLayoutOwnership(QLayout *layout, QWidget *widget)
 {
-    if (layout == nullptr || widget == nullptr) {
+    if (layout == nullptr || widget == nullptr)
+    {
         PyErr_SetString(PyExc_RuntimeError, msgInvalidParameterAdd);
         return;
     }
 
-    //transfer ownership to parent widget
+    // transfer ownership to parent widget
     QWidget *lw = layout->parentWidget();
     QWidget *pw = widget->parentWidget();
 
-   Shiboken::AutoDecRef pyChild(Shiboken::Conversions::pointerToPython(Shiboken::Module::get(SbkPySide6_QtWidgetsTypeStructs[SBK_QWidget_IDX]), widget));
+    Shiboken::AutoDecRef pyChild(Shiboken::Conversions::pointerToPython(Shiboken::Module::get(SbkPySide6_QtWidgetsTypeStructs[SBK_QWidget_IDX]), widget));
 
-    //Transfer parent to layout widget
+    // Transfer parent to layout widget
     if (pw && lw && pw != lw)
         Shiboken::Object::setParent(nullptr, pyChild);
 
-    if (!lw && !pw) {
-        //keep the reference while the layout is orphan
+    if (!lw && !pw)
+    {
+        // keep the reference while the layout is orphan
         Shiboken::AutoDecRef pyParent(Shiboken::Conversions::pointerToPython(Shiboken::Module::get(SbkPySide6_QtWidgetsTypeStructs[SBK_QWidget_IDX]), layout));
         Shiboken::Object::keepReference(reinterpret_cast<SbkObject *>(pyParent.object()),
                                         retrieveObjectName(pyParent).constData(),
                                         pyChild, true);
-    } else {
+    }
+    else
+    {
         if (!lw)
             lw = pw;
         Shiboken::AutoDecRef pyParent(Shiboken::Conversions::pointerToPython(Shiboken::Module::get(SbkPySide6_QtWidgetsTypeStructs[SBK_QWidget_IDX]), lw));
@@ -40,17 +44,55 @@ inline void addLayoutOwnership(QLayout *layout, QWidget *widget)
     }
 }
 
-inline void addLayoutOwnership(QLayout *layout, QLayoutItem *item)
+inline void addLayoutOwnership(QLayout *layout, QLayout *other)
 {
-
-    if (layout == nullptr || item == nullptr) {
+    if (layout == nullptr || other == nullptr)
+    {
         PyErr_SetString(PyExc_RuntimeError, msgInvalidParameterAdd);
         return;
     }
 
-    if (QWidget *w = item->widget()) {
+    // transfer all children widgets from other to layout parent widget
+    QWidget *parent = layout->parentWidget();
+    if (!parent)
+    {
+        // keep the reference while the layout is orphan
+        Shiboken::AutoDecRef pyParent(Shiboken::Conversions::pointerToPython(Shiboken::Module::get(SbkPySide6_QtWidgetsTypeStructs[SBK_QLayout_IDX]), layout));
+        Shiboken::AutoDecRef pyChild(Shiboken::Conversions::pointerToPython(Shiboken::Module::get(SbkPySide6_QtWidgetsTypeStructs[SBK_QLayout_IDX]), other));
+        Shiboken::Object::keepReference(reinterpret_cast<SbkObject *>(pyParent.object()),
+                                        retrieveObjectName(pyParent).constData(),
+                                        pyChild, true);
+        return;
+    }
+
+    for (int i = 0, i_max = other->count(); i < i_max; ++i)
+    {
+        QLayoutItem *item = other->itemAt(i);
+        if (PyErr_Occurred() || !item)
+            return;
+        addLayoutOwnership(layout, item);
+    }
+
+    Shiboken::AutoDecRef pyParent(Shiboken::Conversions::pointerToPython(Shiboken::Module::get(SbkPySide6_QtWidgetsTypeStructs[SBK_QLayout_IDX]), layout));
+    Shiboken::AutoDecRef pyChild(Shiboken::Conversions::pointerToPython(Shiboken::Module::get(SbkPySide6_QtWidgetsTypeStructs[SBK_QLayout_IDX]), other));
+    Shiboken::Object::setParent(pyParent, pyChild);
+}
+
+inline void addLayoutOwnership(QLayout *layout, QLayoutItem *item)
+{
+
+    if (layout == nullptr || item == nullptr)
+    {
+        PyErr_SetString(PyExc_RuntimeError, msgInvalidParameterAdd);
+        return;
+    }
+
+    if (QWidget *w = item->widget())
+    {
         addLayoutOwnership(layout, w);
-    } else {
+    }
+    else
+    {
         if (QLayout *l = item->layout())
             addLayoutOwnership(layout, l);
     }

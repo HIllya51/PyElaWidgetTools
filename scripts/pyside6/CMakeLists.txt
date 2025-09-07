@@ -32,8 +32,6 @@ add_library(
     ElaWidgetTools SHARED
 )
 add_custom_command(
-    TARGET ElaWidgetTools      
-    PRE_BUILD
     COMMAND shiboken6 
         --generator-set=shiboken
         --output-directory=OUTPUTDIR
@@ -46,6 +44,7 @@ add_custom_command(
         ${CMAKE_CURRENT_SOURCE_DIR}/bindings.xml
     DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/bindings.xml ${CMAKE_CURRENT_SOURCE_DIR}/wrapper.hpp
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+    OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/wrapper.hpp ${CMAKE_CURRENT_SOURCE_DIR}/bindings.xml
     COMMENT "Running shiboken6 generator for bindings.xml"
 )
 

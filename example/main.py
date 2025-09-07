@@ -8,6 +8,11 @@ from PyQt5.QtWidgets import *
 from PyQt5ElaWidgetTools import *
 from mainwindow import *
 
+try:
+    QT_VERSION_STR
+except:
+    QT_VERSION_STR = "6.8.3"
+
 if QT_VERSION_STR < "6.0.0":
     QGuiApplication.setAttribute(Qt.ApplicationAttribute.AA_UseHighDpiPixmaps)
     if QT_VERSION_STR >= "5.14.0":

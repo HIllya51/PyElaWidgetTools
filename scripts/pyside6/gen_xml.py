@@ -20,6 +20,93 @@ eladir = "../../ElaWidgetTools/ElaWidgetTools"
 import re
 
 
+def specialfuns(const=True):
+    ___ = ""
+    ___ += r"""<modify-function signature="addFooterNode(QString,QString&amp;,int,ElaIconType::IconName)const">
+    <modify-argument index="2">
+        <remove-argument/>
+    </modify-argument>
+    <inject-code class="target" position="beginning">
+        QString footerKey;
+        ElaNavigationType::NodeOperateReturnType cppRes =
+            %CPPSELF.addFooterNode(%1, footerKey, %3, %4);
+
+        PyObject* pyRes = Shiboken::Conversions::copyToPython(
+            SbkElaNavigationTypeTypes[SBK_ELANAVIGATIONTYPE_NODEOPERATERETURNTYPE_IDX],
+            &amp;cppRes);
+
+        PyObject* pyFooterKey = Shiboken::Conversions::copyToPython(
+            SbkPySide6_QtCoreTypes[SBK_QSTRING_IDX],
+            &amp;footerKey;);
+
+        return Py_BuildValue("(NN)", pyRes, pyFooterKey);
+    </inject-code>
+</modify-function>"""
+    ___ += r"""<modify-function signature="addFooterNode(QString,QWidget*,QString&amp;,int,ElaIconType::IconName)const">
+    <modify-argument index="3">
+        <remove-argument/>
+    </modify-argument>
+    <inject-code class="target" position="beginning">
+        QString footerKey;
+        ElaNavigationType::NodeOperateReturnType cppRes =
+            %CPPSELF.addFooterNode(%1, %2, footerKey, %4, %5);
+
+        PyObject* pyRes = Shiboken::Conversions::copyToPython(
+            SbkElaNavigationTypeTypes[SBK_ELANAVIGATIONTYPE_NODEOPERATERETURNTYPE_IDX],
+            &amp;cppRes);
+
+        PyObject* pyFooterKey = Shiboken::Conversions::copyToPython(
+            SbkPySide6_QtCoreTypes[SBK_QSTRING_IDX],
+            &amp;footerKey;);
+
+        return Py_BuildValue("(NN)", pyRes, pyFooterKey);
+    </inject-code>
+</modify-function>"""
+    ___ += r"""<modify-function signature="addExpanderNode(QString,QString&amp;,ElaIconType::IconName)const">
+    <modify-argument index="2">
+        <remove-argument/>
+    </modify-argument>
+    <inject-code class="target" position="beginning">
+        QString footerKey;
+        ElaNavigationType::NodeOperateReturnType cppRes =
+            %CPPSELF.addExpanderNode(%1, footerKey, %3);
+
+        PyObject* pyRes = Shiboken::Conversions::copyToPython(
+            SbkElaNavigationTypeTypes[SBK_ELANAVIGATIONTYPE_NODEOPERATERETURNTYPE_IDX],
+            &amp;cppRes);
+
+        PyObject* pyFooterKey = Shiboken::Conversions::copyToPython(
+            SbkPySide6_QtCoreTypes[SBK_QSTRING_IDX],
+            &amp;footerKey;);
+
+        return Py_BuildValue("(NN)", pyRes, pyFooterKey);
+    </inject-code>
+</modify-function>"""
+    ___ += r"""<modify-function signature="addExpanderNode(QString,QString&amp;,QString,ElaIconType::IconName)const">
+    <modify-argument index="2">
+        <remove-argument/>
+    </modify-argument>
+    <inject-code class="target" position="beginning">
+        QString footerKey;
+        ElaNavigationType::NodeOperateReturnType cppRes =
+            %CPPSELF.addExpanderNode(%1, footerKey, %3, %4);
+
+        PyObject* pyRes = Shiboken::Conversions::copyToPython(
+            SbkElaNavigationTypeTypes[SBK_ELANAVIGATIONTYPE_NODEOPERATERETURNTYPE_IDX],
+            &amp;cppRes);
+
+        PyObject* pyFooterKey = Shiboken::Conversions::copyToPython(
+            SbkPySide6_QtCoreTypes[SBK_QSTRING_IDX],
+            &amp;footerKey;);
+
+        return Py_BuildValue("(NN)", pyRes, pyFooterKey);
+    </inject-code>
+</modify-function>"""
+    if not const:
+        ___ = ___.replace("const", "")
+    return ___
+
+
 def cast_h_to_sip(filename):
     with open(filename, "r", encoding="utf-8") as f:
         content = f.read()
@@ -28,7 +115,13 @@ def cast_h_to_sip(filename):
     for __ in _:
         # ElaFlowLayout::itemAt
         # ElaFlowLayout::addItem
-        ___ += f'<object-type name="{__}" />'
+        if "ElaNavigationBar" in filename or "ElaWindow" in filename:
+            ___ += f'<object-type name="{__}" >'
+            ___ += specialfuns("ElaWindow" in filename)
+            ___ += f"</object-type>"
+
+        else:
+            ___ += f'<object-type name="{__}" />'
     return ___
 
 

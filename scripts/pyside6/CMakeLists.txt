@@ -40,7 +40,7 @@ add_custom_command(
         --avoid-protected-hack
         ${CMAKE_CURRENT_SOURCE_DIR}/wrapper.hpp
         ${CMAKE_CURRENT_SOURCE_DIR}/bindings.xml
-    DEPENDS bindings.xml wrapper.hpp
+    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/bindings.xml ${CMAKE_CURRENT_SOURCE_DIR}/wrapper.hpp
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
     OUTPUT ${SHIBOKEN_GENERATED_SOURCES}
     COMMENT "Running shiboken6 generator for bindings.xml"

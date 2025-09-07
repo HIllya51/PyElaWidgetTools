@@ -91,11 +91,18 @@ if binding.lower().startswith("pyqt"):
     shutil.copy(r"objects\ElaWidgetTools.pyi", rf"wheel\{dirname}")
     with open(r"wheel\__init__.py", "r") as ff:
         init = ff.read()
-    with open(rf"wheel\{dirname}\__init__.py", "r") as ff:
+    with open(rf"wheel\{dirname}\__init__.py", "w") as ff:
         ff.write(f"from {binding} import QtCore\n" + init)
 
 elif binding.lower().startswith("pyside"):
     os.chdir("pyside6")
+
+    # 使用pyqt的东西来生成pyi，shiboken自带的谜之不管用
+    os.mkdir("sip")
+    subprocess.run(f"python gen_Def.sip.py")
+    subprocess.run(f'python gen_widgets.py {int(qtversion.startswith("5"))}')
+    subprocess.run(f'python gen_pyi_from_sip.py {int(qtversion.startswith("5"))}')
+    ###
 
     archA = ("win32", "x64")[arch == "x64"]
     subprocess.run(
@@ -108,12 +115,14 @@ elif binding.lower().startswith("pyside"):
     os.chdir("..")
     os.mkdir("objects")
     shutil.copy(r"pyside6\Release\ElaWidgetTools.pyd", "objects")
+    shutil.copy(r"pyside6\ElaWidgetTools.pyi", "objects")
     dirname = f"PySide6ElaWidgetTools"
     os.mkdir(rf"wheel\{dirname}")
     shutil.copy(r"objects\ElaWidgetTools.pyd", rf"wheel\{dirname}")
+    shutil.copy(r"objects\ElaWidgetTools.pyi", rf"wheel\{dirname}")
     with open(r"wheel\__init__.py", "r") as ff:
         init = ff.read()
-    with open(rf"wheel\{dirname}\__init__.py", "r") as ff:
+    with open(rf"wheel\{dirname}\__init__.py", "w") as ff:
         ff.write("from PySide6 import QtCore, QtWidgets, QtGui\n" + init)
 
 #

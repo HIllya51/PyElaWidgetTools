@@ -6,64 +6,6 @@ forQt5 = len(sys.argv) >= 2 and int(sys.argv[1])
 eladir = "../../ElaWidgetTools/ElaWidgetTools"
 
 
-# Helper function to convert C++ type to SIP/Python type hint
-def cpp_to_sip_type(cpp_type, is_return_type=False):
-    return cpp_type
-    cpp_type = cpp_type.strip()
-    # Basic Qt types
-    type_map = {
-        "bool": "bool",
-        "int": "int",
-        "double": "double",
-        "float": "float",
-        "QString": "const QString&",  # Common for input, QString for return
-        "QVariant": "const QVariant&",  # Common for input, QVariant for return
-        "QObject*": "QObject*",
-        "QWidget*": "QWidget*",
-        "QMainWindow*": "QMainWindow*",
-        "QMenu*": "QMenu*",
-        "QEvent*": "QEvent*",
-        "QPixmap": "const QPixmap&",  # Common for input, QPixmap for return
-        "QPoint": "const QPoint&",
-        "QSize": "const QSize&",
-        "QRect": "const QRect&",
-        "QUrl": "const QUrl&",
-        "QStringList": "const QStringList&",
-        # Add more as needed
-    }
-    if is_return_type:
-        type_map["QString"] = "QString"
-        type_map["QVariant"] = "QVariant"
-        type_map["QPixmap"] = "QPixmap"
-        type_map["QPoint"] = "QPoint"
-        type_map["QSize"] = "QSize"
-        type_map["QRect"] = "QRect"
-        type_map["QUrl"] = "QUrl"
-        type_map["QStringList"] = "QStringList"
-
-    # Pointers and references (simplified)
-    if cpp_type.endswith("*"):
-        base = cpp_type[:-1].strip()
-        if base in type_map:
-            return (
-                type_map[base] + "*"
-                if not type_map[base].endswith("*")
-                else type_map[base]
-            )
-        return cpp_type  # Keep as is if not in map (e.g. custom class pointer)
-    if cpp_type.endswith("&"):
-        base = cpp_type[:-1].strip()
-        if base in type_map:
-            return type_map.get(base, base) + "&"  # Use mapped or original + &
-        return cpp_type
-
-    # Scoped enums / types (like ElaNavigationType::NavigationDisplayMode)
-    if "::" in cpp_type:
-        return cpp_type  # SIP handles scoped enums directly
-
-    return type_map.get(cpp_type, cpp_type)
-
-
 def parse_parameters(param_str):
     params = []
     if not param_str.strip():
@@ -118,7 +60,7 @@ def parse_parameters(param_str):
             param_type = param_def.strip()  # Might be just the type for unnamed params
             param_name = f"arg{len(params) + 1}"  # Placeholder name
 
-        sip_param_type = cpp_to_sip_type(param_type)
+        sip_param_type = param_type
 
         # Heuristic for /TransferThisPointer/ for QWidget* parent
         transfer_this = (
@@ -326,7 +268,7 @@ def generate_sip_for_class_2(header_content, filename=""):
             params_str = match.group(4)
             const_kw = match.group(5) or ""
 
-            sip_return_type = cpp_to_sip_type(return_type_raw, is_return_type=True)
+            sip_return_type = return_type_raw
             parsed_params = parse_parameters(params_str)
 
             sip_lines.append(
@@ -392,7 +334,7 @@ def generate_sip_for_class__1(header_content, filename=""):
         prop_type_raw = match.group(1).strip()
         prop_name = match.group(2)
 
-        sip_prop_type = cpp_to_sip_type(prop_type_raw)
+        sip_prop_type = prop_type_raw
 
         # Determine getter/setter names based on convention
         getter_name = f"get{prop_name}"
@@ -404,10 +346,10 @@ def generate_sip_for_class__1(header_content, filename=""):
         # sip_lines.append(f"  %Property({sip_prop_type} {prop_name.lower()} READ {getter_name} WRITE {setter_name})\n")
         sip_lines.append(f"public: Q_SIGNAL void p{prop_name}Changed();")
         sip_lines.append(
-            f"  void {setter_name}({cpp_to_sip_type(prop_type_raw)} {prop_name});"
+            f"  void {setter_name}({(prop_type_raw)} {prop_name});"
         )  # Use input version of type
         sip_lines.append(
-            f"  {cpp_to_sip_type(prop_type_raw, is_return_type=True)} {getter_name}() const;"
+            f"  {(prop_type_raw)} {getter_name}() const;"
         )  # Use return version
 
     # --- Methods ---
@@ -530,7 +472,7 @@ def generate_sip_for_class__1(header_content, filename=""):
                     ):  # if its a public non-virtual accessor of a property
                         continue
 
-                sip_return_type = cpp_to_sip_type(return_type_raw, is_return_type=True)
+                sip_return_type = return_type_raw
                 parsed_params = parse_parameters(params_str)
                 PyName = ""
                 if 0:  # classmethods.get(method_name):
@@ -589,7 +531,7 @@ def cast_h_to_sip(filename):
         ls = [_ for _ in ls if "QList<QVariantMap>" not in _]  # 不支持的类型转换
         bad = ("long *", "qintptr *")[forQt5]
         ls = [_ for _ in ls if bad not in _]  # 这个是Qt5的条件编译，Qt6的话要删掉另一条
-        
+
         final_output = "\n".join(ls)
 
         with open(output_sip_file, "w", encoding="utf-8") as f:

@@ -49,7 +49,7 @@ add_custom_command(
 add_library(
     ElaWidgetTools
     SHARED
-    wrapper.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/wrapper.hpp
     ${SHIBOKEN_GENERATED_SOURCES}
 )
 

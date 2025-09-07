@@ -42,7 +42,7 @@ add_library(
 target_include_directories(
     ElaWidgetTools
     PRIVATE
-    "src"
+    "${CMAKE_CURRENT_SOURCE_DIR}"
     "${ELA_INCLUDE_PATH}"
     "${MY_PYTHON_INSTALL_PATH}/include"
     "${MY_SITE_PACKAGES_PATH}/PySide6/include"

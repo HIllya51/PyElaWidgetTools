@@ -26,7 +26,8 @@ def cast_h_to_sip(filename):
     _ = re.findall(r"class ELA_EXPORT ([\w]*)", content)
     ___ = ""
     for __ in _:
-
+        # ElaFlowLayout::itemAt
+        # ElaFlowLayout::addItem
         ___ += f'<object-type name="{__}" />'
     return ___
 
@@ -145,7 +146,7 @@ wrapperbase = """
 #endif
 """
 
-H_internal = """ #include <ElaDef.h> """
+H_internal = """#include <ElaDef.h>"""
 with open("wrapper.hpp", "w", encoding="utf8") as ff:
     ff.write(wrapperbase.format(internal=H_internal + "\n" + h))
 
@@ -164,3 +165,8 @@ os.system(
         "\n", " "
     )
 )
+
+with open(r"OUTPUTDIR\ElaWidgetTools\elaflowlayout_wrapper.h", "r") as ff:
+    __ = ff.read()
+with open(r"OUTPUTDIR\ElaWidgetTools\elaflowlayout_wrapper.h", "w") as ff:
+    ff.write(__ + '\n#include"special.hpp"')

@@ -105,13 +105,19 @@ elif binding.lower().startswith("pyside"):
     pyipath = os.getcwd()
     __parsefile(
         "ElaWidgetTools.pyi",
-        lambda c: c.replace("PyQt6", "PySide6").replace("pyqtSignal", "Signal"),
+        lambda c: c.replace("PyQt6", "PySide6")
+        .replace("pyqtSignal", "Signal")
+        .replace(
+            "addPageNodeKeyPoints", "addPageNode"
+        ),  # SIP没办法处理这4个重载，但SHIBOKEN可以，因此没有这个重命名
     )
     ###
     os.chdir(cwd)
     os.chdir("pyside6")
 
-    subprocess.run(f'python gen_xml.py {os.path.abspath("../../ElaWidgetTools/ElaWidgetTools").replace("\\", "/")} D:/a/PyElaWidgetTools/Qt/{qtversion}/{qtarchdir} {pyDir.replace("\\", "/")}')
+    subprocess.run(
+        f'python gen_xml.py {os.path.abspath("../../ElaWidgetTools/ElaWidgetTools").replace("\\", "/")} D:/a/PyElaWidgetTools/Qt/{qtversion}/{qtarchdir} {pyDir.replace("\\", "/")}'
+    )
 
     archA = ("win32", "x64")[arch == "x64"]
     subprocess.run(

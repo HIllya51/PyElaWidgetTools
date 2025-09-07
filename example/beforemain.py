@@ -1,6 +1,7 @@
-import sys, os
+import re, os
 
 asQt5 = True
+asSide6 = False
 
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
@@ -13,17 +14,24 @@ for _d, _, _fs in os.walk("."):
                 s = ff.read()
 
             with open(_d + "/" + _f, "w", encoding="utf8") as ff:
-                if asQt5:
-                    ff.write(
-                        s.replace("PyQt6", "PyQt5").replace(
+
+                if asSide6:
+                    s = re.sub("PyQt[56]", "PySide6", s)
+                    s = re.sub("PyQt[56]ElaWidgetTools", "PySide6ElaWidgetTools", s)
+                    s = re.sub("addPageNodeKeyPoints", "addPageNode", s)  # 不可逆
+                else:
+                    s = re.sub("PySide6", "PyQt5", s)
+                    s = re.sub("PySide6ElaWidgetTools", "PyQt5ElaWidgetTools", s)
+                    if asQt5:
+                        s = s.replace("PyQt6", "PyQt5").replace(
                             "PyQt6ElaWidgetTools", "PyQt5ElaWidgetTools"
                         )
-                    )
-                else:
-                    ff.write(
-                        s.replace("PyQt5", "PyQt6").replace(
+                    else:
+                        s = s.replace("PyQt5", "PyQt6").replace(
                             "PyQt5ElaWidgetTools", "PyQt6ElaWidgetTools"
                         )
-                    )
+
+                ff.write(s)
+
 
 from main import *

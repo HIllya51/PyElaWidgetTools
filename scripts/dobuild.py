@@ -25,19 +25,18 @@ else:
     subprocess.run(f"{pyPath} -m pip install pyqt5==5.15.9 PyQt-builder==1.15 sip==6.7")
 
 # 编译ela
-subprocess.run("git clone https://github.com/Liniyous/ElaWidgetTools")
-with open("ElaWidgetTools/CMakeLists.txt", "r", encoding="utf8") as ff:
+with open("../ElaWidgetTools/CMakeLists.txt", "r", encoding="utf8") as ff:
     cml = ff.read()
-with open("ElaWidgetTools/CMakeLists.txt", "w", encoding="utf8") as ff:
+with open("../ElaWidgetTools/CMakeLists.txt", "w", encoding="utf8") as ff:
     ff.write(
         cml.replace(
             "add_subdirectory(ElaWidgetTools)",
             'option(ELAWIDGETTOOLS_BUILD_STATIC_LIB "Build static library." ON)\nadd_subdirectory(ElaWidgetTools)',
         ).replace("add_subdirectory(ElaWidgetToolsExample)", "")
     )
-with open(r"ElaWidgetTools\ElaWidgetTools\ElaProperty.h", "r", encoding="utf8") as ff:
+with open(r"..\ElaWidgetTools\ElaWidgetTools\ElaProperty.h", "r", encoding="utf8") as ff:
     cml = ff.read()
-with open(r"ElaWidgetTools\ElaWidgetTools\ElaProperty.h", "w", encoding="utf8") as ff:
+with open(r"..\ElaWidgetTools\ElaWidgetTools\ElaProperty.h", "w", encoding="utf8") as ff:
     ff.write(
         cml.replace(
             "Q_DECL_EXPORT",
@@ -47,7 +46,7 @@ with open(r"ElaWidgetTools\ElaWidgetTools\ElaProperty.h", "w", encoding="utf8") 
 
 archA = ("win32", "x64")[arch == "x64"]
 subprocess.run(
-    f'cmake ./ElaWidgetTools/CMakeLists.txt -G "Visual Studio 17 2022" -A {archA} -T host={arch}'
+    f'cmake ../ElaWidgetTools/CMakeLists.txt -G "Visual Studio 17 2022" -A {archA} -T host={arch}'
 )
 subprocess.run(f"cmake --build ./ --config Release --target ALL_BUILD -j {os.cpu_count()}")
 

@@ -3,7 +3,7 @@ import sys, os, re
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 forQt5 = len(sys.argv) >= 2 and int(sys.argv[1])
 
-eladir = "ElaWidgetTools/ElaWidgetTools"
+eladir = "../ElaWidgetTools/ElaWidgetTools"
 
 
 # Helper function to convert C++ type to SIP/Python type hint

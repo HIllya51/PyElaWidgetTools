@@ -22,7 +22,7 @@ elif bindingfor == "PySide6":
 
 setup(
     name=f"{bindingfor}-ElaWidgetTools",
-    version="0.0.5",
+    version="0.0.6",
     author="HIllya51",
     license="MIT",
     install_requires=[f"""{bindingfor}"""],

@@ -18,7 +18,7 @@ eladir = "../../ElaWidgetTools/ElaWidgetTools"
 
 with open(eladir + "/ElaProperty.h", "r", encoding="utf8") as ff:
     pro = ff.read()
-
+# 如果不这样改，信号会被识别成方法。
 pro = re.sub(r"Q_SIGNAL(.*?)\\", r"Q_SIGNALS:Q_SIGNAL \1\\\npublic:\\", pro)
 
 with open(eladir + "/ElaProperty.h", "w", encoding="utf8") as ff:

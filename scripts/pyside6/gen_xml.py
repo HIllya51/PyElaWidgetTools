@@ -16,13 +16,13 @@ os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 eladir = "../../ElaWidgetTools/ElaWidgetTools"
 
-# with open(eladir + "/ElaProperty.h", "r", encoding="utf8") as ff:
-#     pro = ff.read()
+with open(eladir + "/ElaProperty.h", "r", encoding="utf8") as ff:
+    pro = ff.read()
 
-# pro = re.sub(r"Q_SIGNAL(.*?)\\", r"signals:\1public:\\", pro)
+pro = re.sub(r"Q_SIGNAL(.*?)\\", r"Q_SIGNALS:Q_SIGNAL \1\\\npublic:\\", pro)
 
-# with open(eladir + "/ElaProperty.h", "w", encoding="utf8") as ff:
-#     ff.write(pro)
+with open(eladir + "/ElaProperty.h", "w", encoding="utf8") as ff:
+    ff.write(pro)
 
 
 def specialfuns(const=True):

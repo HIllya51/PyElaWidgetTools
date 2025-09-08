@@ -18,7 +18,6 @@ for _d, _, _fs in os.walk("."):
                 if asSide6:
                     s = re.sub("PyQt[56]", "PySide6", s)
                     s = re.sub("PyQt[56]ElaWidgetTools", "PySide6ElaWidgetTools", s)
-                    s = re.sub("addPageNodeKeyPoints", "addPageNode", s)  # 不可逆
                 else:
                     s = re.sub("PySide6", "PyQt5", s)
                     s = re.sub("PySide6ElaWidgetTools", "PyQt5ElaWidgetTools", s)

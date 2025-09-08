@@ -346,9 +346,11 @@ def generate_pyi(sip_content):
                     params_str, current_namespace_name
                 )
                 ret_type_py = sip_to_python_type(ret_type_sip, current_namespace_name)
-
+                _self = "self"
+                _self2 = "self,"
                 if "static" in ret_type_sip:
                     pyi_lines.append("    @staticmethod")
+                    _self = _self2 = ""
                 final_ret_type = ret_type_py
                 if out_param_types:
                     if ret_type_py == "None":  # void function with /Out/ params
@@ -363,11 +365,11 @@ def generate_pyi(sip_content):
                 param_list_str = ", ".join(py_params)
                 if param_list_str:
                     pyi_lines.append(
-                        f"{current_indent}def {method_name_py}(self, {param_list_str}) -> {final_ret_type}:"
+                        f"{current_indent}def {method_name_py}({_self2} {param_list_str}) -> {final_ret_type}:"
                     )
                 else:
                     pyi_lines.append(
-                        f"{current_indent}def {method_name_py}(self) -> {final_ret_type}:"
+                        f"{current_indent}def {method_name_py}({_self}) -> {final_ret_type}:"
                     )
                 pyi_lines.append(f"{current_indent}    ...")
                 continue

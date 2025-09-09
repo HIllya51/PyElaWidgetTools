@@ -24,7 +24,7 @@ pyPath = f"{pyDir}\\python.exe"
 subprocess.run(f"{pyPath} -m pip install --upgrade pip")
 if binding.lower().startswith("pyqt"):
     if qtversion.startswith("6"):
-        subprocess.run(f"{pyPath} -m pip install pyqt6 PyQt-builder sip")
+        subprocess.run(f"{pyPath} -m pip install pyqt6==6.6 PyQt-builder sip")
     else:
         subprocess.run(
             f"{pyPath} -m pip install pyqt5==5.15.9 PyQt-builder==1.15 sip==6.7"
@@ -85,15 +85,6 @@ if binding.lower().startswith("pyqt"):
     shutil.copy(r"pyqt\ElaWidgetTools.pyi", "objects")
     shutil.copytree(r"pyqt\sip", "objects/sip")
 
-    dirname = f"PyQt{qtversion[0]}ElaWidgetTools"
-    os.mkdir(rf"wheel\{dirname}")
-    shutil.copy(r"objects\ElaWidgetTools.pyd", rf"wheel\{dirname}")
-    shutil.copy(r"objects\ElaWidgetTools.pyi", rf"wheel\{dirname}")
-    with open(r"wheel\__init__.py", "r") as ff:
-        init = ff.read()
-    with open(rf"wheel\{dirname}\__init__.py", "w") as ff:
-        ff.write(f"from {binding} import QtCore\n" + init)
-
 elif binding.lower().startswith("pyside"):
     cwd = os.getcwd()
     # 使用pyqt的东西来生成pyi，shiboken自带的谜之不管用
@@ -126,14 +117,16 @@ elif binding.lower().startswith("pyside"):
     os.mkdir("objects")
     shutil.copy(r"pyside6\Release\ElaWidgetTools.pyd", "objects")
     shutil.copy(pyipath + r"\ElaWidgetTools.pyi", "objects")
-    dirname = f"PySide6ElaWidgetTools"
-    os.mkdir(rf"wheel\{dirname}")
-    shutil.copy(r"objects\ElaWidgetTools.pyd", rf"wheel\{dirname}")
-    shutil.copy(r"objects\ElaWidgetTools.pyi", rf"wheel\{dirname}")
-    with open(r"wheel\__init__.py", "r") as ff:
-        init = ff.read()
-    with open(rf"wheel\{dirname}\__init__.py", "w") as ff:
-        ff.write("from PySide6 import QtCore, QtWidgets, QtGui\n" + init)
+
+dirname = f"{binding}ElaWidgetTools"
+os.mkdir(rf"wheel\{dirname}")
+shutil.copy(r"objects\ElaWidgetTools.pyd", rf"wheel\{dirname}")
+shutil.copy(r"objects\ElaWidgetTools.pyi", rf"wheel\{dirname}")
+
+with open(r"wheel\__init__.py", "r") as ff:
+    init = ff.read()
+with open(rf"wheel\{dirname}\__init__.py", "w") as ff:
+    ff.write(f"from {binding} import QtCore, QtWidgets, QtGui\n" + init)
 
 #
 os.chdir("wheel")

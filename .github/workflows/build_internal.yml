@@ -24,7 +24,7 @@ jobs:
             arch: x64
             binding: PyQt5
           - qtarch: win64_msvc2019_64
-            version: 6.6.2
+            version: 6.4.3
             pythonversion: 3.12.10
             arch: x64
             binding: PyQt6

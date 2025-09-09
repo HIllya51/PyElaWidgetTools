@@ -235,8 +235,38 @@ xmlbase = """<?xml version="1.0"?>
 {internal}
 
 </typesystem>"""
+
+xmlall = xmlbase.format(internal=xmlinternal + xml)
+
+
+def maybeparse(xx: str):
+    with open(
+        f"{MY_SITE_PACKAGES_PATH}/PySide6/include/QtCore/pyside6_qtcore_python.h", "r"
+    ) as ff:
+        qtcore = ff.read()
+        if not ("SBK_QString_IDX" in qtcore):
+            xx = xx.replace("SBK_QLayoutItem_IDX", "SBK_QLAYOUTITEM_IDX")
+            xx = xx.replace("SBK_QLayout_IDX", "SBK_QLAYOUT_IDX")
+            xx = xx.replace("SBK_QString_IDX", "SBK_QSTRING_IDX")
+            xx = xx.replace("SBK_QWidget_IDX", "SBK_QWIDGET_IDX")
+            xx = xx.replace(
+                "SbkPySide6_QtWidgetsTypeStructs", "SbkPySide6_QtWidgetsTypes"
+            )
+            xx = xx.replace(
+                "SBK_ElaNavigationType_NodeOperateReturnType_IDX",
+                "SBK_ELANAVIGATIONTYPE_NODEOPERATERETURNTYPE_IDX",
+            )
+        return xx
+
+
 with open("bindings.xml", "w", encoding="utf8") as ff:
-    ff.write(xmlbase.format(internal=xmlinternal + xml))
+    ff.write(maybeparse(xmlall))
+
+with open("special.hpp", "r", encoding="utf8") as ff:
+    special = ff.read()
+
+with open("special.hpp", "w", encoding="utf8") as ff:
+    ff.write(maybeparse(special))
 
 
 wrapperbase = """
@@ -254,6 +284,7 @@ wrapperbase = """
 H_internal = """#include <ElaDef.h>"""
 with open("wrapper.hpp", "w", encoding="utf8") as ff:
     ff.write(wrapperbase.format(internal=H_internal + "\n" + h))
+
 
 sysinclude = ""
 if "msvc2019" in MY_QT_INSTALL:

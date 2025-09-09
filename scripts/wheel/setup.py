@@ -1,5 +1,5 @@
-from setuptools import setup, find_packages, Distribution, Command
-import sys, platform
+from setuptools import setup, find_packages, Distribution
+import sys
 
 bindingfor = sys.argv[-1]
 sys.argv.pop(-1)
@@ -14,15 +14,15 @@ class BinaryDistribution(Distribution):
 
 
 if bindingfor == "PyQt5":
-    req = "PyQt5"  # >=5.15
+    req = "PyQt5>=5.15"
 elif bindingfor == "PyQt6":
-    req = "PyQt6"  # >=6.7
+    req = "PyQt6>=6.6"
 elif bindingfor == "PySide6":
     req = "PySide6"
 
 setup(
     name=f"{bindingfor}-ElaWidgetTools",
-    version="0.0.8",
+    version="0.0.9",
     author="HIllya51",
     license="MIT",
     install_requires=[f"""{bindingfor}"""],

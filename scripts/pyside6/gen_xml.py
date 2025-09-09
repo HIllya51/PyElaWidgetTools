@@ -9,7 +9,7 @@ else:
     ELA_INCLUDE_PATH = (
         "C:/Users/11737/Documents/GitHub/PyElaWidgetTools/ElaWidgetTools/ElaWidgetTools"
     )
-    MY_QT_INSTALL = "c:/tmp/6.8.3/msvc2022_64"
+    MY_QT_INSTALL = "c:/tmp/6.6.2/msvc2019_64"
     MY_PYTHON_INSTALL_PATH = "C:/Users/11737/AppData/Local/Programs/Python/Python312"
 MY_SITE_PACKAGES_PATH = MY_PYTHON_INSTALL_PATH + "/Lib/site-packages"
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
@@ -19,10 +19,11 @@ eladir = "../../ElaWidgetTools/ElaWidgetTools"
 with open(eladir + "/ElaProperty.h", "r", encoding="utf8") as ff:
     pro = ff.read()
 # 如果不这样改，信号会被识别成方法。
-pro = re.sub(r"Q_SIGNAL(.*?)\\", r"Q_SIGNALS:Q_SIGNAL \1\\\npublic:\\", pro)
+if not ("Q_SIGNALS:Q_SIGNAL" in pro):
+    pro = re.sub(r"Q_SIGNAL(.*?)\\", r"Q_SIGNALS:Q_SIGNAL \1\\\npublic:\\", pro)
 
-with open(eladir + "/ElaProperty.h", "w", encoding="utf8") as ff:
-    ff.write(pro)
+    with open(eladir + "/ElaProperty.h", "w", encoding="utf8") as ff:
+        ff.write(pro)
 
 
 def specialfuns(const=True):
@@ -254,9 +255,23 @@ H_internal = """#include <ElaDef.h>"""
 with open("wrapper.hpp", "w", encoding="utf8") as ff:
     ff.write(wrapperbase.format(internal=H_internal + "\n" + h))
 
-
+sysinclude = ""
+if "msvc2019" in MY_QT_INSTALL:
+    # <=6.7必须使用msvc2019的头文件
+    vspath = "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC"
+    if not os.path.exists(vspath):
+        vspath = (
+            "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/Tools/MSVC"
+        )
+    print(os.listdir(vspath))
+    for _ in os.listdir(vspath):
+        if _.startswith("14.29"):
+            msvc2019 = _
+    sysinclude = vspath + "/" + msvc2019 + "/include"
+    print(sysinclude)
+    sysinclude = f'--system-include-paths="{sysinclude}"'
 os.system(
-    f"""shiboken6
+    f"""shiboken6 {sysinclude}
         --generator-set=shiboken
         --output-directory=OUTPUTDIR
         -I{ELA_INCLUDE_PATH}

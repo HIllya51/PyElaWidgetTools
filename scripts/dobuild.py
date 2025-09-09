@@ -131,8 +131,12 @@ with open(rf"wheel\{dirname}\__init__.py", "w") as ff:
 #
 os.chdir("wheel")
 subprocess.run(f"{pyPathEx} -m pip install setuptools wheel")
+
+req = ""
+if binding.lower().startswith("pyside"):
+    req = f"PySide6=={qtversion}"
 subprocess.run(
-    f"{pyPathEx} setup.py bdist_wheel {('64','32')[arch == 'x86']} {binding}"
+    f"{pyPathEx} setup.py bdist_wheel {req} {('64','32')[arch == 'x86']} {binding}"
 )
 os.chdir("..")
 

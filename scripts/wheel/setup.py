@@ -7,6 +7,12 @@ sys.argv.pop(-1)
 bit = sys.argv[-1]
 sys.argv.pop(-1)
 
+req = "PySide6"
+
+if sys.argv[-1].startswith("PySide6=="):
+    req = sys.argv[-1]
+    sys.argv.pop(-1)
+
 
 class BinaryDistribution(Distribution):
     def has_ext_modules(self):
@@ -18,7 +24,7 @@ if bindingfor == "PyQt5":
 elif bindingfor == "PyQt6":
     req = "PyQt6>=6.4"
 elif bindingfor == "PySide6":
-    req = "PySide6==6.6.2"
+    pass
 
 setup(
     name=f"{bindingfor}-ElaWidgetTools",

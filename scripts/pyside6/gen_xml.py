@@ -249,6 +249,7 @@ def maybeparse(xx: str):
             xx = xx.replace("SBK_QLayout_IDX", "SBK_QLAYOUT_IDX")
             xx = xx.replace("SBK_QString_IDX", "SBK_QSTRING_IDX")
             xx = xx.replace("SBK_QWidget_IDX", "SBK_QWIDGET_IDX")
+            xx = xx.replace("SbkElaWidgetToolsTypeStructs", "SbkElaWidgetToolsTypes")
             xx = xx.replace(
                 "SbkPySide6_QtWidgetsTypeStructs", "SbkPySide6_QtWidgetsTypes"
             )

@@ -18,7 +18,7 @@ if bindingfor == "PyQt5":
 elif bindingfor == "PyQt6":
     req = "PyQt6>=6.6"
 elif bindingfor == "PySide6":
-    req = "PySide6"
+    req = "PySide6==6.6.2"
 
 setup(
     name=f"{bindingfor}-ElaWidgetTools",

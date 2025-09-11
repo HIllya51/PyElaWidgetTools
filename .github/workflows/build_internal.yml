@@ -60,7 +60,7 @@ jobs:
         with:
           version: ${{matrix.version}}
           arch: ${{matrix.qtarch}}
-          host: windows
+          host: ${{matrix.qthost}}
           target: desktop
       
       - uses: actions/setup-python@v5

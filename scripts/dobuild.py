@@ -86,7 +86,7 @@ subprocess.run(
     shell=True,
 )
 subprocess.run(
-    f"cmake --build ./ --config Release --target ALL_BUILD -j {os.cpu_count()}",
+    f"cmake --build ./ --config Release -j {os.cpu_count()}",
     shell=True,
 )
 if binding.lower().startswith("pyqt"):
@@ -100,7 +100,14 @@ if binding.lower().startswith("pyqt"):
         f'python gen_pyi_from_sip.py {int(qtversion.startswith("5"))}', shell=True
     )
     subprocess.run(f"{pyPath} sip_code_fix.py", shell=True)
-
+    if sys.platform == "win32":
+        __parsefile(
+            "pyproject.toml",
+            lambda c: c.replace(
+                '[ "ElaWidgetTools" ]',
+                '[ "ElaWidgetTools","D3D11", "DXGI", "kernel32" ,"user32", "gdi32", "winspool" ,"comdlg32", "advapi32", "shell32", "ole32", "oleaut32", "uuid", "odbc32", "odbccp32"]',
+            ),
+        )
     subprocess.run(f"{sipbuild} --verbose --qmake {qmake}", shell=True)
     # for _dir, _, _fs in os.walk(r"."):
     #     for _f in _fs:
@@ -141,7 +148,7 @@ elif binding.lower().startswith("pyside"):
         shell=True,
     )
     subprocess.run(
-        f"cmake --build ./ --config Release --target ALL_BUILD -j {os.cpu_count()}",
+        f"cmake --build ./ --config Release -j {os.cpu_count()}",
         shell=True,
     )
 

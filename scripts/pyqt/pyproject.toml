@@ -22,7 +22,4 @@ qmake-QT = ["widgets"]
 include-dirs = ["../../ElaWidgetTools/ElaWidgetTools"]
 sip-file = "ElaWidgetTools.sip"
 library-dirs = [ "../ElaWidgetTools/Release" ]
-libraries = [
-    "ElaWidgetTools", 
-    "D3D11", "DXGI", "kernel32" ,"user32", "gdi32", "winspool" ,"comdlg32", "advapi32", "shell32", "ole32", "oleaut32", "uuid", "odbc32", "odbccp32"
-]
+libraries = [ "ElaWidgetTools" ]

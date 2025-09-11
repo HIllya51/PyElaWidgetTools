@@ -33,17 +33,17 @@ elif sys.platform == "linux":
     qmake = f"{Qtinstallpath}/bin/qmake"
 
 
-subprocess.run(f"-m pip install --upgrade pip", executable=pyPath)
+subprocess.run(f"{pyPath} -m pip install --upgrade pip", shell=True)
 if binding.lower().startswith("pyqt"):
     if qtversion.startswith("6"):
-        subprocess.run(f"{pyPath} -m pip install pyqt6==6.6 PyQt-builder sip")
+        subprocess.run(f"{pyPath} -m pip install pyqt6==6.6 PyQt-builder sip", shell=True)
     else:
         subprocess.run(
-            f"{pyPath} -m pip install pyqt5==5.15.9 PyQt-builder==1.15 sip==6.7"
+            f"{pyPath} -m pip install pyqt5==5.15.9 PyQt-builder==1.15 sip==6.7", shell=True
         )
 elif binding.lower().startswith("pyside"):
     subprocess.run(
-        f"{pyPath} -m pip install pyside6=={qtversion} shiboken6=={qtversion} shiboken6_generator=={qtversion}"
+        f"{pyPath} -m pip install pyside6=={qtversion} shiboken6=={qtversion} shiboken6_generator=={qtversion}", shell=True
     )
 
 
@@ -76,20 +76,20 @@ if sys.platform == "win32":
 else:
     flags = ""
 subprocess.run(
-    f"cmake -DELAWIDGETTOOLS_BUILD_STATIC_LIB=ON ../ElaWidgetTools/CMakeLists.txt {flags}"
+    f"cmake -DELAWIDGETTOOLS_BUILD_STATIC_LIB=ON ../ElaWidgetTools/CMakeLists.txt {flags}", shell=True
 )
 subprocess.run(
-    f"cmake --build ./ --config Release --target ALL_BUILD -j {os.cpu_count()}"
+    f"cmake --build ./ --config Release --target ALL_BUILD -j {os.cpu_count()}", shell=True
 )
 if binding.lower().startswith("pyqt"):
     os.chdir("pyqt")
     os.mkdir("sip")
-    subprocess.run(f"python gen_Def.sip.py")
-    subprocess.run(f'python gen_widgets.py {int(qtversion.startswith("5"))}')
-    subprocess.run(f'python gen_pyi_from_sip.py {int(qtversion.startswith("5"))}')
-    subprocess.run(f"{pyPath} sip_code_fix.py")
+    subprocess.run(f"python gen_Def.sip.py", shell=True)
+    subprocess.run(f'python gen_widgets.py {int(qtversion.startswith("5"))}', shell=True)
+    subprocess.run(f'python gen_pyi_from_sip.py {int(qtversion.startswith("5"))}', shell=True)
+    subprocess.run(f"{pyPath} sip_code_fix.py", shell=True)
 
-    subprocess.run(rf"{pyDir}/Scripts/sip-build --verbose --qmake {qmake}")
+    subprocess.run(rf"{pyDir}/Scripts/sip-build --verbose --qmake {qmake}", shell=True)
     # for _dir, _, _fs in os.walk(r"."):
     #     for _f in _fs:
     #         print(_dir, _f)
@@ -104,9 +104,9 @@ elif binding.lower().startswith("pyside"):
     # 使用pyqt的东西来生成pyi，shiboken自带的谜之不管用
     os.chdir("pyqt")
     os.mkdir("sip")
-    subprocess.run(f"python gen_Def.sip.py")
-    subprocess.run(f'python gen_widgets.py {int(qtversion.startswith("5"))}')
-    subprocess.run(f'python gen_pyi_from_sip.py {int(qtversion.startswith("5"))}')
+    subprocess.run(f"python gen_Def.sip.py", shell=True)
+    subprocess.run(f'python gen_widgets.py {int(qtversion.startswith("5"))}', shell=True)
+    subprocess.run(f'python gen_pyi_from_sip.py {int(qtversion.startswith("5"))}', shell=True)
     __parsefile(
         "ElaWidgetTools.pyi",
         lambda c: c.replace("PyQt6", "PySide6").replace("pyqtSignal", "Signal"),
@@ -116,14 +116,14 @@ elif binding.lower().startswith("pyside"):
     os.chdir("pyside6")
 
     subprocess.run(
-        f'python gen_xml.py {os.path.abspath("../../ElaWidgetTools/ElaWidgetTools").replace("\\", "/")} {Qtinstallpath} {pyDir}'
+        f'python gen_xml.py {os.path.abspath("../../ElaWidgetTools/ElaWidgetTools").replace("\\", "/")} {Qtinstallpath} {pyDir}', shell=True
     )
 
     subprocess.run(
-        f'cmake -DMY_QT_INSTALL={Qtinstallpath} -DMY_PYTHON_INSTALL_PATH={pyDir} -DELA_LIB_PATH={os.path.abspath("../ElaWidgetTools/Release/ElaWidgetTools.lib").replace("\\", "/")} -DELA_INCLUDE_PATH={os.path.abspath("../../ElaWidgetTools/ElaWidgetTools").replace("\\", "/")} ./CMakeLists.txt {flags}'
+        f'cmake -DMY_QT_INSTALL={Qtinstallpath} -DMY_PYTHON_INSTALL_PATH={pyDir} -DELA_LIB_PATH={os.path.abspath("../ElaWidgetTools/Release/ElaWidgetTools.lib").replace("\\", "/")} -DELA_INCLUDE_PATH={os.path.abspath("../../ElaWidgetTools/ElaWidgetTools").replace("\\", "/")} ./CMakeLists.txt {flags}', shell=True
     )
     subprocess.run(
-        f"cmake --build ./ --config Release --target ALL_BUILD -j {os.cpu_count()}"
+        f"cmake --build ./ --config Release --target ALL_BUILD -j {os.cpu_count()}", shell=True
     )
 
     os.chdir("..")
@@ -143,13 +143,13 @@ with open(f"wheel/{dirname}/__init__.py", "w") as ff:
 
 #
 os.chdir("wheel")
-subprocess.run(f"{pyPathEx} -m pip install setuptools wheel")
+subprocess.run(f"{pyPathEx} -m pip install setuptools wheel", shell=True)
 
 req = ""
 if binding.lower().startswith("pyside"):
     req = f"PySide6=={qtversion}"
 subprocess.run(
-    f"{pyPathEx} setup.py bdist_wheel {req} {('64','32')[arch == 'x86']} {binding}"
+    f"{pyPathEx} setup.py bdist_wheel {req} {('64','32')[arch == 'x86']} {binding}", shell=True
 )
 os.chdir("..")
 

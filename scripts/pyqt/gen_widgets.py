@@ -546,6 +546,8 @@ for f in os.listdir(eladir):
         continue
     if f.startswith("ElaSingleton"):
         continue
+    if f.startswith("ElaDxgiManager") and (sys.platform != "win32"):
+        continue
     if f.startswith("Ela") and f.endswith(".h"):
         cast_h_to_sip(f)
         allfiles.append(f"%Include {os.path.basename(f).split('.')[0]}.sip")

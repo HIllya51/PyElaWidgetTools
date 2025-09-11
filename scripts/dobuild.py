@@ -108,10 +108,10 @@ if binding.lower().startswith("pyqt"):
                 '[ "ElaWidgetTools","D3D11", "DXGI", "kernel32" ,"user32", "gdi32", "winspool" ,"comdlg32", "advapi32", "shell32", "ole32", "oleaut32", "uuid", "odbc32", "odbccp32"]',
             ),
         )
-    subprocess.run(f"{sipbuild} --verbose --qmake {qmake}", shell=True)
     for _dir, _, _fs in os.walk(r"."):
         for _f in _fs:
             print(_dir, _f)
+    subprocess.run(f"{sipbuild} --verbose --qmake {qmake}", shell=True)
     os.chdir("..")
     os.mkdir("objects")
     shutil.copy("pyqt/build/ElaWidgetTools/ElaWidgetTools.pyd", "objects")

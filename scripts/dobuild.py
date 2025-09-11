@@ -24,11 +24,13 @@ if sys.platform == "win32":
     pyDir = f"C:/hostedtoolcache/windows/Python/{pythonversion}/{arch}"
     pyPath = f"{pyDir}/python.exe"
     Qtinstallpath = f"D:/a/PyElaWidgetTools/Qt/{qtversion}/{qtarchdir}"
+    qmake = f"{Qtinstallpath}/bin/qmake.exe"
 elif sys.platform == "linux":
     pyPathEx = f"/opt/hostedtoolcache/Python/3.12.10/x64/bin/python"
     pyDir = f"/opt/hostedtoolcache/Python/{pythonversion}/{arch}/bin/python"
     pyPath = f"{pyDir}/python.exe"
     Qtinstallpath = f"/home/runner/work/PyElaWidgetTools/Qt/{qtversion}/{qtarchdir}"
+    qmake = f"{Qtinstallpath}/bin/qmake"
 
 subprocess.run(f"{pyPath} -m pip install --upgrade pip")
 if binding.lower().startswith("pyqt"):
@@ -85,10 +87,6 @@ if binding.lower().startswith("pyqt"):
     subprocess.run(f'python gen_widgets.py {int(qtversion.startswith("5"))}')
     subprocess.run(f'python gen_pyi_from_sip.py {int(qtversion.startswith("5"))}')
     subprocess.run(f"{pyPath} sip_code_fix.py")
-    if sys.platform == "win32":
-        qmake = f"{Qtinstallpath}/bin/qmake.exe"
-    else:
-        qmake = f"{Qtinstallpath}/bin/qmake"
 
     subprocess.run(
         rf"{pyDir}/Scripts/sip-build --verbose --qmake {qmake}"
@@ -123,7 +121,7 @@ elif binding.lower().startswith("pyside"):
     )
 
     subprocess.run(
-        f'cmake -DMY_QT_INSTALL={Qtinstallpath} -DMY_PYTHON_INSTALL_PATH={pyDir.replace("\\", "/")} -DELA_LIB_PATH={os.path.abspath("../ElaWidgetTools/Release/ElaWidgetTools.lib").replace("\\", "/")} -DELA_INCLUDE_PATH={os.path.abspath("../../ElaWidgetTools/ElaWidgetTools").replace("\\", "/")} ./CMakeLists.txt {flags}'
+        f'cmake -DMY_QT_INSTALL={Qtinstallpath} -DMY_PYTHON_INSTALL_PATH={pyDir} -DELA_LIB_PATH={os.path.abspath("../ElaWidgetTools/Release/ElaWidgetTools.lib").replace("\\", "/")} -DELA_INCLUDE_PATH={os.path.abspath("../../ElaWidgetTools/ElaWidgetTools").replace("\\", "/")} ./CMakeLists.txt {flags}'
     )
     subprocess.run(
         f"cmake --build ./ --config Release --target ALL_BUILD -j {os.cpu_count()}"

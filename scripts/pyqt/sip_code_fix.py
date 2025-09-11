@@ -3,7 +3,8 @@ import site
 
 print(sys.version_info.minor)
 print(site.getsitepackages())
-f = os.path.join(site.getsitepackages()[0], "sipbuild/project.py")
+sitepkg = site.getsitepackages()[-1]
+f = os.path.join(sitepkg, "sipbuild/project.py")
 with open(f, "r") as ff:
     x = ff.read()
 x = x.replace(
@@ -14,7 +15,7 @@ with open(f, "w") as ff:
     ff.write(x)
 
 
-f = os.path.join(site.getsitepackages()[0], "sipbuild/generator/utils.py")
+f = os.path.join(sitepkg, "sipbuild/generator/utils.py")
 with open(f, "r") as ff:
     x = ff.read()
 x = x.replace(

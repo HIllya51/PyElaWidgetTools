@@ -476,10 +476,8 @@ def generate_sip_for_class__1(header_content, filename=""):
                 sip_return_type = return_type_raw
                 parsed_params = parse_parameters(params_str)
                 PyName = ""
-                if 0:  # classmethods.get(method_name):
-                    index = classmethods.get(method_name)
-                    classmethods[method_name] += 1
-                    PyName = f"/PyName={method_name}{index}/"
+                if ("takeOverNativeEvent" == method_name) and (sys.platform != "win32"):
+                    continue
                 elif method_name == "addPageNode" and "keyPoints" in params_str:
                     print(match.groups())
                     PyName = f"/PyName={method_name}KeyPoints/"

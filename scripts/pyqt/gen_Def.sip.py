@@ -1,4 +1,4 @@
-import os
+import os, sys
 
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
@@ -80,6 +80,13 @@ def parse_def_h_to_sip(header_content):
                 if m:
                     member_name = m.group(1)
                     member_value = m.group(2).strip()
+                    if (
+                        (enum_name == "WindowDisplayMode")
+                        and (not (member_name in ("Normal", "ElaMica")))
+                        and (sys.platform != "win32")
+                    ):
+                        continue
+
                     sip_output.append(f"        {member_name} = {member_value},")
                     found_members.append(member_name)
                 elif member_line and not member_line.endswith(

@@ -27,7 +27,7 @@ if sys.platform == "win32":
     qmake = f"{Qtinstallpath}/bin/qmake.exe"
 elif sys.platform == "linux":
     pyPathEx = f"/opt/hostedtoolcache/Python/3.12.10/x64/bin/python"
-    pyDir = f"/opt/hostedtoolcache/Python/{pythonversion}/{arch}/bin/python"
+    pyDir = f"/opt/hostedtoolcache/Python/{pythonversion}/{arch}/bin"
     pyPath = f"{pyDir}/python.exe"
     Qtinstallpath = f"/home/runner/work/PyElaWidgetTools/Qt/{qtversion}/{qtarchdir}"
     qmake = f"{Qtinstallpath}/bin/qmake"

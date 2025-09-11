@@ -13,17 +13,13 @@ x = x.replace(
 with open(f, "w") as ff:
     ff.write(x)
 
-if (sys.version_info.minor) <= 7:
 
-    f = os.path.join(
-        site.getsitepackages()[0],
-        "sipbuild/generator/utils.py",
-    )
-    with open(f, "r") as ff:
-        x = ff.read()
-    x = x.replace(
-        "zip(td1.types.args, td2.types.args, strict=True):",
-        "zip(td1.types.args, td2.types.args):",
-    )
-    with open(f, "w") as ff:
-        ff.write(x)
+f = os.path.join(site.getsitepackages()[0], "sipbuild/generator/utils.py")
+with open(f, "r") as ff:
+    x = ff.read()
+x = x.replace(
+    "zip(td1.types.args, td2.types.args, strict=True):",
+    "zip(td1.types.args, td2.types.args):",
+)
+with open(f, "w") as ff:
+    ff.write(x)

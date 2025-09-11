@@ -32,6 +32,10 @@ elif sys.platform == "linux":
     Qtinstallpath = f"/home/runner/work/PyElaWidgetTools/Qt/{qtversion}/{qtarchdir}"
     qmake = f"{Qtinstallpath}/bin/qmake"
 
+for _dir, _, _fs in os.walk(f"/opt/hostedtoolcache/Python/{pythonversion}/{arch}"):
+    for _f in _fs:
+        print(_dir, _f)
+
 subprocess.run(f"{pyPath} -m pip install --upgrade pip")
 if binding.lower().startswith("pyqt"):
     if qtversion.startswith("6"):

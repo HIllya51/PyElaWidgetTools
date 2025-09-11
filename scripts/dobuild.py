@@ -34,7 +34,7 @@ elif sys.platform == "linux":
 
 for _dir, _, _fs in os.walk(f"/opt/hostedtoolcache/Python/{pythonversion}/{arch}"):
     for _f in _fs:
-        print(_dir, _f)
+        print(os.path.join(_dir, _f), pyPath)
 
 subprocess.run(f"{pyPath} -m pip install --upgrade pip")
 if binding.lower().startswith("pyqt"):
@@ -92,9 +92,7 @@ if binding.lower().startswith("pyqt"):
     subprocess.run(f'python gen_pyi_from_sip.py {int(qtversion.startswith("5"))}')
     subprocess.run(f"{pyPath} sip_code_fix.py")
 
-    subprocess.run(
-        rf"{pyDir}/Scripts/sip-build --verbose --qmake {qmake}"
-    )
+    subprocess.run(rf"{pyDir}/Scripts/sip-build --verbose --qmake {qmake}")
     # for _dir, _, _fs in os.walk(r"."):
     #     for _f in _fs:
     #         print(_dir, _f)

@@ -1,10 +1,9 @@
 import sys, os
+import site
 
 print(sys.version_info.minor)
-
-f = os.path.join(
-    os.path.dirname(sys.executable), "Lib/site-packages/sipbuild/project.py"
-)
+print(site.getsitepackages())
+f = os.path.join(site.getsitepackages()[0], "sipbuild/project.py")
 with open(f, "r") as ff:
     x = ff.read()
 x = x.replace(
@@ -17,8 +16,8 @@ with open(f, "w") as ff:
 if (sys.version_info.minor) <= 7:
 
     f = os.path.join(
-        os.path.dirname(sys.executable),
-        "Lib/site-packages/sipbuild/generator/utils.py",
+        site.getsitepackages()[0],
+        "sipbuild/generator/utils.py",
     )
     with open(f, "r") as ff:
         x = ff.read()

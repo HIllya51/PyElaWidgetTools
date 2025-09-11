@@ -3,7 +3,7 @@ import sys, os
 print(sys.version_info.minor)
 
 f = os.path.join(
-    os.path.dirname(sys.executable), r"Lib\site-packages\sipbuild\project.py"
+    os.path.dirname(sys.executable), "Lib/site-packages/sipbuild/project.py"
 )
 with open(f, "r") as ff:
     x = ff.read()
@@ -18,7 +18,7 @@ if (sys.version_info.minor) <= 7:
 
     f = os.path.join(
         os.path.dirname(sys.executable),
-        r"Lib\site-packages\sipbuild\generator\utils.py",
+        "Lib/site-packages/sipbuild/generator/utils.py",
     )
     with open(f, "r") as ff:
         x = ff.read()

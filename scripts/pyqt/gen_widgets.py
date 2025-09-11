@@ -502,7 +502,7 @@ def generate_sip_for_class__1(header_content, filename=""):
 
 def cast_h_to_sip(filename):
     filename = os.path.splitext(os.path.basename(filename))[0]
-    input_header_file = rf"{eladir}\{filename}.h"
+    input_header_file = f"{eladir}/{filename}.h"
     output_sip_file = f"sip/{filename}.sip"
 
     with open(input_header_file, "r", encoding="utf-8") as f:
@@ -552,7 +552,7 @@ for f in os.listdir(eladir):
         cast_h_to_sip(f)
         allfiles.append(f"%Include {os.path.basename(f).split('.')[0]}.sip")
 
-with open(r"sip\ElaWidgetTools.sip", "w", encoding="utf-8") as f:
+with open("sip/ElaWidgetTools.sip", "w", encoding="utf-8") as f:
     __ = "\n".join(allfiles)
     f.write(
         rf"""%Module(name=ElaWidgetTools, use_limited_api=True)

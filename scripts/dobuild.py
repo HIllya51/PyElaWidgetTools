@@ -89,9 +89,9 @@ subprocess.run(
     f"cmake --build ./ --config Release -j {os.cpu_count()}",
     shell=True,
 )
-for _dir, _, _fs in os.walk(r"."):
-    for _f in _fs:
-        print(_dir, _f)
+# for _dir, _, _fs in os.walk(r"."):
+#     for _f in _fs:
+#         print(_dir, _f)
 if binding.lower().startswith("pyqt"):
     os.chdir("pyqt")
     os.mkdir("sip")
@@ -110,6 +110,11 @@ if binding.lower().startswith("pyqt"):
                 '[ "ElaWidgetTools" ]',
                 '[ "ElaWidgetTools","D3D11", "DXGI", "kernel32" ,"user32", "gdi32", "winspool" ,"comdlg32", "advapi32", "shell32", "ole32", "oleaut32", "uuid", "odbc32", "odbccp32"]',
             ),
+        )
+    elif sys.platform == "linux":
+        __parsefile(
+            "pyproject.toml",
+            lambda c: c.replace("../ElaWidgetTools/Release", "../ElaWidgetTools"),
         )
     subprocess.run(f"{sipbuild} --verbose --qmake {qmake}", shell=True)
     os.chdir("..")

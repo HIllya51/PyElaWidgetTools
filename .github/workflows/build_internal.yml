@@ -9,30 +9,40 @@ on:
         required: false 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         include:
-          - qtarch: win32_msvc2019
+          - os: windows-latest
+            qtarch: win32_msvc2019
             version: 5.15.2
             pythonversion: 3.7.9
             arch: x86
             binding: PyQt5
-          - qtarch: win64_msvc2019_64
+          - os: windows-latest
+            qtarch: win64_msvc2019_64
             version: 5.15.2
             pythonversion: 3.7.9
             arch: x64
             binding: PyQt5
-          - qtarch: win64_msvc2019_64
+          - os: windows-latest
+            qtarch: win64_msvc2019_64
             version: 6.4.3
             pythonversion: 3.12.10
             arch: x64
             binding: PyQt6
-          - qtarch: win64_msvc2019_64
+          - os: windows-latest
+            qtarch: win64_msvc2019_64
             version: 6.6.2
             pythonversion: 3.12.10
             arch: x64
             binding: PySide6
+          - os: ubuntu-latest
+            qtarch: gcc_64
+            version: 5.15.2
+            pythonversion: 3.7.9
+            arch: x64
+            binding: PyQt5
     permissions:
       id-token: write
       attestations: write

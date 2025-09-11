@@ -16,13 +16,13 @@ qtversion = sys.argv[3]
 arch = sys.argv[4]
 binding = sys.argv[5]
 
-qtarchdir = qtarch[qtarch.find("_") + 1 :]
 
 # 准备环境
 if sys.platform == "win32":
     pyPathEx = f"C:/hostedtoolcache/windows/Python/3.12.10/x64/python.exe"
     pyDir = f"C:/hostedtoolcache/windows/Python/{pythonversion}/{arch}"
     pyPath = f"{pyDir}/python.exe"
+    qtarchdir = qtarch[qtarch.find("_") + 1 :]
     Qtinstallpath = f"D:/a/PyElaWidgetTools/Qt/{qtversion}/{qtarchdir}"
     qmake = f"{Qtinstallpath}/bin/qmake.exe"
     sipbuild = f"{pyDir}/Scripts/sip-build"
@@ -30,7 +30,7 @@ elif sys.platform == "linux":
     pyPathEx = f"/opt/hostedtoolcache/Python/3.12.10/x64/bin/python"
     pyDir = f"/opt/hostedtoolcache/Python/{pythonversion}/{arch}/bin"
     pyPath = f"{pyDir}/python"
-    Qtinstallpath = f"/home/runner/work/PyElaWidgetTools/Qt/{qtversion}/{qtarchdir}"
+    Qtinstallpath = f"/home/runner/work/PyElaWidgetTools/Qt/{qtversion}/{qtarch}"
     qmake = f"{Qtinstallpath}/bin/qmake"
     sipbuild = f"{pyDir}/sip-build"
 

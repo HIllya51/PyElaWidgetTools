@@ -109,9 +109,9 @@ if binding.lower().startswith("pyqt"):
             ),
         )
     subprocess.run(f"{sipbuild} --verbose --qmake {qmake}", shell=True)
-    # for _dir, _, _fs in os.walk(r"."):
-    #     for _f in _fs:
-    #         print(_dir, _f)
+    for _dir, _, _fs in os.walk(r"."):
+        for _f in _fs:
+            print(_dir, _f)
     os.chdir("..")
     os.mkdir("objects")
     shutil.copy("pyqt/build/ElaWidgetTools/ElaWidgetTools.pyd", "objects")

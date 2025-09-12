@@ -175,6 +175,9 @@ elif binding.lower().startswith("pyside"):
         f"cmake --build ./ --config Release -j {os.cpu_count()}",
         shell=True,
     )
+    if sys.platform=='linux':
+        os.makedirs('pyside6/Release', exists_ok=True)
+        shutil.move(f"pyside6/libElaWidgetTools{bin_app}", f"pyside6/Release/ElaWidgetTools{bin_app}")
 
     os.chdir("..")
     os.mkdir("objects")

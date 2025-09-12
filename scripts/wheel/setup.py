@@ -26,6 +26,11 @@ elif bindingfor == "PyQt6":
 elif bindingfor == "PySide6":
     pass
 
+if sys.platform == "win32":
+    platnames = ("win32", "win_amd64")[bit == "64"]
+elif sys.platform == "linux":
+    platnames = "manylinux_2_17"
+
 setup(
     name=f"{bindingfor}-ElaWidgetTools",
     version="0.0.9",
@@ -41,7 +46,7 @@ setup(
     options={
         "bdist_wheel": {
             "py_limited_api": ["cp38", "cp37"][bindingfor == "PyQt5"],
-            "plat_name": ("win32", "win_amd64")[bit == "64"],
+            "plat_name": platnames,
         }
     },
     project_urls={

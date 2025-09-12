@@ -74,13 +74,25 @@ target_link_directories(
     ${MY_SITE_PACKAGES_PATH}/PySide6
 )
 
+find_library(SHIBOKEN6_LIB
+        NAMES shiboken6.abi3
+        PATHS "${MY_SITE_PACKAGES_PATH}/shiboken6"
+        NO_DEFAULT_PATH
+    )
+find_library(PYSIDE6_LIB
+        NAMES pyside6.abi3
+        PATHS "${MY_SITE_PACKAGES_PATH}/PySide6"
+        NO_DEFAULT_PATH
+    )
+
+
 target_link_libraries(
     ElaWidgetTools
     PRIVATE
     Qt6::Widgets
     Qt6::Core
-    shiboken6.abi3
-    pyside6.abi3
+    ${SHIBOKEN6_LIB}
+    ${PYSIDE6_LIB}
     ${ELA_LIB_PATH}
 )
 

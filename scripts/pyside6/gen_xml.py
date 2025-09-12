@@ -5,13 +5,14 @@ if len(sys.argv) > 1:
     ELA_INCLUDE_PATH = sys.argv[1]
     MY_QT_INSTALL = sys.argv[2]
     MY_PYTHON_INSTALL_PATH = sys.argv[3]
+    MY_SITE_PACKAGES_PATH = sys.argv[4]
 else:
     ELA_INCLUDE_PATH = (
         "C:/Users/11737/Documents/GitHub/PyElaWidgetTools/ElaWidgetTools/ElaWidgetTools"
     )
     MY_QT_INSTALL = "c:/tmp/6.6.2/msvc2019_64"
     MY_PYTHON_INSTALL_PATH = "C:/Users/11737/AppData/Local/Programs/Python/Python312"
-MY_SITE_PACKAGES_PATH = MY_PYTHON_INSTALL_PATH + "/Lib/site-packages"
+    MY_SITE_PACKAGES_PATH = "C:/Users/11737/AppData/Local/Programs/Python/Python312/Lib/site-packages"
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 eladir = "../../ElaWidgetTools/ElaWidgetTools"

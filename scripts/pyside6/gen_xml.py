@@ -309,7 +309,7 @@ if sys.platform=='linux':
     inc='/usr/lib/gcc/x86_64-linux-gnu/14/include'
     if not os.path.exists(inc):
         inc='/usr/lib/gcc/x86_64-linux-gnu/11/include'
-    sysinclude = f'--system-include-paths="{inc}"'
+    sysinclude = f'-I{inc}'
 os.system(
     f"""shiboken6 {sysinclude}
         --generator-set=shiboken

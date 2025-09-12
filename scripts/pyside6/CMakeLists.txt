@@ -27,14 +27,13 @@ qt_standard_project_setup()
 set(SHIBOKEN_OUTPUT_FOLDER "${CMAKE_CURRENT_SOURCE_DIR}/OUTPUTDIR")
 
 # Do not use a GLOB here, to allow for usage as OUTPUT in custom command
-#file(GLOB SHIBOKEN_GENERATED_SOURCES "${SHIBOKEN_OUTPUT_FOLDER}/ElaWidgetTools/*.cpp" "${SHIBOKEN_OUTPUT_FOLDER}/ElaWidgetTools/*.h")
+file(GLOB SHIBOKEN_GENERATED_SOURCES "${SHIBOKEN_OUTPUT_FOLDER}/ElaWidgetTools/*.cpp" "${SHIBOKEN_OUTPUT_FOLDER}/ElaWidgetTools/*.h")
 
-file(GLOB SHIBOKEN_GENERATED_SOURCES_1 "${SHIBOKEN_OUTPUT_FOLDER}/ElaWidgetTools/*.cpp" "${SHIBOKEN_OUTPUT_FOLDER}/ElaWidgetTools/*.h")
 
 add_library(
     ElaWidgetTools SHARED
     ${CMAKE_CURRENT_SOURCE_DIR}/wrapper.hpp
-    ${SHIBOKEN_GENERATED_SOURCES_1}
+    ${SHIBOKEN_GENERATED_SOURCES}
 )
 
 # A bit ugly:

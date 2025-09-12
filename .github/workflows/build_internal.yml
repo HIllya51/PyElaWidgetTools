@@ -55,6 +55,13 @@ jobs:
             pythonversion: 3.12.10
             arch: x64
             binding: PyQt6
+          - os: ubuntu-latest
+            qthost: linux
+            qtarch: gcc_64
+            version: 6.6.2
+            pythonversion: 3.12.10
+            arch: x64
+            binding: PySide6
     permissions:
       id-token: write
       attestations: write

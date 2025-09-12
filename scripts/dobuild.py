@@ -1,4 +1,4 @@
-import sys, os, subprocess, shutil
+import sys, os, subprocess, shutil, site
 
 print(sys.platform)
 print(sys.executable)
@@ -26,6 +26,7 @@ if sys.platform == "win32":
     Qtinstallpath = f"D:/a/PyElaWidgetTools/Qt/{qtversion}/{qtarchdir}"
     qmake = f"{Qtinstallpath}/bin/qmake.exe"
     sipbuild = f"{pyDir}/Scripts/sip-build"
+    bin_app='.pyd'
 elif sys.platform == "linux":
     pyPathEx = f"/opt/hostedtoolcache/Python/3.12.10/x64/bin/python"
     pyDir = f"/opt/hostedtoolcache/Python/{pythonversion}/{arch}/bin"
@@ -33,6 +34,7 @@ elif sys.platform == "linux":
     Qtinstallpath = f"/home/runner/work/PyElaWidgetTools/Qt/{qtversion}/{qtarch}"
     qmake = f"{Qtinstallpath}/bin/qmake"
     sipbuild = f"{pyDir}/sip-build"
+    bin_app='.abi3.so'
 
 
 subprocess.run(f"{pyPath} -m pip install --upgrade pip", shell=True)
@@ -119,10 +121,7 @@ if binding.lower().startswith("pyqt"):
     subprocess.run(f"{sipbuild} --verbose --qmake {qmake}", shell=True)
     os.chdir("..")
     os.mkdir("objects")
-    if sys.platform == "win32":
-        shutil.copy("pyqt/build/ElaWidgetTools/ElaWidgetTools.pyd", "objects")
-    elif sys.platform == "linux":
-        shutil.copy("pyqt/build/ElaWidgetTools/ElaWidgetTools.abi3.so", "objects")
+    shutil.copy(f"pyqt/build/ElaWidgetTools/ElaWidgetTools{bin_app}", "objects")
 
     shutil.copy("pyqt/ElaWidgetTools.pyi", "objects")
     shutil.copytree("pyqt/sip", "objects/sip")
@@ -148,12 +147,12 @@ elif binding.lower().startswith("pyside"):
     os.chdir("pyside6")
 
     subprocess.run(
-        f'python gen_xml.py {os.path.abspath("../../ElaWidgetTools/ElaWidgetTools").replace("\\", "/")} {Qtinstallpath} {pyDir}',
+        f'python gen_xml.py {os.path.abspath("../../ElaWidgetTools/ElaWidgetTools").replace("\\", "/")} {Qtinstallpath} {pyDir} {site.getsitepackages()[-1].replace("\\", "/")}',
         shell=True,
     )
 
     subprocess.run(
-        f'cmake -DMY_QT_INSTALL={Qtinstallpath} -DMY_PYTHON_INSTALL_PATH={pyDir} -DELA_LIB_PATH={os.path.abspath("../ElaWidgetTools/Release/ElaWidgetTools.lib").replace("\\", "/")} -DELA_INCLUDE_PATH={os.path.abspath("../../ElaWidgetTools/ElaWidgetTools").replace("\\", "/")} ./CMakeLists.txt {flags}',
+        f'cmake -DMY_QT_INSTALL={Qtinstallpath} -DMY_SITE_PACKAGES_PATH={site.getsitepackages()[-1].replace("\\", "/")} -DMY_PYTHON_INSTALL_PATH={pyDir} -DELA_LIB_PATH={os.path.abspath("../ElaWidgetTools/Release/ElaWidgetTools.lib").replace("\\", "/")} -DELA_INCLUDE_PATH={os.path.abspath("../../ElaWidgetTools/ElaWidgetTools").replace("\\", "/")} ./CMakeLists.txt {flags}',
         shell=True,
     )
     subprocess.run(
@@ -163,16 +162,13 @@ elif binding.lower().startswith("pyside"):
 
     os.chdir("..")
     os.mkdir("objects")
-    shutil.copy("pyside6/Release/ElaWidgetTools.pyd", "objects")
+    shutil.copy(f"pyside6/Release/ElaWidgetTools{bin_app}", "objects")
     shutil.copy(pyipath + "/ElaWidgetTools.pyi", "objects")
 
 dirname = f"{binding}ElaWidgetTools"
 os.mkdir(f"wheel/{dirname}")
 
-if sys.platform == "win32":
-    shutil.copy("objects/ElaWidgetTools.pyd", f"wheel/{dirname}")
-elif sys.platform == "linux":
-    shutil.copy("objects/ElaWidgetTools.abi3.so", f"wheel/{dirname}")
+shutil.copy(f"objects/ElaWidgetTools{bin_app}", f"wheel/{dirname}")
 shutil.copy("objects/ElaWidgetTools.pyi", f"wheel/{dirname}")
 
 with open("wheel/__init__.py", "r") as ff:

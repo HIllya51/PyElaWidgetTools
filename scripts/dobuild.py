@@ -166,7 +166,7 @@ elif binding.lower().startswith("pyside"):
 
     os.chdir("..")
     os.mkdir("objects")
-    shutil.copytree(f'pyside6/CMakeFiles/ElaWidgetTools.dir/OUTPUTDIR', 'objects/test')
+    shutil.copytree(f'pyside6/OUTPUTDIR/ElaWidgetTools', 'objects/test')
     exit(0)
 
     shutil.copy(f"pyside6/Release/ElaWidgetTools{bin_app}", "objects")

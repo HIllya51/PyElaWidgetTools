@@ -332,3 +332,11 @@ with open("OUTPUTDIR/ElaWidgetTools/elaflowlayout_wrapper.h", "r") as ff:
     __ = ff.read()
 with open("OUTPUTDIR/ElaWidgetTools/elaflowlayout_wrapper.h", "w") as ff:
     ff.write(__ + '\n#include"special.hpp"')
+
+
+
+with open("OUTPUTDIR/ElaWidgetTools/elamessagebar_wrapper.cpp", "r") as ff:
+    __ = ff.read()
+with open("OUTPUTDIR/ElaWidgetTools/elamessagebar_wrapper.cpp", "w") as ff:
+    #linux这个文件蜜汁不正常。
+    ff.write(__.replace("::%CLASS_NAME::", ""))

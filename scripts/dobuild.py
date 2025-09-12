@@ -122,7 +122,6 @@ if binding.lower().startswith("pyqt"):
     if sys.platform == "win32":
         shutil.copy("pyqt/build/ElaWidgetTools/ElaWidgetTools.pyd", "objects")
     elif sys.platform == "linux":
-        shutil.copy("pyqt/build/ElaWidgetTools/libElaWidgetTools.so", "objects")
         shutil.copy("pyqt/build/ElaWidgetTools/ElaWidgetTools.abi3.so", "objects")
 
     shutil.copy("pyqt/ElaWidgetTools.pyi", "objects")
@@ -173,7 +172,6 @@ os.mkdir(f"wheel/{dirname}")
 if sys.platform == "win32":
     shutil.copy("objects/ElaWidgetTools.pyd", f"wheel/{dirname}")
 elif sys.platform == "linux":
-    shutil.copy("objects/libElaWidgetTools.so", f"wheel/{dirname}")
     shutil.copy("objects/ElaWidgetTools.abi3.so", f"wheel/{dirname}")
 shutil.copy("objects/ElaWidgetTools.pyi", f"wheel/{dirname}")
 

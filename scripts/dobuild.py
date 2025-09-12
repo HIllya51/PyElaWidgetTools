@@ -168,7 +168,7 @@ elif binding.lower().startswith("pyside"):
             shiboken6Lib=_
     
     subprocess.run(
-        f'cmake -DMY_QT_INSTALL={Qtinstallpath} -Dshiboken6Lib={shiboken6Lib} -DPySide6Lib={PySide6Lib} -DMY_PYTHON_INCLUDE_PATH={MY_PYTHON_INCLUDE_PATH} -DMY_SITE_PACKAGES_PATH={MY_SITE_PACKAGES_PATH} -DMY_PYTHON_INSTALL_PATH={pyDir} -DELA_LIB_PATH={ELA_LIB_PATH} -DELA_INCLUDE_PATH={os.path.abspath("../../ElaWidgetTools/ElaWidgetTools").replace("\\", "/")} ./CMakeLists.txt {flags}',
+        f'cmake -DdllSUFFIX={bin_app} -DMY_QT_INSTALL={Qtinstallpath} -Dshiboken6Lib={shiboken6Lib} -DPySide6Lib={PySide6Lib} -DMY_PYTHON_INCLUDE_PATH={MY_PYTHON_INCLUDE_PATH} -DMY_SITE_PACKAGES_PATH={MY_SITE_PACKAGES_PATH} -DMY_PYTHON_INSTALL_PATH={pyDir} -DELA_LIB_PATH={ELA_LIB_PATH} -DELA_INCLUDE_PATH={os.path.abspath("../../ElaWidgetTools/ElaWidgetTools").replace("\\", "/")} ./CMakeLists.txt {flags}',
         shell=True,
     )
     subprocess.run(

@@ -11,6 +11,7 @@ set(MY_PYTHON_INCLUDE_PATH "C:/Users/11737/AppData/Local/Programs/Python/Python3
 set(MY_QT_INSTALL c:/tmp/6.8.3/msvc2022_64 CACHE STRING "MY_QT_INSTALL")
 set(shiboken6Lib shiboken6.abi3 CACHE STRING "shiboken6Lib")
 set(PySide6Lib pyside6.abi3 CACHE STRING "PySide6Lib")
+set(dllSUFFIX ".pyd" CACHE STRING "dllSUFFIX")
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -65,7 +66,7 @@ target_compile_definitions(
 set_target_properties(
     ElaWidgetTools
     PROPERTIES
-    SUFFIX ".pyd"
+    SUFFIX "${dllSUFFIX}"
 )
 
 target_link_directories(

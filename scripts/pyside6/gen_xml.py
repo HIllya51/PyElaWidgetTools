@@ -311,6 +311,10 @@ if sys.platform=='linux':
         inc='/usr/lib/gcc/x86_64-linux-gnu/11/include'
         
     pyDir = os.path.dirname(os.path.dirname(sys.executable)) + "/include"
+        
+    for _dir, _, _fs in os.walk(os.path.dirname(os.path.dirname(sys.executable))):
+        for _f in _fs:
+            print(_dir, _f)
     sysinclude = f' -I{inc} -I{pyDir} '
 os.system(
     f"""shiboken6 {sysinclude}

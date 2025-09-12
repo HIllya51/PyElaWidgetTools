@@ -35,7 +35,7 @@ setup(
     packages=find_packages(include=[f"{bindingfor}ElaWidgetTools"]),
     include_package_data=False,
     package_data={
-        f"{bindingfor}ElaWidgetTools": ["*.pyd"],
+        f"{bindingfor}ElaWidgetTools": ["*.pyd", "*.so"],
     },
     distclass=BinaryDistribution,
     options={

@@ -304,6 +304,12 @@ if "msvc2019" in MY_QT_INSTALL:
     sysinclude = vspath + "/" + msvc2019 + "/include"
     print(sysinclude)
     sysinclude = f'--system-include-paths="{sysinclude}"'
+
+if sys.platform=='linux':
+    inc='/usr/lib/gcc/x86_64-linux-gnu/14/include'
+    if not os.path.exists(inc):
+        inc='/usr/lib/gcc/x86_64-linux-gnu/11/include'
+    sysinclude = f'--system-include-paths="{inc}"'
 os.system(
     f"""shiboken6 {sysinclude}
         --generator-set=shiboken

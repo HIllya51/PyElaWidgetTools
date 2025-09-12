@@ -176,8 +176,9 @@ elif binding.lower().startswith("pyside"):
         shell=True,
     )
     if sys.platform=='linux':
-        os.makedirs('pyside6/Release', exist_ok=True)
-        shutil.move(f"pyside6/libElaWidgetTools{bin_app}", f"pyside6/Release/ElaWidgetTools{bin_app}")
+        os.makedirs('Release', exist_ok=True)
+        
+        shutil.move(f"libElaWidgetTools{bin_app}", f"Release/ElaWidgetTools{bin_app}")
 
     os.chdir("..")
     os.mkdir("objects")

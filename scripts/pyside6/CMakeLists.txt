@@ -7,6 +7,7 @@ set(ELA_INCLUDE_PATH "C:/Users/11737/Documents/GitHub/PyElaWidgetTools/ElaWidget
 set(ELA_LIB_PATH "C:/Users/11737/Documents/GitHub/PyElaWidgetTools/ElaWidgetTools/build/ElaWidgetTools/Release/ElaWidgetTools.lib" CACHE STRING "ELA_LIB_PATH")
 set(MY_PYTHON_INSTALL_PATH "C:/Users/11737/AppData/Local/Programs/Python/Python312" CACHE STRING "MY_PYTHON_INSTALL_PATH")
 set(MY_SITE_PACKAGES_PATH "C:/Users/11737/AppData/Local/Programs/Python/Python312/Lib/site-packages" CACHE STRING "MY_SITE_PACKAGES_PATH")
+set(MY_PYTHON_INCLUDE_PATH "C:/Users/11737/AppData/Local/Programs/Python/Python312/include" CACHE STRING "MY_PYTHON_INCLUDE_PATH")
 set(MY_QT_INSTALL c:/tmp/6.8.3/msvc2022_64 CACHE STRING "MY_QT_INSTALL")
 
 set(CMAKE_CXX_STANDARD 17)
@@ -42,9 +43,9 @@ add_library(
 target_include_directories(
     ElaWidgetTools
     PRIVATE
+    "${MY_PYTHON_INCLUDE_PATH}"
     "${CMAKE_CURRENT_SOURCE_DIR}"
     "${ELA_INCLUDE_PATH}"
-    "${MY_PYTHON_INSTALL_PATH}/include"
     "${MY_SITE_PACKAGES_PATH}/PySide6/include"
     "${MY_SITE_PACKAGES_PATH}/PySide6/include/QtWidgets"
     "${MY_SITE_PACKAGES_PATH}/PySide6/include/QtGui"

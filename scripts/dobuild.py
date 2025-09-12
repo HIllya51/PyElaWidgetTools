@@ -150,9 +150,13 @@ elif binding.lower().startswith("pyside"):
         f'python gen_xml.py {os.path.abspath("../../ElaWidgetTools/ElaWidgetTools").replace("\\", "/")} {Qtinstallpath} {pyDir} {site.getsitepackages()[-1].replace("\\", "/")}',
         shell=True,
     )
-
+    if sys.platform=='win32':
+        MY_PYTHON_INCLUDE_PATH=pyDir+'/include'
+    elif sys.platform=='linux':
+        __ = os.path.dirname(os.path.dirname(sys.executable))
+        MY_PYTHON_INCLUDE_PATH = __ + "/include/"+os.listdir(__ + "/include")[0]
     subprocess.run(
-        f'cmake -DMY_QT_INSTALL={Qtinstallpath} -DMY_SITE_PACKAGES_PATH={site.getsitepackages()[-1].replace("\\", "/")} -DMY_PYTHON_INSTALL_PATH={pyDir} -DELA_LIB_PATH={os.path.abspath("../ElaWidgetTools/Release/ElaWidgetTools.lib").replace("\\", "/")} -DELA_INCLUDE_PATH={os.path.abspath("../../ElaWidgetTools/ElaWidgetTools").replace("\\", "/")} ./CMakeLists.txt {flags}',
+        f'cmake -DMY_QT_INSTALL={Qtinstallpath} -DMY_PYTHON_INCLUDE_PATH={MY_PYTHON_INCLUDE_PATH} -DMY_SITE_PACKAGES_PATH={site.getsitepackages()[-1].replace("\\", "/")} -DMY_PYTHON_INSTALL_PATH={pyDir} -DELA_LIB_PATH={os.path.abspath("../ElaWidgetTools/Release/ElaWidgetTools.lib").replace("\\", "/")} -DELA_INCLUDE_PATH={os.path.abspath("../../ElaWidgetTools/ElaWidgetTools").replace("\\", "/")} ./CMakeLists.txt {flags}',
         shell=True,
     )
     subprocess.run(

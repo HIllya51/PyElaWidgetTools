@@ -9,6 +9,8 @@ set(MY_PYTHON_INSTALL_PATH "C:/Users/11737/AppData/Local/Programs/Python/Python3
 set(MY_SITE_PACKAGES_PATH "C:/Users/11737/AppData/Local/Programs/Python/Python312/Lib/site-packages" CACHE STRING "MY_SITE_PACKAGES_PATH")
 set(MY_PYTHON_INCLUDE_PATH "C:/Users/11737/AppData/Local/Programs/Python/Python312/include" CACHE STRING "MY_PYTHON_INCLUDE_PATH")
 set(MY_QT_INSTALL c:/tmp/6.8.3/msvc2022_64 CACHE STRING "MY_QT_INSTALL")
+set(shiboken6Lib shiboken6.abi3 CACHE STRING "shiboken6Lib")
+set(PySide6Lib pyside6.abi3 CACHE STRING "PySide6Lib")
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -74,16 +76,6 @@ target_link_directories(
     ${MY_SITE_PACKAGES_PATH}/PySide6
 )
 
-find_library(SHIBOKEN6_LIB
-        NAMES shiboken6.abi3
-        PATHS "${MY_SITE_PACKAGES_PATH}/shiboken6"
-        NO_DEFAULT_PATH
-    )
-find_library(PYSIDE6_LIB
-        NAMES pyside6.abi3
-        PATHS "${MY_SITE_PACKAGES_PATH}/PySide6"
-        NO_DEFAULT_PATH
-    )
 
 
 target_link_libraries(
@@ -91,8 +83,8 @@ target_link_libraries(
     PRIVATE
     Qt6::Widgets
     Qt6::Core
-    ${SHIBOKEN6_LIB}
-    ${PYSIDE6_LIB}
+    ${MY_SITE_PACKAGES_PATH}/shiboken6/${shiboken6Lib}
+    ${MY_SITE_PACKAGES_PATH}/PySide6/${PySide6Lib}
     ${ELA_LIB_PATH}
 )
 

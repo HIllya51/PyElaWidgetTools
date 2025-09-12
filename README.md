@@ -2,7 +2,7 @@
 
 [ElaWidgetTools](https://github.com/Liniyous/ElaWidgetTools)的Python绑定。目前支持PyQt5、PyQt6、PySide6。
 
-PyQt5: `pip install PyQt5-ElaWidgetTools`，PyQt5>=5.15
+PyQt5: `pip install PyQt5-ElaWidgetTools`，PyQt5>=5.15.7
 
 PyQt6: `pip install PyQt6-ElaWidgetTools`，PyQt6>=6.4
 

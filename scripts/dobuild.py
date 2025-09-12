@@ -146,8 +146,9 @@ elif binding.lower().startswith("pyside"):
     os.chdir(cwd)
     os.chdir("pyside6")
 
+    MY_SITE_PACKAGES_PATH=site.getsitepackages()[-1].replace("\\", "/")
     subprocess.run(
-        f'python gen_xml.py {os.path.abspath("../../ElaWidgetTools/ElaWidgetTools").replace("\\", "/")} {Qtinstallpath} {pyDir} {site.getsitepackages()[-1].replace("\\", "/")}',
+        f'python gen_xml.py {os.path.abspath("../../ElaWidgetTools/ElaWidgetTools").replace("\\", "/")} {Qtinstallpath} {pyDir} {MY_SITE_PACKAGES_PATH}',
         shell=True,
     )
     if sys.platform=='win32':
@@ -157,8 +158,17 @@ elif binding.lower().startswith("pyside"):
         __ = os.path.dirname(os.path.dirname(sys.executable))
         MY_PYTHON_INCLUDE_PATH = __ + "/include/"+os.listdir(__ + "/include")[0]
         ELA_LIB_PATH=os.path.abspath(f"../ElaWidgetTools/libElaWidgetTools.a")
+
+
+    for _ in os.listdir(f"{MY_SITE_PACKAGES_PATH}/PySide6"):
+        if _.startswith('libpyside6.abi3.so'):
+            PySide6Lib=_
+    for _ in os.listdir(f"{MY_SITE_PACKAGES_PATH}/shiboken6"):
+        if _.startswith('libshiboken6.abi3.so'):
+            shiboken6Lib=_
+    
     subprocess.run(
-        f'cmake -DMY_QT_INSTALL={Qtinstallpath} -DMY_PYTHON_INCLUDE_PATH={MY_PYTHON_INCLUDE_PATH} -DMY_SITE_PACKAGES_PATH={site.getsitepackages()[-1].replace("\\", "/")} -DMY_PYTHON_INSTALL_PATH={pyDir} -DELA_LIB_PATH={ELA_LIB_PATH} -DELA_INCLUDE_PATH={os.path.abspath("../../ElaWidgetTools/ElaWidgetTools").replace("\\", "/")} ./CMakeLists.txt {flags}',
+        f'cmake -DMY_QT_INSTALL={Qtinstallpath} -Dshiboken6Lib={shiboken6Lib} -DPySide6Lib={PySide6Lib} -DMY_PYTHON_INCLUDE_PATH={MY_PYTHON_INCLUDE_PATH} -DMY_SITE_PACKAGES_PATH={MY_SITE_PACKAGES_PATH} -DMY_PYTHON_INSTALL_PATH={pyDir} -DELA_LIB_PATH={ELA_LIB_PATH} -DELA_INCLUDE_PATH={os.path.abspath("../../ElaWidgetTools/ElaWidgetTools").replace("\\", "/")} ./CMakeLists.txt {flags}',
         shell=True,
     )
     subprocess.run(

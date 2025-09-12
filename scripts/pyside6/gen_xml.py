@@ -314,9 +314,6 @@ if sys.platform=='linux':
     print(pyDir)
     sysinclude = f' -I{inc} -I{pyDir} '
 
-print(os.listdir(f"{MY_SITE_PACKAGES_PATH}/shiboken6"))
-print(os.listdir(f"{MY_SITE_PACKAGES_PATH}/PySide6"))
-
 os.system(
     f"""shiboken6 {sysinclude}
         --generator-set=shiboken

@@ -9,8 +9,8 @@ set(MY_PYTHON_INSTALL_PATH "C:/Users/11737/AppData/Local/Programs/Python/Python3
 set(MY_SITE_PACKAGES_PATH "C:/Users/11737/AppData/Local/Programs/Python/Python312/Lib/site-packages" CACHE STRING "MY_SITE_PACKAGES_PATH")
 set(MY_PYTHON_INCLUDE_PATH "C:/Users/11737/AppData/Local/Programs/Python/Python312/include" CACHE STRING "MY_PYTHON_INCLUDE_PATH")
 set(MY_QT_INSTALL c:/tmp/6.8.3/msvc2022_64 CACHE STRING "MY_QT_INSTALL")
-set(shiboken6Lib shiboken6.abi3 CACHE STRING "shiboken6Lib")
-set(PySide6Lib pyside6.abi3 CACHE STRING "PySide6Lib")
+set(shiboken6Lib shiboken6.abi3.lib CACHE STRING "shiboken6Lib")
+set(PySide6Lib pyside6.abi3.lib CACHE STRING "PySide6Lib")
 set(dllSUFFIX ".pyd" CACHE STRING "dllSUFFIX")
 
 set(CMAKE_CXX_STANDARD 17)

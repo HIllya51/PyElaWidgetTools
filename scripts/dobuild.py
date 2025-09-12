@@ -159,8 +159,8 @@ elif binding.lower().startswith("pyside"):
         MY_PYTHON_INCLUDE_PATH = __ + "/include/"+os.listdir(__ + "/include")[0]
         ELA_LIB_PATH=os.path.abspath(f"../ElaWidgetTools/libElaWidgetTools.a")
 
-    PySide6Lib='pyside6.abi3'
-    shiboken6Lib='shiboken6.abi3'
+    PySide6Lib='pyside6.abi3.lib'
+    shiboken6Lib='shiboken6.abi3.lib'
     for _ in os.listdir(f"{MY_SITE_PACKAGES_PATH}/PySide6"):
         if _.startswith('libpyside6.abi3.so'):
             PySide6Lib=_

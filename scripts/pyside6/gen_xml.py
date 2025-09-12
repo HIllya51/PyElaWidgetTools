@@ -328,7 +328,7 @@ os.system(
     )
 )
 
-with open(r"OUTPUTDIR\ElaWidgetTools\elaflowlayout_wrapper.h", "r") as ff:
+with open("OUTPUTDIR/ElaWidgetTools/elaflowlayout_wrapper.h", "r") as ff:
     __ = ff.read()
-with open(r"OUTPUTDIR\ElaWidgetTools\elaflowlayout_wrapper.h", "w") as ff:
+with open("OUTPUTDIR/ElaWidgetTools/elaflowlayout_wrapper.h", "w") as ff:
     ff.write(__ + '\n#include"special.hpp"')

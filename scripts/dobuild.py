@@ -27,7 +27,6 @@ if sys.platform == "win32":
     qmake = f"{Qtinstallpath}/bin/qmake.exe"
     sipbuild = f"{pyDir}/Scripts/sip-build"
     bin_app='.pyd'
-    libfn='ElaWidgetTools.lib'
 elif sys.platform == "linux":
     pyPathEx = f"/opt/hostedtoolcache/Python/3.12.10/x64/bin/python"
     pyDir = f"/opt/hostedtoolcache/Python/{pythonversion}/{arch}/bin"
@@ -36,7 +35,6 @@ elif sys.platform == "linux":
     qmake = f"{Qtinstallpath}/bin/qmake"
     sipbuild = f"{pyDir}/sip-build"
     bin_app='.abi3.so'
-    libfn='libElaWidgetTools.a'
 
 
 subprocess.run(f"{pyPath} -m pip install --upgrade pip", shell=True)
@@ -154,11 +152,11 @@ elif binding.lower().startswith("pyside"):
     )
     if sys.platform=='win32':
         MY_PYTHON_INCLUDE_PATH=pyDir+'/include'
+        ELA_LIB_PATH=os.path.abspath(f"../ElaWidgetTools/Release/ElaWidgetTools.lib").replace("\\", "/")
     elif sys.platform=='linux':
         __ = os.path.dirname(os.path.dirname(sys.executable))
         MY_PYTHON_INCLUDE_PATH = __ + "/include/"+os.listdir(__ + "/include")[0]
-    
-    ELA_LIB_PATH=os.path.abspath(f"../ElaWidgetTools/Release/{libfn}").replace("\\", "/")
+        ELA_LIB_PATH=os.path.abspath(f"../ElaWidgetTools/libElaWidgetTools.a")
     subprocess.run(
         f'cmake -DMY_QT_INSTALL={Qtinstallpath} -DMY_PYTHON_INCLUDE_PATH={MY_PYTHON_INCLUDE_PATH} -DMY_SITE_PACKAGES_PATH={site.getsitepackages()[-1].replace("\\", "/")} -DMY_PYTHON_INSTALL_PATH={pyDir} -DELA_LIB_PATH={ELA_LIB_PATH} -DELA_INCLUDE_PATH={os.path.abspath("../../ElaWidgetTools/ElaWidgetTools").replace("\\", "/")} ./CMakeLists.txt {flags}',
         shell=True,

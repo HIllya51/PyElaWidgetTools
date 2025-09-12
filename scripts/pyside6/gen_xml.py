@@ -309,8 +309,9 @@ if sys.platform=='linux':
     inc='/usr/lib/gcc/x86_64-linux-gnu/14/include'
     if not os.path.exists(inc):
         inc='/usr/lib/gcc/x86_64-linux-gnu/11/include'
-    pyDir = os.listdir(os.path.dirname(os.path.dirname(sys.executable)) + "/include")[0]
-        
+    __ = os.path.dirname(os.path.dirname(sys.executable))
+    pyDir = __ + "/include/"+os.listdir(__ + "/include")[0]
+    print(pyDir)
     sysinclude = f' -I{inc} -I{pyDir} '
 os.system(
     f"""shiboken6 {sysinclude}

@@ -29,7 +29,7 @@ elif bindingfor == "PySide6":
 if sys.platform == "win32":
     platnames = ("win32", "win_amd64")[bit == "64"]
 elif sys.platform == "linux":
-    platnames = "manylinux_2_17"
+    platnames = "manylinux1_x86_64"
 
 setup(
     name=f"{bindingfor}-ElaWidgetTools",

@@ -311,7 +311,7 @@ if sys.platform=='linux':
         inc='/usr/lib/gcc/x86_64-linux-gnu/11/include'
         
     pyDir = os.path.dirname(os.path.dirname(sys.executable)) + "/include"
-    sysinclude = f'-I{inc}'
+    sysinclude = f' -I{inc} -I{pyDir} '
 os.system(
     f"""shiboken6 {sysinclude}
         --generator-set=shiboken

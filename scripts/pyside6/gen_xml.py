@@ -49,7 +49,7 @@ def specialfuns(const=True):
         return Py_BuildValue("(NN)", pyRes, pyFooterKey);
     </inject-code>
 </modify-function>"""
-    ___ += r"""<modify-function signature="addFooterNode(QString,QWidget*,QString&amp;,int,ElaIconType::IconName)const">
+    ___ += r"""<modify-function signature="addFooterNode(QString,QWidget*,QString&amp;,int,ElaIconType::IconName)">
     <modify-argument index="3">
         <remove-argument/>
     </modify-argument>
@@ -69,7 +69,7 @@ def specialfuns(const=True):
         return Py_BuildValue("(NN)", pyRes, pyFooterKey);
     </inject-code>
 </modify-function>"""
-    ___ += r"""<modify-function signature="addExpanderNode(QString,QString&amp;,ElaIconType::IconName)const">
+    ___ += r"""<modify-function signature="addExpanderNode(QString,QString&amp;,ElaIconType::IconName)">
     <modify-argument index="2">
         <remove-argument/>
     </modify-argument>
@@ -89,7 +89,7 @@ def specialfuns(const=True):
         return Py_BuildValue("(NN)", pyRes, pyFooterKey);
     </inject-code>
 </modify-function>"""
-    ___ += r"""<modify-function signature="addExpanderNode(QString,QString&amp;,QString,ElaIconType::IconName)const">
+    ___ += r"""<modify-function signature="addExpanderNode(QString,QString&amp;,QString,ElaIconType::IconName)">
     <modify-argument index="2">
         <remove-argument/>
     </modify-argument>
@@ -111,8 +111,8 @@ def specialfuns(const=True):
 </modify-function>"""
 
     # SIP没办法处理这4个重载，但SHIBOKEN可以。但为了统一，将SHIBOKEN也改名。
-    ___ += r"""<modify-function signature="addPageNode(QString,QWidget*,int,ElaIconType::IconName)const" rename="addPageNodeKeyPoints"/>"""
-    ___ += r"""<modify-function signature="addPageNode(QString,QWidget*,QString,int,ElaIconType::IconName)const" rename="addPageNodeKeyPoints"/>"""
+    ___ += r"""<modify-function signature="addPageNode(QString,QWidget*,int,ElaIconType::IconName)" rename="addPageNodeKeyPoints"/>"""
+    ___ += r"""<modify-function signature="addPageNode(QString,QWidget*,QString,int,ElaIconType::IconName)" rename="addPageNodeKeyPoints"/>"""
     if not const:
         ___ = ___.replace("const", "")
     return ___

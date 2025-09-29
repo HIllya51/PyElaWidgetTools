@@ -147,16 +147,6 @@ def generate_sip_for_class_2(header_content, filename=""):
 
     class_body_content = class_body_content_match.group(1)
 
-    # Regex to find method declarations, considering access specifiers
-    # This pattern aims to capture methods correctly, including constructors/destructors
-    method_pattern_detailed = re.compile(
-        r"^\s*(explicit\s+|virtual\s+)?\s*"  # Optional explicit or virtual
-        r"((?:[\w:]+(?:\s*<[^>]*>)?(?:\s*(?:const\s*)?[*&])?)\s+)"  # Return type (complex types with templates, pointers, refs)
-        # or class name for constructor
-        r"(\w+)\s*"  # Method or Class name
-        r"\(([^)]*)\)\s*"  # Parameters
-        r"(const)?\s*(override|final)?\s*;",  # Optional const, override, final
-    )
     constructor_destructor_pattern = re.compile(
         r"^\s*(Q_INVOKABLE)?\s*(explicit\s+|virtual\s+)?\s*"
         r"(~?%s)\s*"  # Class name, possibly with ~
@@ -194,11 +184,12 @@ def generate_sip_for_class_2(header_content, filename=""):
 
         # Constructors/Destructors in this "default private" block
         for match in constructor_destructor_pattern.finditer(code_block):
+            Q_INVOKABLE=match.group(1) if match.group(1) else ""
             # For ElaIcon (singleton), these are private and we've handled the constructor above
             if is_singleton and match.group(3) == f"{class_name}":
                 # sip_lines.append(f"  {class_name}(); // Already handled as private for singleton")
                 processed_methods_for_access_section.add(
-                    f"{match.group(1)} {match.group(3)}({match.group(4)})"
+                    f"{Q_INVOKABLE} {match.group(3)}({match.group(4)})"
                 )
                 continue
             if is_singleton and match.group(3) == f"~{class_name}":
@@ -386,7 +377,7 @@ def generate_sip_for_class__1(header_content, filename=""):
 
         # Constructor pattern
         constructor_pattern = re.compile(
-            r"^\s*(explicit\s+)?%s\s*\((.*)\)\s*(?:override)?\s*;"
+            r"^\s*(Q_INVOKABLE)?\s*(explicit\s+)?%s\s*\((.*)\)\s*(?:override)?\s*;"
             % class_name,  # Constructor specific to class_name
             re.MULTILINE,
         )
@@ -413,11 +404,12 @@ def generate_sip_for_class__1(header_content, filename=""):
 
             # Constructors
             for match in constructor_pattern.finditer(code_block):
-                explicit_kw = match.group(1) or ""
-                params_str = match.group(2)
+                Q_INVOKABLE = match.group(1) or ""
+                explicit_kw = match.group(2) or ""
+                params_str = match.group(3)
                 parsed_params = parse_parameters(params_str)
                 sip_lines.append(
-                    f"  {explicit_kw}{class_name}({', '.join(parsed_params)});"
+                    f"  {Q_INVOKABLE} {explicit_kw}{class_name}({', '.join(parsed_params)});"
                 )
 
             # Destructor

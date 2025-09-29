@@ -153,6 +153,7 @@ elif binding.lower().startswith("pyside"):
             shell=True,
         )
         .stdout.strip()
+        .decode()
         .replace("\\", "/")
     )
     subprocess.run(

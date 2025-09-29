@@ -24,21 +24,21 @@ jobs:
             qthost: windows
             qtarch: win64_msvc2019_64
             version: 5.15.2
-            pythonversion: 3.7.9
+            pythonversion: 3.8.10
             arch: x64
             binding: PyQt5
           - os: windows-latest
             qthost: windows
             qtarch: win64_msvc2019_64
             version: 6.4.3
-            pythonversion: 3.12.10
+            pythonversion: 3.8.10
             arch: x64
             binding: PyQt6
           - os: windows-latest
             qthost: windows
             qtarch: win64_msvc2019_64
             version: 6.6.2
-            pythonversion: 3.12.10
+            pythonversion: 3.8.10
             arch: x64
             binding: PySide6
           - os: ubuntu-latest
@@ -52,14 +52,14 @@ jobs:
             qthost: linux
             qtarch: gcc_64
             version: 6.4.3
-            pythonversion: 3.12.10
+            pythonversion: 3.8.12
             arch: x64
             binding: PyQt6
           - os: ubuntu-latest
             qthost: linux
             qtarch: gcc_64
             version: 6.6.2
-            pythonversion: 3.12.10
+            pythonversion: 3.8.12
             arch: x64
             binding: PySide6
     permissions:

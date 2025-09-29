@@ -41,11 +41,11 @@ subprocess.run(f"{pyPath} -m pip install --upgrade pip", shell=True)
 if binding.lower().startswith("pyqt"):
     if qtversion.startswith("6"):
         subprocess.run(
-            f"{pyPath} -m pip install pyqt6==6.6 PyQt-builder sip", shell=True
+            f"{pyPath} -m pip install pyqt6==6.4.2 PyQt-builder sip", shell=True
         )
     else:
         subprocess.run(
-            f"{pyPath} -m pip install pyqt5==5.15.9 PyQt-builder==1.15 sip==6.7",
+            f"{pyPath} -m pip install pyqt5==5.15.5 PyQt-builder==1.15 sip==6.7",
             shell=True,
         )
 elif binding.lower().startswith("pyside"):

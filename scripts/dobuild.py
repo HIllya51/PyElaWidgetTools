@@ -26,7 +26,7 @@ if sys.platform == "win32":
     Qtinstallpath = f"D:/a/PyElaWidgetTools/Qt/{qtversion}/{qtarchdir}"
     qmake = f"{Qtinstallpath}/bin/qmake.exe"
     sipbuild = f"{pyDir}/Scripts/sip-build"
-    bin_app='.pyd'
+    bin_app = ".pyd"
 elif sys.platform == "linux":
     pyPathEx = f"/opt/hostedtoolcache/Python/3.12.10/x64/bin/python"
     pyDir = f"/opt/hostedtoolcache/Python/{pythonversion}/{arch}/bin"
@@ -34,7 +34,7 @@ elif sys.platform == "linux":
     Qtinstallpath = f"/home/runner/work/PyElaWidgetTools/Qt/{qtversion}/{qtarch}"
     qmake = f"{Qtinstallpath}/bin/qmake"
     sipbuild = f"{pyDir}/sip-build"
-    bin_app='.abi3.so'
+    bin_app = ".abi3.so"
 
 
 subprocess.run(f"{pyPath} -m pip install --upgrade pip", shell=True)
@@ -146,28 +146,33 @@ elif binding.lower().startswith("pyside"):
     os.chdir(cwd)
     os.chdir("pyside6")
 
-    MY_SITE_PACKAGES_PATH=site.getsitepackages()[-1].replace("\\", "/")
+    MY_SITE_PACKAGES_PATH = subprocess.run(
+        f'{pyPath} -c "import site;print(site.getsitepackages()[-1])"',
+        stdout=subprocess.PIPE,
+    ).stdout.replace("\\", "/")
     subprocess.run(
         f'python gen_xml.py {os.path.abspath("../../ElaWidgetTools/ElaWidgetTools").replace("\\", "/")} {Qtinstallpath} {pyDir} {MY_SITE_PACKAGES_PATH}',
         shell=True,
     )
-    if sys.platform=='win32':
-        MY_PYTHON_INCLUDE_PATH=pyDir+'/include'
-        ELA_LIB_PATH=os.path.abspath(f"../ElaWidgetTools/Release/ElaWidgetTools.lib").replace("\\", "/")
-    elif sys.platform=='linux':
+    if sys.platform == "win32":
+        MY_PYTHON_INCLUDE_PATH = pyDir + "/include"
+        ELA_LIB_PATH = os.path.abspath(
+            f"../ElaWidgetTools/Release/ElaWidgetTools.lib"
+        ).replace("\\", "/")
+    elif sys.platform == "linux":
         __ = os.path.dirname(os.path.dirname(sys.executable))
-        MY_PYTHON_INCLUDE_PATH = __ + "/include/"+os.listdir(__ + "/include")[0]
-        ELA_LIB_PATH=os.path.abspath(f"../ElaWidgetTools/libElaWidgetTools.a")
+        MY_PYTHON_INCLUDE_PATH = __ + "/include/" + os.listdir(__ + "/include")[0]
+        ELA_LIB_PATH = os.path.abspath(f"../ElaWidgetTools/libElaWidgetTools.a")
 
-    PySide6Lib='pyside6.abi3.lib'
-    shiboken6Lib='shiboken6.abi3.lib'
+    PySide6Lib = "pyside6.abi3.lib"
+    shiboken6Lib = "shiboken6.abi3.lib"
     for _ in os.listdir(f"{MY_SITE_PACKAGES_PATH}/PySide6"):
-        if _.startswith('libpyside6.abi3.so'):
-            PySide6Lib=_
+        if _.startswith("libpyside6.abi3.so"):
+            PySide6Lib = _
     for _ in os.listdir(f"{MY_SITE_PACKAGES_PATH}/shiboken6"):
-        if _.startswith('libshiboken6.abi3.so'):
-            shiboken6Lib=_
-    
+        if _.startswith("libshiboken6.abi3.so"):
+            shiboken6Lib = _
+
     subprocess.run(
         f'cmake -DdllSUFFIX={bin_app} -DMY_QT_INSTALL={Qtinstallpath} -Dshiboken6Lib={shiboken6Lib} -DPySide6Lib={PySide6Lib} -DMY_PYTHON_INCLUDE_PATH={MY_PYTHON_INCLUDE_PATH} -DMY_SITE_PACKAGES_PATH={MY_SITE_PACKAGES_PATH} -DMY_PYTHON_INSTALL_PATH={pyDir} -DELA_LIB_PATH={ELA_LIB_PATH} -DELA_INCLUDE_PATH={os.path.abspath("../../ElaWidgetTools/ElaWidgetTools").replace("\\", "/")} ./CMakeLists.txt {flags}',
         shell=True,
@@ -176,9 +181,9 @@ elif binding.lower().startswith("pyside"):
         f"cmake --build ./ --config Release -j {os.cpu_count()}",
         shell=True,
     )
-    if sys.platform=='linux':
-        os.makedirs('Release', exist_ok=True)
-        
+    if sys.platform == "linux":
+        os.makedirs("Release", exist_ok=True)
+
         shutil.move(f"libElaWidgetTools{bin_app}", f"Release/ElaWidgetTools{bin_app}")
 
     os.chdir("..")

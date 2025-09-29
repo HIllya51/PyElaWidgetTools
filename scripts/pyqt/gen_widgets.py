@@ -184,7 +184,7 @@ def generate_sip_for_class_2(header_content, filename=""):
 
         # Constructors/Destructors in this "default private" block
         for match in constructor_destructor_pattern.finditer(code_block):
-            Q_INVOKABLE=match.group(1) if match.group(1) else ""
+            Q_INVOKABLE = ""  # match.group(1) or ""
             # For ElaIcon (singleton), these are private and we've handled the constructor above
             if is_singleton and match.group(3) == f"{class_name}":
                 # sip_lines.append(f"  {class_name}(); // Already handled as private for singleton")
@@ -404,7 +404,7 @@ def generate_sip_for_class__1(header_content, filename=""):
 
             # Constructors
             for match in constructor_pattern.finditer(code_block):
-                Q_INVOKABLE = match.group(1) or ""
+                Q_INVOKABLE = ""  # match.group(1) or ""
                 explicit_kw = match.group(2) or ""
                 params_str = match.group(3)
                 parsed_params = parse_parameters(params_str)

@@ -146,10 +146,15 @@ elif binding.lower().startswith("pyside"):
     os.chdir(cwd)
     os.chdir("pyside6")
 
-    MY_SITE_PACKAGES_PATH = subprocess.run(
-        f'{pyPath} -c "import site;print(site.getsitepackages()[-1])"',
-        stdout=subprocess.PIPE,
-    ).stdout.replace("\\", "/")
+    MY_SITE_PACKAGES_PATH = (
+        subprocess.run(
+            f'{pyPath} -c "import site;print(site.getsitepackages()[-1])"',
+            stdout=subprocess.PIPE,
+            shell=True,
+        )
+        .stdout.strip()
+        .replace("\\", "/")
+    )
     subprocess.run(
         f'python gen_xml.py {os.path.abspath("../../ElaWidgetTools/ElaWidgetTools").replace("\\", "/")} {Qtinstallpath} {pyDir} {MY_SITE_PACKAGES_PATH}',
         shell=True,

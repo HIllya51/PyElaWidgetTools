@@ -158,7 +158,7 @@ def generate_sip_for_class_2(header_content, filename=""):
         r"(const)?\s*(override|final)?\s*;",  # Optional const, override, final
     )
     constructor_destructor_pattern = re.compile(
-        r"^\s*(explicit\s+|virtual\s+)?\s*"
+        r"^\s*(Q_INVOKABLE)?\s*(explicit\s+|virtual\s+)?\s*"
         r"(~?%s)\s*"  # Class name, possibly with ~
         r"\(([^)]*)\)\s*(override)?\s*;" % class_name,
         re.MULTILINE,
@@ -195,16 +195,16 @@ def generate_sip_for_class_2(header_content, filename=""):
         # Constructors/Destructors in this "default private" block
         for match in constructor_destructor_pattern.finditer(code_block):
             # For ElaIcon (singleton), these are private and we've handled the constructor above
-            if is_singleton and match.group(2) == f"{class_name}":
+            if is_singleton and match.group(3) == f"{class_name}":
                 # sip_lines.append(f"  {class_name}(); // Already handled as private for singleton")
                 processed_methods_for_access_section.add(
-                    f"{match.group(2)}({match.group(3)})"
+                    f"{match.group(1)} {match.group(3)}({match.group(4)})"
                 )
                 continue
-            if is_singleton and match.group(2) == f"~{class_name}":
+            if is_singleton and match.group(3) == f"~{class_name}":
                 # sip_lines.append(f"  ~{class_name}(); // Private destructor")
                 processed_methods_for_access_section.add(
-                    f"{match.group(2)}({match.group(3)})"
+                    f"{match.group(3)}({match.group(4)})"
                 )
                 continue
             # ... (logic for non-singleton private constructors if needed)
@@ -220,25 +220,25 @@ def generate_sip_for_class_2(header_content, filename=""):
 
         # Constructors/Destructors
         for match in constructor_destructor_pattern.finditer(code_block):
-            method_key = f"{match.group(2)}({match.group(3)})"
+            method_key = f"{match.group(3)}({match.group(4)})"
             if method_key in processed_methods_for_access_section:
                 continue
             processed_methods_for_access_section.add(method_key)
 
             if (
-                is_singleton and match.group(2) == f"{class_name}"
+                is_singleton and match.group(3) == f"{class_name}"
             ):  # If somehow a public ctor in a singleton
                 sip_lines.append(
                     f"  // Public constructor for singleton? Unusual. getInstance() is preferred."
                 )
                 continue  # getInstance is the way
-            if is_singleton and match.group(2) == f"~{class_name}":
+            if is_singleton and match.group(3) == f"~{class_name}":
                 sip_lines.append(f"  // Public destructor for singleton? Unusual.")
                 continue
 
-            explicit_kw = match.group(1) or ""
-            name = match.group(2)  # ~ClassName or ClassName
-            params_str = match.group(3)
+            explicit_kw = match.group(2) or ""
+            name = match.group(3)  # ~ClassName or ClassName
+            params_str = match.group(4)
             parsed_params = parse_parameters(params_str)
             sip_lines.append(f"  {explicit_kw}{name}({', '.join(parsed_params)});")
 

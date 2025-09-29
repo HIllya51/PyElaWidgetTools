@@ -20,9 +20,9 @@ class BinaryDistribution(Distribution):
 
 
 if bindingfor == "PyQt5":
-    req = "PyQt5>=5.15"
+    req = "PyQt5>=5.15.5"
 elif bindingfor == "PyQt6":
-    req = "PyQt6>=6.4"
+    req = "PyQt6>=6.4.2"
 elif bindingfor == "PySide6":
     pass
 
@@ -33,7 +33,7 @@ elif sys.platform == "linux":
 
 setup(
     name=f"{bindingfor}-ElaWidgetTools",
-    version="0.1.1",
+    version="0.2",
     author="HIllya51",
     license="MIT",
     install_requires=[f"""{bindingfor}"""],

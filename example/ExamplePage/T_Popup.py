@@ -125,7 +125,7 @@ class T_Popup(T_BasePage):
                 _drawer.expand()
             else:
                 drawerSwitchText.setText("关")
-                _drawer.collpase()
+                _drawer.collapse()
 
         drawerSwitch.toggled.connect(__)
         _drawer.expandStateChanged.connect(drawerSwitch.setIsToggled)

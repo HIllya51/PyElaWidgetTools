@@ -68,10 +68,6 @@ __parsefile(
     lambda cml: cml.replace("add_subdirectory(ElaWidgetToolsExample)", ""),
 )
 __parsefile(
-    "../ElaWidgetTools/ElaWidgetTools/CMakeLists.txt",
-    lambda cml: cml.replace("qt_add_library", "add_library"),  # qt6.8以上
-)
-__parsefile(
     "../ElaWidgetTools/ElaWidgetTools/ElaProperty.h",
     lambda cml: cml.replace(
         "Q_DECL_EXPORT",

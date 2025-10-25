@@ -33,7 +33,7 @@ elif sys.platform == "linux":
 
 setup(
     name=f"{bindingfor}-ElaWidgetTools",
-    version="0.3.1",
+    version="0.4",
     author="HIllya51",
     license="MIT",
     install_requires=[f"""{bindingfor}"""],

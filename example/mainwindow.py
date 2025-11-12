@@ -56,7 +56,6 @@ class MainWindow(ElaWindow):
         customLayout.addWidget(menuBar)
         customLayout.addStretch()
         self.setCustomWidget(ElaAppBarType.CustomArea.MiddleArea, customWidget)
-        self.setCustomWidgetMaximumWidth(500)
 
         menuBar.addElaIconAction(ElaIconType.IconName.AtomSimple, "动作菜单")
         iconMenu = menuBar.addMenu(ElaIconType.IconName.Aperture, "图标菜单")

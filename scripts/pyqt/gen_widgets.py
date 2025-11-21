@@ -548,7 +548,7 @@ def cast_h_to_sip(filename):
     full_sip_content.append(sip_class_def)
     final_output = "\n".join(full_sip_content)
     ls = final_output.splitlines()
-    ls = [_ for _ in ls if "QVector" not in _]  # 不支持的类型转换
+    #ls = [_ for _ in ls if "QVector" not in _]  # 不支持的类型转换
     ls = [_ for _ in ls if "QList<QVariantMap>" not in _]  # 不支持的类型转换
     bad = ("long *", "qintptr *")[forQt5]
     ls = [_ for _ in ls if bad not in _]  # 这个是Qt5的条件编译，Qt6的话要删掉另一条

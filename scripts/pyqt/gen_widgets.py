@@ -500,17 +500,17 @@ def parseshitelasuggestbox(content):
     return content
 
 
-def parseshitelasuggestbox2():
-    return r"""struct SuggestData {
-%TypeHeaderCode
-#include "ElaDef.h"
-#include "ElaSuggestBox.h"
-%End
+def parseshitelasuggestbox2(sip_class_def: str):
+    extra = r"""struct SuggestData {
     public:
         explicit SuggestData();
         explicit SuggestData(ElaIconType::IconName icon, const QString& suggestText, const QVariantMap& suggestData = {});
         ~SuggestData();
     };"""
+
+    idx = sip_class_def.rfind("public:\n") + 8
+    sip_class_def = sip_class_def[:idx] + "\n" + extra + "\n" + sip_class_def[idx:]
+    return sip_class_def
 
 
 def cast_h_to_sip(filename):
@@ -536,7 +536,7 @@ def cast_h_to_sip(filename):
         return
 
     if filename == "ElaSuggestBox":
-        sip_class_def = parseshitelasuggestbox2() + "\n" + sip_class_def
+        sip_class_def = parseshitelasuggestbox2(sip_class_def)
 
     full_sip_content = []
     # Add necessary imports based on base class and parameter types

@@ -490,6 +490,34 @@ def generate_sip_for_class__1(header_content, filename=""):
     return "\n".join(sip_lines)
 
 
+def parseshitelasuggestbox(content):
+
+    x = re.search(r"struct ELA_EXPORT SuggestData \{[\s\S]*?\};", content)
+
+    klass = content.find("class")
+    content = content.replace(x.group(), "")
+    content = content[:klass] + x.group() + "\n" + content[klass:]
+    return content
+
+
+def parseshitelasuggestbox2():
+    return r"""struct SuggestData {
+    
+%TypeHeaderCode
+#include "ElaDef.h"
+#include "ElaSuggestBox.h"
+%End
+        Q_PRIVATE_CREATE(ElaIconType::IconName, ElaIcon)
+        Q_PRIVATE_CREATE(QString, SuggestText)
+        Q_PRIVATE_CREATE(QString, SuggestKey)
+        Q_PRIVATE_CREATE(QVariantMap, SuggestData)
+    public:
+        explicit SuggestData();
+        explicit SuggestData(ElaIconType::IconName icon, const QString& suggestText, const QVariantMap& suggestData = {});
+        ~SuggestData();
+    };"""
+
+
 def cast_h_to_sip(filename):
     filename = os.path.splitext(os.path.basename(filename))[0]
     input_header_file = f"{eladir}/{filename}.h"
@@ -497,6 +525,8 @@ def cast_h_to_sip(filename):
 
     with open(input_header_file, "r", encoding="utf-8") as f:
         content = f.read()
+    if filename == "ElaSuggestBox":
+        content = parseshitelasuggestbox(content)
 
     # A common pattern is to have a main .sip file that includes others.
     # This script generates the content for a single class.
@@ -507,26 +537,31 @@ def cast_h_to_sip(filename):
     )
     sip_class_def = generate_sip_for_class(content, input_header_file)
 
-    if sip_class_def:
-        full_sip_content = []
-        # Add necessary imports based on base class and parameter types
-        # This is a basic set, might need to be smarter
-        full_sip_content.append("%Import QtCore/QtCoremod.sip")
-        full_sip_content.append("%Import QtGui/QtGuimod.sip")
-        full_sip_content.append("%Import QtWidgets/QtWidgetsmod.sip")
-        full_sip_content.append("")
-        full_sip_content.append(sip_class_def)
-        final_output = "\n".join(full_sip_content)
-        ls = final_output.splitlines()
-        ls = [_ for _ in ls if "QVector" not in _]  # 不支持的类型转换
-        ls = [_ for _ in ls if "QList<QVariantMap>" not in _]  # 不支持的类型转换
-        bad = ("long *", "qintptr *")[forQt5]
-        ls = [_ for _ in ls if bad not in _]  # 这个是Qt5的条件编译，Qt6的话要删掉另一条
+    if not sip_class_def:
+        return
 
-        final_output = "\n".join(ls)
+    if filename == "ElaSuggestBox":
+        sip_class_def = parseshitelasuggestbox2() + "\n" + sip_class_def
 
-        with open(output_sip_file, "w", encoding="utf-8") as f:
-            f.write(final_output)
+    full_sip_content = []
+    # Add necessary imports based on base class and parameter types
+    # This is a basic set, might need to be smarter
+    full_sip_content.append("%Import QtCore/QtCoremod.sip")
+    full_sip_content.append("%Import QtGui/QtGuimod.sip")
+    full_sip_content.append("%Import QtWidgets/QtWidgetsmod.sip")
+    full_sip_content.append("")
+    full_sip_content.append(sip_class_def)
+    final_output = "\n".join(full_sip_content)
+    ls = final_output.splitlines()
+    ls = [_ for _ in ls if "QVector" not in _]  # 不支持的类型转换
+    ls = [_ for _ in ls if "QList<QVariantMap>" not in _]  # 不支持的类型转换
+    bad = ("long *", "qintptr *")[forQt5]
+    ls = [_ for _ in ls if bad not in _]  # 这个是Qt5的条件编译，Qt6的话要删掉另一条
+
+    final_output = "\n".join(ls)
+
+    with open(output_sip_file, "w", encoding="utf-8") as f:
+        f.write(final_output)
 
 
 allfiles = []

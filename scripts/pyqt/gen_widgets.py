@@ -502,15 +502,10 @@ def parseshitelasuggestbox(content):
 
 def parseshitelasuggestbox2():
     return r"""struct SuggestData {
-    
 %TypeHeaderCode
 #include "ElaDef.h"
 #include "ElaSuggestBox.h"
 %End
-        Q_PRIVATE_CREATE(ElaIconType::IconName, ElaIcon)
-        Q_PRIVATE_CREATE(QString, SuggestText)
-        Q_PRIVATE_CREATE(QString, SuggestKey)
-        Q_PRIVATE_CREATE(QVariantMap, SuggestData)
     public:
         explicit SuggestData();
         explicit SuggestData(ElaIconType::IconName icon, const QString& suggestText, const QVariantMap& suggestData = {});

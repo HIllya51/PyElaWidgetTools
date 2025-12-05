@@ -100,7 +100,7 @@ jobs:
           arch: ${{matrix.qtarch}}
           host: ${{matrix.qthost}}
           target: desktop
-      - if: matrix.target == 'macos-latest':
+      - if: matrix.target == 'macos-latest'
         run: |
           brew install gettext
           brew link gettext --force

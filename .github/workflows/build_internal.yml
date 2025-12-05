@@ -65,21 +65,21 @@ jobs:
             arch: x64
             binding: PySide6
           #macos
-          - os: macos-latest
+          - os: macos-11
             qthost: mac
             qtarch: clang_64
             version: 5.15.2
             pythonversion: 3.8.12
             arch: x64
             binding: PyQt5
-          - os: macos-latest
+          - os: macos-11
             qthost: mac
             qtarch: clang_64
             version: 6.4.3
             pythonversion: 3.8.12
             arch: x64
             binding: PyQt6
-          - os: macos-latest
+          - os: macos-11
             qthost: mac
             qtarch: clang_64
             version: 6.6.2

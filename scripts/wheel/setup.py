@@ -30,12 +30,10 @@ if sys.platform == "win32":
     platnames = ("win32", "win_amd64")[bit == "64"]
 elif sys.platform == "linux":
     platnames = "manylinux1_x86_64"
-elif sys.platform == "darwin":
-    platnames = "macosx_10_13_x86_64"
 
 setup(
     name=f"{bindingfor}-ElaWidgetTools",
-    version="0.8",
+    version="0.7",
     author="HIllya51",
     license="MIT",
     install_requires=[f"""{bindingfor}"""],

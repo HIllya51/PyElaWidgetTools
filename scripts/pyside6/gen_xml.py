@@ -39,7 +39,7 @@ def specialfuns(const=True):
             %CPPSELF.addFooterNode(%1, footerKey, %3, %4);
 
         PyObject* pyRes = Shiboken::Conversions::copyToPython(
-            PepType_SETP(reinterpret_cast&lt;SbkEnumType *&gt;(Shiboken::Module::get(SbkElaWidgetToolsTypeStructs[SBK_ElaNavigationType_NodeResult_IDX])))-&gt;converter,
+            PepType_SETP(reinterpret_cast&lt;SbkEnumType *&gt;(Shiboken::Module::get(SbkElaWidgetToolsTypeStructs[SBK_ELANAVIGATIONTYPE_NODERESULT_IDX])))-&gt;converter,
             &amp;cppRes);
 
         PyObject* pyFooterKey = Shiboken::Conversions::copyToPython(
@@ -59,7 +59,7 @@ def specialfuns(const=True):
             %CPPSELF.addFooterNode(%1, %2, footerKey, %4, %5);
 
         PyObject* pyRes = Shiboken::Conversions::copyToPython(
-            PepType_SETP(reinterpret_cast&lt;SbkEnumType *&gt;(Shiboken::Module::get(SbkElaWidgetToolsTypeStructs[SBK_ElaNavigationType_NodeResult_IDX])))-&gt;converter,
+            PepType_SETP(reinterpret_cast&lt;SbkEnumType *&gt;(Shiboken::Module::get(SbkElaWidgetToolsTypeStructs[SBK_ELANAVIGATIONTYPE_NODERESULT_IDX])))-&gt;converter,
             &amp;cppRes);
 
         PyObject* pyFooterKey = Shiboken::Conversions::copyToPython(
@@ -79,7 +79,7 @@ def specialfuns(const=True):
             %CPPSELF.addExpanderNode(%1, footerKey, %3);
 
         PyObject* pyRes = Shiboken::Conversions::copyToPython(
-            PepType_SETP(reinterpret_cast&lt;SbkEnumType *&gt;(Shiboken::Module::get(SbkElaWidgetToolsTypeStructs[SBK_ElaNavigationType_NodeResult_IDX])))-&gt;converter,
+            PepType_SETP(reinterpret_cast&lt;SbkEnumType *&gt;(Shiboken::Module::get(SbkElaWidgetToolsTypeStructs[SBK_ELANAVIGATIONTYPE_NODERESULT_IDX])))-&gt;converter,
             &amp;cppRes);
 
         PyObject* pyFooterKey = Shiboken::Conversions::copyToPython(
@@ -99,7 +99,7 @@ def specialfuns(const=True):
             %CPPSELF.addExpanderNode(%1, footerKey, %3, %4);
 
         PyObject* pyRes = Shiboken::Conversions::copyToPython(
-            PepType_SETP(reinterpret_cast&lt;SbkEnumType *&gt;(Shiboken::Module::get(SbkElaWidgetToolsTypeStructs[SBK_ElaNavigationType_NodeResult_IDX])))-&gt;converter,
+            PepType_SETP(reinterpret_cast&lt;SbkEnumType *&gt;(Shiboken::Module::get(SbkElaWidgetToolsTypeStructs[SBK_ELANAVIGATIONTYPE_NODERESULT_IDX])))-&gt;converter,
             &amp;cppRes);
 
         PyObject* pyFooterKey = Shiboken::Conversions::copyToPython(
@@ -256,8 +256,8 @@ def maybeparse(xx: str):
                 "SbkPySide6_QtWidgetsTypeStructs", "SbkPySide6_QtWidgetsTypes"
             )
             xx = xx.replace(
-                "SBK_ElaNavigationType_NodeResult_IDX",
-                "SBK_ELANAVIGATIONTYPE_NodeResult_IDX",
+                "SBK_ELANAVIGATIONTYPE_NODERESULT_IDX",
+                "SBK_ELANAVIGATIONTYPE_NODERESULT_IDX",
             )
         return xx
 

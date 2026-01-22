@@ -478,7 +478,7 @@ def generate_sip_for_class__1(header_content, filename=""):
                 method_line = f"  {virtual_kw}{sip_return_type} {method_name}({', '.join(parsed_params)}){const_kw} {PyName};"
 
                 # Handle known out parameters like QString& for keys
-                # Example: ElaNavigationType::NodeOperateReturnType addExpanderNode(QString expanderTitle, QString& expanderKey, ...)
+                # Example: ElaNavigationType::NodeResult addExpanderNode(QString expanderTitle, QString& expanderKey, ...)
                 # The parse_parameters function now adds /Out/.
                 # If a method returns a type AND has /Out/ params, Python might see a tuple.
                 # SIP handles this, e.g., (return_value, out_param1, out_param2)

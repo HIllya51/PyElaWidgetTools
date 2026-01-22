@@ -320,7 +320,7 @@ def generate_pyi(sip_content):
             # ReturnType methodName(args) const /PyName=pyName/;
             # void setIsStayTop(bool IsStayTop);
             # bool getIsStayTop() const;
-            # ElaNavigationType::NodeOperateReturnType addExpanderNode(QString expanderTitle, QString & expanderKey /Out/, ElaIconType::IconName awesome = ElaIconType::None) const ;
+            # ElaNavigationType::NodeResult addExpanderNode(QString expanderTitle, QString & expanderKey /Out/, ElaIconType::IconName awesome = ElaIconType::None) const ;
             method_match = re.match(
                 r"([\w:*&\s]+?)\s+"  # Return type (can include *, &, ::)
                 r"(\w+)\s*"  # Method name

@@ -6,7 +6,7 @@ for _d, _, _fs in os.walk("."):
     for _f in _fs:
         if not _f.endswith(".whl"):
             continue
-        _f=os.path.join(_d, _f)
-        os.rename(_f, f'collect/{_f}')
+        __f=os.path.join(_d, _f)
+        os.rename(__f, f'collect/{_f}')
 os.chdir('collect')
 subprocess.run(f'twine upload -u __token__ -p {sys.argv[2]} ./*.whl')

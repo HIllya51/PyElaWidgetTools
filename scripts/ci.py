@@ -9,4 +9,4 @@ for _d, _, _fs in os.walk("."):
         __f=os.path.join(_d, _f)
         os.rename(__f, f'collect/{_f}')
 os.chdir('collect')
-subprocess.run(f'twine upload -u __token__ -p {sys.argv[2]} ./*.whl')
+subprocess.run(f'twine upload -u __token__ -p {sys.argv[1]} ./*.whl')

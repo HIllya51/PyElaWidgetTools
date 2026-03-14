@@ -1,0 +1,26 @@
+name: Build
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    permissions:
+      id-token: write
+      attestations: write
+      contents: write
+    uses: ./.github/workflows/build_internal.yml
+  
+  release:
+    runs-on: windows-latest
+    needs: [build]
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+            path: build
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{matrix.pythonversion}}
+          architecture: ${{ matrix.arch }}
+      - run: pip install twine
+      - run: python scripts/ci.py ${{ secrets.PYPI }}

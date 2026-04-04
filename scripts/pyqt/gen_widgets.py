@@ -558,6 +558,14 @@ def cast_h_to_sip(filename):
         "class ElaActionCommand : public QObject",
         "class ElaActionCommand : public QObject /Abstract/",
     )
+    final_output = final_output.replace(
+        "virtual void undo() ;",
+        "virtual void undo() = 0;",
+    )
+    final_output = final_output.replace(
+        "virtual void redo() ;",
+        "virtual void redo() = 0;",
+    )
     with open(output_sip_file, "w", encoding="utf-8") as f:
         f.write(final_output)
 

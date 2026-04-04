@@ -554,7 +554,10 @@ def cast_h_to_sip(filename):
     ls = [_ for _ in ls if bad not in _]  # 这个是Qt5的条件编译，Qt6的话要删掉另一条
 
     final_output = "\n".join(ls)
-
+    final_output = final_output.replace(
+        "class ElaActionCommand : public QObject",
+        "class ElaActionCommand : public QObject /Abstract/",
+    )
     with open(output_sip_file, "w", encoding="utf-8") as f:
         f.write(final_output)
 

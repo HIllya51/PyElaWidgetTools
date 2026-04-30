@@ -67,7 +67,7 @@ jobs:
       attestations: write
       contents: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           submodules: 'recursive'
       - uses: jurplel/install-qt-action@v4
@@ -77,11 +77,11 @@ jobs:
           host: ${{matrix.qthost}}
           target: desktop
       
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: ${{matrix.pythonversion}}
           architecture: ${{ matrix.arch }}
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: 3.12.10
           architecture: x64
@@ -90,10 +90,10 @@ jobs:
         with:
           arch: ${{ matrix.arch }}
       - run: python scripts/dobuild.py ${{matrix.pythonversion}} ${{ matrix.qtarch }}  ${{ matrix.version }} ${{ matrix.arch }}  ${{matrix.binding}}
-      - uses: actions/attest-build-provenance@v2.2.0
+      - uses: actions/attest-build-provenance@v4
         with:
             subject-path: scripts/objects
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: ${{matrix.qthost}}_${{ matrix.binding }}_${{ matrix.arch }}
           path: scripts/objects

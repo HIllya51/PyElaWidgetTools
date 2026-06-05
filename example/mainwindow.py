@@ -10,7 +10,6 @@ from ExamplePage.T_Setting import *
 from ExamplePage.T_Popup import *
 from ExamplePage.T_Navigation import *
 from ExamplePage.T_Card import *
-from ExamplePage.T_Graphics import *
 from ExamplePage.T_ListView import *
 from ExamplePage.T_UpdateWidget import *
 from ExamplePage.T_TableView import *
@@ -179,7 +178,6 @@ class MainWindow(ElaWindow):
         self._elaScreenPage = QWidget()  # T_ElaScreen(self);
         self._iconPage = T_Icon(self)
         self._baseComponentsPage = T_BaseComponents(self)
-        self._graphicsPage = T_Graphics(self)
         self._navigationPage = T_Navigation(self)
         self._popupPage = T_Popup(self)
         self._cardPage = T_Card(self)
@@ -219,9 +217,6 @@ class MainWindow(ElaWindow):
         )
         self.expandNavigationNode(_viewKey)
 
-        self.addPageNodeKeyPoints(
-            "ElaGraphics", self._graphicsPage, 9, ElaIconType.IconName.Paintbrush
-        )
         self.addPageNode("ElaCard", self._cardPage, ElaIconType.IconName.Cards)
         self.addPageNode(
             "ElaNavigation", self._navigationPage, ElaIconType.IconName.LocationArrow

@@ -76,7 +76,7 @@ __parsefile(
 )
 if sys.platform == "win32":
     archA = ("win32", "x64")[arch == "x64"]
-    flags = f'-G "Visual Studio 18 2024" -A {archA} -T host={arch}'
+    flags = f'-G "Visual Studio 18 2026" -A {archA} -T host={arch}'
 else:
     flags = ""
 subprocess.run(

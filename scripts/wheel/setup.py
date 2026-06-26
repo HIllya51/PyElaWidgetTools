@@ -7,6 +7,8 @@ sys.argv.pop(-1)
 bit = sys.argv[-1]
 sys.argv.pop(-1)
 
+version="0.11.0"
+
 req = "PySide6"
 
 if sys.argv[-1].startswith("PySide6=="):
@@ -33,7 +35,7 @@ elif sys.platform == "linux":
 
 setup(
     name=f"{bindingfor}-ElaWidgetTools",
-    version="0.10.1",
+    version=version,
     author="HIllya51",
     license="MIT",
     install_requires=[f"""{bindingfor}"""],

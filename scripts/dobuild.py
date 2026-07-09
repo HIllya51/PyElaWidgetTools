@@ -77,6 +77,22 @@ __parsefile(
 if sys.platform == "win32":
     archA = ("win32", "x64")[arch == "x64"]
     flags = f'-G "Visual Studio 18 2026" -A {archA} -T host={arch}'
+
+    if binding.lower() == "pyqt6":
+        fix = r"""
+    if(MSVC AND MSVC_VERSION GREATER_EQUAL 1940)  # VS2026 的 _MSC_VER 约为 1940+
+        message(STATUS "Detected VS2026 or newer, adding compatibility definitions")
+        add_compile_definitions(
+            _SILENCE_ALL_MS_EXT_DEPRECATION_WARNINGS
+            _HAS_CXX17=1
+            _HAS_CXX20=1
+            _CRT_SECURE_NO_WARNINGS
+        )
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /std:c++17 /Zc:__cplusplus")
+    endif()
+
+    """
+        __parsefile("../ElaWidgetTools/CMakeLists.txt", lambda c: c + fix)
 else:
     flags = ""
 subprocess.run(
@@ -109,20 +125,6 @@ if binding.lower().startswith("pyqt"):
                 '[ "ElaWidgetTools","D3D11", "DXGI", "kernel32" ,"user32", "gdi32", "winspool" ,"comdlg32", "advapi32", "shell32", "ole32", "oleaut32", "uuid", "odbc32", "odbccp32"]',
             ),
         )
-        if binding.lower() == "pyqt6":
-            fix = r"""
-[tool.sip.builder]
-qmake-settings = [
-    "DEFINES += _SILENCE_ALL_MS_EXT_DEPRECATION_WARNINGS",
-    "DEFINES += _SILENCE_STDEXT_HASH_DEPRECATION_WARNINGS",
-    "DEFINES += _HAS_CXX17=1",
-    "DEFINES += _HAS_CXX20=1",
-    "DEFINES += _CRT_SECURE_NO_WARNINGS",
-    "QMAKE_CXXFLAGS += /std:c++17",
-    "QMAKE_CXXFLAGS += /Zc:__cplusplus"
-]
-    """
-            __parsefile("pyproject.toml", lambda c: c + fix)
     elif sys.platform == "linux":
         __parsefile(
             "pyproject.toml",

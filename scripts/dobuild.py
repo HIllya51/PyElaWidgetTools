@@ -1,4 +1,4 @@
-import sys, os, subprocess, shutil, site
+import sys, os, subprocess, shutil, site, io
 
 print(sys.platform)
 print(sys.executable)
@@ -53,6 +53,8 @@ elif binding.lower().startswith("pyside"):
         f"{pyPath} -m pip install pyside6=={qtversion} shiboken6=={qtversion} shiboken6_generator=={qtversion}",
         shell=True,
     )
+
+sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
 
 
 # 编译ela

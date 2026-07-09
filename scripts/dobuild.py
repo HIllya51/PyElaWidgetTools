@@ -109,6 +109,18 @@ if binding.lower().startswith("pyqt"):
                 '[ "ElaWidgetTools","D3D11", "DXGI", "kernel32" ,"user32", "gdi32", "winspool" ,"comdlg32", "advapi32", "shell32", "ole32", "oleaut32", "uuid", "odbc32", "odbccp32"]',
             ),
         )
+        if binding.lower() == "pyqt6":
+            fix = r"""
+[tool.sip.builder]
+qmake-settings = [
+    "DEFINES += _SILENCE_ALL_MS_EXT_DEPRECATION_WARNINGS",
+    "DEFINES += _HAS_CXX17=1",
+    "DEFINES += _HAS_CXX20=1",
+    "DEFINES += _CRT_SECURE_NO_WARNINGS",
+    "QMAKE_CXXFLAGS += /std:c++17",
+    "QMAKE_CXXFLAGS += /Zc:__cplusplus"
+]"""
+            __parsefile("pyproject.toml", lambda c: c + fix)
     elif sys.platform == "linux":
         __parsefile(
             "pyproject.toml",

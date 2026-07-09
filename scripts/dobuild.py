@@ -56,11 +56,14 @@ elif binding.lower().startswith("pyside"):
 
 
 # 编译ela
-def __parsefile(fn, cb):
+def __parsefile(fn, cb, pr=False):
     with open(fn, "r", encoding="utf8") as ff:
         cml = ff.read()
     with open(fn, "w", encoding="utf8") as ff:
-        ff.write(cb(cml))
+        _ = cb(cml)
+        if pr:
+            print(_)
+        ff.write(_)
 
 
 __parsefile(
@@ -92,7 +95,14 @@ if sys.platform == "win32":
     endif()
 
     """
-        __parsefile("../ElaWidgetTools/CMakeLists.txt", lambda c: c + fix)
+        __parsefile(
+            "../ElaWidgetTools/CMakeLists.txt",
+            lambda c: c.replace(
+                "add_definitions(-DELAWIDGETTOOLS_LIBRARY)",
+                "add_definitions(-DELAWIDGETTOOLS_LIBRARY)\n" + fix,
+            ),
+            pr=True,
+        )
 else:
     flags = ""
 subprocess.run(

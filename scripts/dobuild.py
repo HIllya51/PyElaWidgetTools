@@ -114,10 +114,11 @@ if binding.lower().startswith("pyqt"):
 [tool.sip.builder]
 qmake-settings = [
     "DEFINES += _SILENCE_ALL_MS_EXT_DEPRECATION_WARNINGS",
+    "DEFINES += _SILENCE_STDEXT_HASH_DEPRECATION_WARNINGS",
     "DEFINES += _HAS_CXX17=1",
     "DEFINES += _HAS_CXX20=1",
     "DEFINES += _CRT_SECURE_NO_WARNINGS",
-    "QMAKE_CXXFLAGS += /std:c++20",
+    "QMAKE_CXXFLAGS += /std:c++17",
     "QMAKE_CXXFLAGS += /Zc:__cplusplus"
 ]
     """

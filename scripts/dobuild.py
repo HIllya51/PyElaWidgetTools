@@ -41,7 +41,7 @@ subprocess.run(f"{pyPath} -m pip install --upgrade pip", shell=True)
 if binding.lower().startswith("pyqt"):
     if qtversion.startswith("6"):
         subprocess.run(
-            f"{pyPath} -m pip install pyqt6==6.4.2 PyQt-builder sip", shell=True
+            f"{pyPath} -m pip install pyqt6==6.5.0 PyQt-builder sip", shell=True
         )
     else:
         subprocess.run(

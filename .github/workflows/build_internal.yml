@@ -30,7 +30,7 @@ jobs:
           - os: windows-latest
             qthost: windows
             qtarch: win64_msvc2019_64
-            version: 6.5.0
+            version: 6.6.2
             pythonversion: 3.8.10
             arch: x64
             binding: PyQt6
@@ -51,7 +51,7 @@ jobs:
           - os: ubuntu-latest
             qthost: linux
             qtarch: gcc_64
-            version: 6.5.0
+            version: 6.6.2
             pythonversion: 3.8.12
             arch: x64
             binding: PyQt6

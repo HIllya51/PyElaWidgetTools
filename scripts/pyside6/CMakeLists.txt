@@ -18,6 +18,19 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_PREFIX_PATH ${MY_QT_INSTALL})
 set(CMAKE_BUILD_TYPE Release)
 
+
+if(MSVC AND MSVC_VERSION GREATER_EQUAL 1940)  # VS2026 的 _MSC_VER 约为 1940+
+    message(STATUS "Detected VS2026 or newer, adding compatibility definitions")
+    add_compile_definitions(
+        _SILENCE_ALL_MS_EXT_DEPRECATION_WARNINGS
+        _HAS_CXX17=1
+        _HAS_CXX20=1
+        _CRT_SECURE_NO_WARNINGS
+    )
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /std:c++17 /Zc:__cplusplus")
+endif()
+
+
 message(STATUS "Python3_ROOT_DIR: ${Python3_ROOT_DIR}")
 message(STATUS "Python3_EXECUTABLE: ${Python3_EXECUTABLE}")
 message(STATUS "Python3_FIND_REGISTRY: ${Python3_FIND_REGISTRY}")

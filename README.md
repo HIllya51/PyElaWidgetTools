@@ -4,7 +4,7 @@
 
 PyQt5: `pip install PyQt5-ElaWidgetTools`，PyQt5>=5.15.5
 
-PyQt6: `pip install PyQt6-ElaWidgetTools`，PyQt6>=6.5.0
+PyQt6: `pip install PyQt6-ElaWidgetTools`，PyQt6>=6.6.2
 
 PySide6: `pip install PySide6-ElaWidgetTools`，PySide6==6.6.2 
 

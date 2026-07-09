@@ -24,7 +24,7 @@ class BinaryDistribution(Distribution):
 if bindingfor == "PyQt5":
     req = "PyQt5>=5.15.5"
 elif bindingfor == "PyQt6":
-    req = "PyQt6>=6.5.0"
+    req = "PyQt6>=6.6.1"
 elif bindingfor == "PySide6":
     pass
 

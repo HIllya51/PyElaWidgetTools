@@ -117,7 +117,7 @@ qmake-settings = [
     "DEFINES += _HAS_CXX17=1",
     "DEFINES += _HAS_CXX20=1",
     "DEFINES += _CRT_SECURE_NO_WARNINGS",
-    "QMAKE_CXXFLAGS += /std:c++17",
+    "QMAKE_CXXFLAGS += /std:c++20",
     "QMAKE_CXXFLAGS += /Zc:__cplusplus"
 ]
     """

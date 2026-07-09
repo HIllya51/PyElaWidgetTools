@@ -289,22 +289,6 @@ with open("wrapper.hpp", "w", encoding="utf8") as ff:
     ff.write(wrapperbase.format(internal=H_internal + "\n" + h))
 
 
-sysinclude = ""
-if "msvc2019" in MY_QT_INSTALL:
-    # <=6.7必须使用msvc2019的头文件
-    vspath = "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC"
-    if not os.path.exists(vspath):
-        vspath = (
-            "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/Tools/MSVC"
-        )
-    print(os.listdir(vspath))
-    for _ in os.listdir(vspath):
-        if _.startswith("14.29"):
-            msvc2019 = _
-    sysinclude = vspath + "/" + msvc2019 + "/include"
-    print(sysinclude)
-    sysinclude = f'--system-include-paths="{sysinclude}"'
-
 if sys.platform=='linux':
     inc='/usr/lib/gcc/x86_64-linux-gnu/14/include'
     if not os.path.exists(inc):
@@ -315,7 +299,7 @@ if sys.platform=='linux':
     sysinclude = f' -I{inc} -I{pyDir} '
 
 os.system(
-    f"""shiboken6 {sysinclude}
+    f"""shiboken6 
         --generator-set=shiboken
         --output-directory=OUTPUTDIR
         -I{ELA_INCLUDE_PATH}

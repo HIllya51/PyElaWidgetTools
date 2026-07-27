@@ -85,7 +85,11 @@ jobs:
         with:
           python-version: 3.12.10
           architecture: x64
-      
+      - if: matrix.binding == 'PySide6' && matrix.qtarch == 'win64_msvc2019_64'
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          vsversion: 2019
+          arch: x64
       - uses: seanmiddleditch/gha-setup-vsdevenv@master
         with:
           arch: ${{ matrix.arch }}

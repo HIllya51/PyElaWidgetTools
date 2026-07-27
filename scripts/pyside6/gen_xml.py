@@ -289,6 +289,7 @@ with open("wrapper.hpp", "w", encoding="utf8") as ff:
     ff.write(wrapperbase.format(internal=H_internal + "\n" + h))
 
 
+sysinclude = ""
 if sys.platform=='linux':
     print(os.listdir('/usr/lib/gcc/x86_64-linux-gnu/'))
     inc='/usr/lib/gcc/x86_64-linux-gnu/14/include'
@@ -300,7 +301,7 @@ if sys.platform=='linux':
     sysinclude = f' -I{inc} -I{pyDir} '
 
 os.system(
-    f"""shiboken6 
+    f"""shiboken6 {sysinclude}
         --generator-set=shiboken
         --output-directory=OUTPUTDIR
         -I{ELA_INCLUDE_PATH}

@@ -290,6 +290,20 @@ with open("wrapper.hpp", "w", encoding="utf8") as ff:
 
 
 sysinclude = ""
+if "msvc2019" in MY_QT_INSTALL:
+    # <=6.7必须使用msvc2019的头文件
+    vspath = "C:/Program Files/Microsoft Visual Studio/18/Community/VC/Tools/MSVC"
+    if not os.path.exists(vspath):
+        vspath = (
+            "C:/Program Files/Microsoft Visual Studio/18/Enterprise/VC/Tools/MSVC"
+        )
+    print(os.listdir(vspath))
+    for _ in os.listdir(vspath):
+        if _.startswith("14.29"):
+            msvc2019 = _
+    sysinclude = vspath + "/" + msvc2019 + "/include"
+    print(sysinclude)
+    sysinclude = f'--system-include-paths="{sysinclude}"'
 if sys.platform=='linux':
     print(os.listdir('/usr/lib/gcc/x86_64-linux-gnu/'))
     inc='/usr/lib/gcc/x86_64-linux-gnu/14/include'

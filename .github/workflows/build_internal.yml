@@ -90,10 +90,7 @@ jobs:
         with:
           arch: ${{ matrix.arch }}
       - if: matrix.binding == 'PySide6' && matrix.qtarch == 'win64_msvc2019_64'
-        uses: step-security/msvc-dev-cmd@v1
-        with:
-          vsversion: 2019
-          arch: x64
+        uses: warrenbuckley/Setup-MSBuild@v1
       - run: python scripts/dobuild.py ${{matrix.pythonversion}} ${{ matrix.qtarch }}  ${{ matrix.version }} ${{ matrix.arch }}  ${{matrix.binding}}
       - uses: actions/attest-build-provenance@v4
         with:

@@ -313,7 +313,7 @@ def generate_sip_for_class__1(header_content, filename=""):
     # --- Properties ---
     # Q_PROPERTY_CREATE_Q_H(type, Name)
     # Assumes getter: Name() or isName() for bool, Setter: setName(type)
-    for pt in ("Q_PROPERTY_CREATE", "Q_PROPERTY_CREATE_Q_H"):
+    for pt in ("Q_PROPERTY_CREATE", "Q_PROPERTY_CREATE_Q_H", "Q_PROPERTY_REF_CREATE_Q_H"):
         prop_pattern = re.compile(rf"{pt}\((.*?),\s*(\w+)\)")
         has_public_section_for_props = False  # To add "public:" if props are first
 

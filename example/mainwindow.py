@@ -22,7 +22,7 @@ class MainWindow(ElaWindow):
         self.initEdgeLayout()
         self.initContent()
         _closeDialog = ElaContentDialog(self)
-        _closeDialog.rightButtonClicked.connect(self.closeWindow)
+        _closeDialog.rightButtonClicked.connect(self.close)
         _closeDialog.middleButtonClicked.connect(
             lambda: (_closeDialog.close(), self.showMinimized())
         )

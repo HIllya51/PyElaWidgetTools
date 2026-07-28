@@ -7,7 +7,7 @@ sys.argv.pop(-1)
 bit = sys.argv[-1]
 sys.argv.pop(-1)
 
-version="0.11.1"
+version="0.11.2"
 
 req = "PySide6"
 

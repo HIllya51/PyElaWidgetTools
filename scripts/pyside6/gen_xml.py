@@ -291,6 +291,21 @@ with open("wrapper.hpp", "w", encoding="utf8") as ff:
     ff.write(wrapperbase.format(internal=H_internal + "\n" + h))
 
 
+# Qt 头文件路径：mac 的 Qt 用 framework 布局（lib/*.framework/Headers），
+# 带模块前缀的 <QtCore/...> 需经 -F 框架搜索路径解析；其余平台是 include/QtCore 布局
+if sys.platform == "darwin":
+    qtinc = (
+        f"-F{MY_QT_INSTALL}/lib"
+        f" -I{MY_QT_INSTALL}/lib/QtCore.framework/Headers"
+        f" -I{MY_QT_INSTALL}/lib/QtGui.framework/Headers"
+        f" -I{MY_QT_INSTALL}/lib/QtWidgets.framework/Headers"
+    )
+else:
+    qtinc = (
+        f"-I{MY_QT_INSTALL}/include -I{MY_QT_INSTALL}/include/QtCore"
+        f" -I{MY_QT_INSTALL}/include/QtGui -I{MY_QT_INSTALL}/include/QtWidgets"
+    )
+
 sysinclude = ""
 if "msvc2019" in MY_QT_INSTALL:
     # <=6.7必须使用msvc2019的头文件
@@ -329,7 +344,7 @@ os.system(
         --generator-set=shiboken
         --output-directory=OUTPUTDIR
         -I{ELA_INCLUDE_PATH}
-        -I{MY_QT_INSTALL}/include -I{MY_QT_INSTALL}/include/QtCore -I{MY_QT_INSTALL}/include/QtGui -I{MY_QT_INSTALL}/include/QtWidgets
+        {qtinc}
         --typesystem-paths={MY_SITE_PACKAGES_PATH}/PySide6/typesystems
         --enable-pyside-extensions
         --avoid-protected-hack

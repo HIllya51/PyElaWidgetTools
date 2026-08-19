@@ -73,7 +73,7 @@ __parsefile(
     lambda cml: cml.replace("add_subdirectory(ElaWidgetToolsExample)", ""),
 )
 __parsefile(
-    "../ElaWidgetTools/ElaWidgetTools/ElaProperty.h",
+    "../ElaWidgetTools/ElaWidgetTools/ElaWidgetToolsExport.h",
     lambda cml: cml.replace(
         "Q_DECL_EXPORT",
         "",
@@ -98,7 +98,7 @@ if sys.platform == "win32":
 
     """
         __parsefile(
-            "../ElaWidgetTools/CMakeLists.txt",
+            "../ElaWidgetTools/ElaWidgetTools/CMakeLists.txt",
             lambda c: c.replace(
                 "add_definitions(-DELAWIDGETTOOLS_LIBRARY)",
                 "add_definitions(-DELAWIDGETTOOLS_LIBRARY)\n" + fix,

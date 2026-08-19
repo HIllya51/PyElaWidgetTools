@@ -17,13 +17,13 @@ os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 eladir = "../../ElaWidgetTools/ElaWidgetTools"
 
-with open(eladir + "/ElaProperty.h", "r", encoding="utf8") as ff:
+with open(eladir + "/ElaPropertyMacro.h", "r", encoding="utf8") as ff:
     pro = ff.read()
 # 如果不这样改，信号会被识别成方法。
 if not ("Q_SIGNALS:Q_SIGNAL" in pro):
     pro = re.sub(r"Q_SIGNAL(.*?)\\", r"Q_SIGNALS:Q_SIGNAL \1\\\npublic:\\", pro)
 
-    with open(eladir + "/ElaProperty.h", "w", encoding="utf8") as ff:
+    with open(eladir + "/ElaPropertyMacro.h", "w", encoding="utf8") as ff:
         ff.write(pro)
 
 
@@ -143,7 +143,9 @@ def gen_widgets(eladir: str):
     hs = []
     xmls = []
     for f in os.listdir(eladir):
-        if f.startswith("ElaDef"):
+        if f.startswith("ElaWidgetToolsDef"):
+            continue
+        if f.startswith("ElaWidgetToolsExport"):
             continue
         if f.startswith("ElaProperty"):
             continue
@@ -158,7 +160,7 @@ def gen_widgets(eladir: str):
 
 def gen_defs():
 
-    with open(eladir + "/ElaDef.h", "r", encoding="utf8") as ff:
+    with open(eladir + "/ElaWidgetToolsDef.h", "r", encoding="utf8") as ff:
         header_content = ff.read()
     sip_output = []
 
@@ -284,7 +286,7 @@ wrapperbase = """
 #endif
 """
 
-H_internal = """#include <ElaDef.h>"""
+H_internal = """#include <ElaWidgetToolsDef.h>"""
 with open("wrapper.hpp", "w", encoding="utf8") as ff:
     ff.write(wrapperbase.format(internal=H_internal + "\n" + h))
 

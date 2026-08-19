@@ -2,7 +2,7 @@ import os, sys
 
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
-with open("../../ElaWidgetTools/ElaWidgetTools/ElaDef.h", "r", encoding="utf8") as ff:
+with open("../../ElaWidgetTools/ElaWidgetTools/ElaWidgetToolsDef.h", "r", encoding="utf8") as ff:
     content = ff.read()
 
 import re
@@ -48,7 +48,7 @@ def parse_def_h_to_sip(header_content):
         sip_output.append(
             """
 %TypeHeaderCode
-#include "ElaDef.h"
+#include "ElaWidgetToolsDef.h"
 %End
 """
         )

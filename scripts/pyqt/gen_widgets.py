@@ -306,16 +306,26 @@ def generate_sip_for_class__1(header_content, filename=""):
     base_class_name = class_match.group(3)
     sip_lines.append(f"class {class_name} : public {base_class_name}\n{{")
     sip_lines.append("%TypeHeaderCode")
-    sip_lines.append(f'#include "ElaDef.h"')
+    sip_lines.append(f'#include "ElaWidgetToolsDef.h"')
     sip_lines.append(f'#include "{os.path.basename(filename)}"')
     sip_lines.append("%End\n")
 
     # --- Properties ---
-    # Q_PROPERTY_CREATE_Q_H(type, Name)
-    # Assumes getter: Name() or isName() for bool, Setter: setName(type)
-    for pt in ("Q_PROPERTY_CREATE", "Q_PROPERTY_CREATE_Q_H", "Q_PROPERTY_REF_CREATE_Q_H"):
+    # Q_PROPERTY_* macros declare a notify signal (pXChanged) + getter/setter.
+    # Q_PRIVATE_* macros declare only getter/setter (no notify signal).
+    PROP_MACROS = [
+        ("Q_PROPERTY_CREATE", True),
+        ("Q_PROPERTY_CREATE_Q_H", True),
+        ("Q_PROPERTY_REF_CREATE_Q_H", True),
+        ("Q_PRIVATE_CREATE", False),
+        ("Q_PRIVATE_CREATE_Q_H", False),
+        ("Q_PRIVATE_REF_CREATE", False),
+        ("Q_PRIVATE_REF_CREATE_Q_H", False),
+    ]
+    has_public_section_for_props = False  # To add "public:" if props are first
+
+    for pt, has_signal in PROP_MACROS:
         prop_pattern = re.compile(rf"{pt}\((.*?),\s*(\w+)\)")
-        has_public_section_for_props = False  # To add "public:" if props are first
 
         for match in prop_pattern.finditer(header_content):
             if not has_public_section_for_props:
@@ -336,7 +346,10 @@ def generate_sip_for_class__1(header_content, filename=""):
             # For now, assume they follow the macro's convention
             # sip_lines.append(f"  // Property: {prop_name}")
             # sip_lines.append(f"  %Property({sip_prop_type} {prop_name.lower()} READ {getter_name} WRITE {setter_name})\n")
-            sip_lines.append(f"public: Q_SIGNAL void p{prop_name}Changed();")
+            if has_signal:
+                sip_lines.append(f"public: Q_SIGNAL void p{prop_name}Changed();")
+            else:
+                sip_lines.append("public:")
             sip_lines.append(
                 f"  void {setter_name}({(prop_type_raw)} {prop_name});"
             )  # Use input version of type
@@ -573,7 +586,9 @@ def cast_h_to_sip(filename):
 allfiles = []
 
 for f in os.listdir(eladir):
-    if f.startswith("ElaDef"):
+    if f.startswith("ElaWidgetToolsDef"):
+        continue
+    if f.startswith("ElaWidgetToolsExport"):
         continue
     if f.startswith("ElaProperty"):
         continue

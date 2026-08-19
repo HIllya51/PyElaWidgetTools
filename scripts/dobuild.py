@@ -39,7 +39,8 @@ elif sys.platform == "darwin":
     pyPathEx = f"/Users/runner/hostedtoolcache/Python/3.12.10/{arch}/bin/python"
     pyDir = f"/Users/runner/hostedtoolcache/Python/{pythonversion}/{arch}/bin"
     pyPath = f"{pyDir}/python"
-    Qtinstallpath = f"/Users/runner/work/PyElaWidgetTools/Qt/{qtversion}/{qtarch}"
+    # aqtinstall 从重构后的仓库安装 macOS 通用包时，输出目录名为 macos 而非 clang_64
+    Qtinstallpath = f"/Users/runner/work/PyElaWidgetTools/Qt/{qtversion}/macos"
     qmake = f"{Qtinstallpath}/bin/qmake"
     sipbuild = f"{pyDir}/sip-build"
     bin_app = ".abi3.so"

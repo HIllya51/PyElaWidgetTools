@@ -313,6 +313,16 @@ def generate_sip_for_class__1(header_content, filename=""):
     # --- Properties ---
     # Q_PROPERTY_* macros declare a notify signal (pXChanged) + getter/setter.
     # Q_PRIVATE_* macros declare only getter/setter (no notify signal).
+    # Only scan the class body: property macros that belong to other types in the
+    # same header (e.g. ElaSuggestBox's nested SuggestData struct) must not be
+    # attributed to this class, or sip will generate accessors that don't exist.
+    _class_body_for_props = re.search(
+        r"class\s+ELA_EXPORT\s+\w+\s*:\s*public\s+\w+\s*\{(.*?)(\};)",
+        header_content,
+        re.DOTALL,
+    )
+    prop_scan = _class_body_for_props.group(1) if _class_body_for_props else header_content
+
     PROP_MACROS = [
         ("Q_PROPERTY_CREATE", True),
         ("Q_PROPERTY_CREATE_Q_H", True),
@@ -327,7 +337,7 @@ def generate_sip_for_class__1(header_content, filename=""):
     for pt, has_signal in PROP_MACROS:
         prop_pattern = re.compile(rf"{pt}\((.*?),\s*(\w+)\)")
 
-        for match in prop_pattern.finditer(header_content):
+        for match in prop_pattern.finditer(prop_scan):
             if not has_public_section_for_props:
                 # Properties are usually public in SIP even if members are private
                 # sip_lines.append("public:") # Not strictly needed for %Property

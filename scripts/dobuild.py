@@ -120,7 +120,11 @@ if sys.platform == "win32":
             pr=True,
         )
 elif sys.platform == "darwin":
-    flags = "-DCMAKE_OSX_DEPLOYMENT_TARGET=11.0"
+    # 扩展模块按 macOS 惯例不在链接期解析 Python API 符号（加载时由解释器进程提供）
+    flags = (
+        "-DCMAKE_OSX_DEPLOYMENT_TARGET=11.0"
+        " -DCMAKE_SHARED_LINKER_FLAGS=-Wl,-undefined,dynamic_lookup"
+    )
 else:
     flags = ""
 subprocess.run(
@@ -214,12 +218,11 @@ elif binding.lower().startswith("pyside"):
     PySide6Lib = "pyside6.abi3.lib"
     shiboken6Lib = "shiboken6.abi3.lib"
     for _ in os.listdir(f"{MY_SITE_PACKAGES_PATH}/PySide6"):
-        if _.startswith("libpyside6.abi3.so") or _.startswith("libpyside6.abi3.dylib"):
+        # mac 的 dylib 文件名带版本号（libpyside6.abi3.6.6.dylib）
+        if _.startswith("libpyside6.abi3"):
             PySide6Lib = _
     for _ in os.listdir(f"{MY_SITE_PACKAGES_PATH}/shiboken6"):
-        if _.startswith("libshiboken6.abi3.so") or _.startswith(
-            "libshiboken6.abi3.dylib"
-        ):
+        if _.startswith("libshiboken6.abi3"):
             shiboken6Lib = _
 
     subprocess.run(

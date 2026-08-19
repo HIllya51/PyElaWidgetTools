@@ -63,7 +63,9 @@ jobs:
             arch: x64
             binding: PySide6
           # Qt 在线仓库已重构：clang_arm64 包被移除，clang_64 现为 X86_64-ARM64 通用二进制
-          - os: macos-latest
+          # 用 macos-15（默认 Xcode 16.4）：shiboken 6.6.2 内置 libclang 15，
+          # 解析不了 macos-26 上 Xcode 26 SDK 的 LLVM 20+ libc++ 头文件
+          - os: macos-15
             qthost: mac
             qtarch: clang_64
             version: 6.6.2
@@ -71,7 +73,7 @@ jobs:
             arch: arm64
             binding: PyQt6
             py312arch: arm64
-          - os: macos-latest
+          - os: macos-15
             qthost: mac
             qtarch: clang_64
             version: 6.6.2

@@ -3,31 +3,29 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5ElaWidgetTools import *
 from ExamplePage.T_BasePage import *
+from _res import *
 
 
 class T_Navigation(T_BasePage):
     def __init__(self, parent=None):
         super().__init__(parent)
-
         self.setWindowTitle("ElaNavigation")
 
-        self.createCustomWidget(
-            "一些导航组件被放置于此，可在此界面体验其效果并按需添加进项目中"
-        )
+        self.createCustomWidget("一些导航组件被放置于此，可在此界面体验其效果并按需添加进项目中")
 
+        # ElaBreadcrumbBar
         breadcrumbBarText = ElaText("ElaBreadcrumbBar", self)
         breadcrumbBarText.setTextPixelSize(18)
-        _breadcrumbBar = ElaBreadcrumbBar(self)
+        self._breadcrumbBar = ElaBreadcrumbBar(self)
         breadcrumbBarList = []
         for i in range(20):
             breadcrumbBarList.append("Item{}".format(i + 1))
-
-        _breadcrumbBar.setBreadcrumbList(breadcrumbBarList)
+        self._breadcrumbBar.setBreadcrumbList(breadcrumbBarList)
 
         resetButton = ElaPushButton("还原", self)
         resetButton.setFixedSize(60, 32)
         resetButton.clicked.connect(
-            lambda: _breadcrumbBar.setBreadcrumbList(breadcrumbBarList)
+            lambda: self._breadcrumbBar.setBreadcrumbList(breadcrumbBarList)
         )
 
         breadcrumbBarTextLayout = QHBoxLayout()
@@ -38,45 +36,48 @@ class T_Navigation(T_BasePage):
 
         breadcrumbBarArea = ElaScrollPageArea(self)
         breadcrumbBarLayout = QVBoxLayout(breadcrumbBarArea)
-        breadcrumbBarLayout.addWidget(_breadcrumbBar)
+        breadcrumbBarLayout.addWidget(self._breadcrumbBar)
 
+        # ElaPivot
         pivotText = ElaText("ElaPivot", self)
         pivotText.setTextPixelSize(18)
-        _pivot = ElaPivot(self)
-        _pivot.setPivotSpacing(8)
-        _pivot.setMarkWidth(75)
-        _pivot.appendPivot("本地歌曲")
-        _pivot.appendPivot("下载歌曲")
-        _pivot.appendPivot("下载视频")
-        _pivot.appendPivot("正在下载")
-        _pivot.setCurrentIndex(0)
+        self._pivot = ElaPivot(self)
+        self._pivot.setPivotSpacing(8)
+        self._pivot.setMarkWidth(75)
+        self._pivot.appendPivot("本地歌曲")
+        self._pivot.appendPivot("下载歌曲")
+        self._pivot.appendPivot("下载视频")
+        self._pivot.appendPivot("正在下载")
+        self._pivot.appendPivot("本地歌曲")
+        self._pivot.appendPivot("下载歌曲")
+        self._pivot.appendPivot("下载视频")
+        self._pivot.appendPivot("正在下载")
+        self._pivot.appendPivot("本地歌曲")
+        self._pivot.appendPivot("下载歌曲")
+        self._pivot.appendPivot("下载视频")
+        self._pivot.appendPivot("正在下载")
+        self._pivot.setCurrentIndex(0)
 
         pivotArea = ElaScrollPageArea(self)
         pivotLayout = QVBoxLayout(pivotArea)
-        pivotLayout.addWidget(_pivot)
+        pivotLayout.addWidget(self._pivot)
 
+        # ElaTabWidget
         tabWidgetText = ElaText("ElaTabWidget", self)
         tabWidgetText.setTextPixelSize(18)
-        _tabWidget = ElaTabWidget(self)
-        _tabWidget.setFixedHeight(500)
-        page1 = QLabel("新标签页1", self)
+        self._tabWidget = ElaTabWidget(self)
+        self._tabWidget.setFixedHeight(600)
+        self._tabWidget.setIsTabTransparent(True)
+        page1 = ElaText("新标签页", self)
+        page1.setTextPixelSize(32)
         page1.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        font = page1.font()
-        font.setPixelSize(32)
-        page1.setFont(font)
-        page2 = QLabel("新标签页2", self)
-        page2.setFont(font)
-        page2.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        page3 = QLabel("新标签页3", self)
-        page3.setFont(font)
-        page3.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        page4 = QLabel("新标签页4", self)
-        page4.setFont(font)
-        page4.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        _tabWidget.addTab(page1, QIcon(":/Resource/Image/Cirno.jpg"), "新标签页1")
-        _tabWidget.addTab(page2, "新标签页2")
-        _tabWidget.addTab(page3, "新标签页3")
-        _tabWidget.addTab(page4, "新标签页4")
+        self._tabWidget.addTab(page1, QIcon(placeholderPixmap(38, 38)), "新标签页")
+        for i in range(5):
+            page = ElaText("新标签页{}".format(i), self)
+            page.setTextPixelSize(32)
+            page.setAlignment(Qt.AlignmentFlag.AlignCenter)
+            self._tabWidget.addTab(page, "新标签页{}".format(i))
+
         centralWidget = QWidget(self)
         centralWidget.setWindowTitle("ElaNavigation")
         centerVLayout = QVBoxLayout(centralWidget)
@@ -91,5 +92,6 @@ class T_Navigation(T_BasePage):
         centerVLayout.addSpacing(15)
         centerVLayout.addWidget(tabWidgetText)
         centerVLayout.addSpacing(10)
-        centerVLayout.addWidget(_tabWidget)
+        centerVLayout.addWidget(self._tabWidget)
+        centerVLayout.addStretch()
         self.addCentralWidget(centralWidget, True, False, 0)

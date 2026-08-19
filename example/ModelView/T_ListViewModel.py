@@ -45,9 +45,10 @@ class T_ListViewModel(QAbstractListModel):
         self._dataList.append("向远航")
         self._dataList.append("最重一粒微光")
 
-    def rowCount(self, *_):
+    def rowCount(self, parent=QModelIndex()):
         return len(self._dataList)
 
-    def data(self, index: QModelIndex, role: int):
+    def data(self, index, role):
         if role == Qt.ItemDataRole.DisplayRole:
             return self._dataList[index.row()]
+        return None

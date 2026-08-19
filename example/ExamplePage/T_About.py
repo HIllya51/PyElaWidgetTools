@@ -2,20 +2,23 @@ from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5ElaWidgetTools import *
+from _res import *
 
 
-class T_About(ElaWidget):
+class T_About(ElaDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
+        self.setFixedSize(400, 400)
         self.setWindowTitle("关于..")
-        self.setWindowIcon(QIcon(":/include/Image/Moon.jpg"))
+        self.setWindowIcon(QIcon(placeholderPixmap(60, 60)))
         self.setIsFixedSize(True)
         self.setWindowModality(Qt.WindowModality.ApplicationModal)
         self.setWindowButtonFlags(ElaAppBarType.ButtonType.CloseButtonHint)
+
         pixCard = ElaImageCard(self)
         pixCard.setFixedSize(60, 60)
         pixCard.setIsPreserveAspectCrop(False)
-        pixCard.setCardImage(QImage(":/include/Image/Moon.jpg"))
+        pixCard.setCardImage(placeholderImage(60, 60))
 
         pixCardLayout = QVBoxLayout()
         pixCardLayout.addWidget(pixCard)
@@ -31,16 +34,12 @@ class T_About(ElaWidget):
         licenseText = ElaText("MIT授权协议", self)
         licenseText.setWordWrap(False)
         licenseText.setTextPixelSize(14)
-        supportText = ElaText(
-            "Windows支持版本: QT5.12以上\nLinux支持版本: Qt5.14以上", self
-        )
+        supportText = ElaText("Windows支持版本: QT5.12以上\nLinux支持版本: Qt5.14以上", self)
         supportText.setWordWrap(False)
         supportText.setTextPixelSize(14)
-        contactText = ElaText("作者: 3056769574@qq.com\n交流群: 850243692(QQ)", self)
+        contactText = ElaText("作者: 80985@qq.com\n交流群: 850243692(QQ)", self)
         contactText.setWordWrap(False)
-        contactText.setTextInteractionFlags(
-            Qt.TextInteractionFlag.TextSelectableByMouse
-        )
+        contactText.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse)
         contactText.setTextPixelSize(14)
         helperText = ElaText("用户手册及API文档付费提供\n提供额外的专业技术支持", self)
         helperText.setWordWrap(False)

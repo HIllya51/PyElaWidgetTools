@@ -9,46 +9,48 @@ class T_BaseComponents(T_BasePage):
     def __init__(self, parent=None):
         super().__init__(parent)
 
+        # 预览窗口标题
         self.setWindowTitle("ElaBaseComponents")
 
+        # 顶部元素
         self.createCustomWidget(
             "一些常用的基础组件被放置于此，可在此界面体验其效果并按需添加进项目中"
         )
 
-        _toggleSwitch = ElaToggleSwitch(self)
+        self._toggleSwitch = ElaToggleSwitch(self)
         toggleSwitchArea = ElaScrollPageArea(self)
         toggleSwitchLayout = QHBoxLayout(toggleSwitchArea)
         toggleSwitchText = ElaText("ElaToggleSwitch", self)
         toggleSwitchText.setTextPixelSize(15)
         toggleSwitchLayout.addWidget(toggleSwitchText)
-        toggleSwitchLayout.addWidget(_toggleSwitch)
+        toggleSwitchLayout.addWidget(self._toggleSwitch)
         toggleSwitchLayout.addStretch()
         toggleSwitchDisableSwitch = ElaToggleSwitch(self)
         toggleSwitchDisableText = ElaText("禁用", self)
         toggleSwitchDisableText.setTextPixelSize(15)
-        toggleSwitchDisableSwitch.toggled.connect(_toggleSwitch.setDisabled)
+        toggleSwitchDisableSwitch.toggled.connect(self._toggleSwitch.setDisabled)
         toggleSwitchLayout.addWidget(toggleSwitchDisableSwitch)
         toggleSwitchLayout.addWidget(toggleSwitchDisableText)
         toggleSwitchLayout.addSpacing(10)
 
-        _toggleButton = ElaToggleButton("ToggleButton", self)
-        _toggleButton.setFixedWidth(120)
+        self._toggleButton = ElaToggleButton("ToggleButton", self)
+        self._toggleButton.setFixedWidth(120)
         toggleButtonArea = ElaScrollPageArea(self)
         toggleButtonLayout = QHBoxLayout(toggleButtonArea)
         toggleButtonText = ElaText("ElaToggleButton", self)
         toggleButtonText.setTextPixelSize(15)
         toggleButtonLayout.addWidget(toggleButtonText)
-        toggleButtonLayout.addWidget(_toggleButton)
+        toggleButtonLayout.addWidget(self._toggleButton)
         toggleButtonLayout.addStretch()
         toggleButtonDisableSwitch = ElaToggleSwitch(self)
         toggleButtonDisableText = ElaText("禁用", self)
         toggleButtonDisableText.setTextPixelSize(15)
-        toggleButtonDisableSwitch.toggled.connect(_toggleButton.setDisabled)
+        toggleButtonDisableSwitch.toggled.connect(self._toggleButton.setDisabled)
         toggleButtonLayout.addWidget(toggleButtonDisableSwitch)
         toggleButtonLayout.addWidget(toggleButtonDisableText)
         toggleButtonLayout.addSpacing(10)
 
-        _comboBox = ElaComboBox(self)
+        self._comboBox = ElaComboBox(self)
         comboList = [
             "我愿投身前途未卜的群星",
             "潜行 步伐小心翼翼",
@@ -57,23 +59,23 @@ class T_BaseComponents(T_BasePage):
             "所谓 道德加上伦理",
             "抱歉只能律己",
         ]
-        _comboBox.addItems(comboList)
+        self._comboBox.addItems(comboList)
         comboBoxArea = ElaScrollPageArea(self)
         comboBoxLayout = QHBoxLayout(comboBoxArea)
         comboBoxText = ElaText("ElaComboBox", self)
         comboBoxText.setTextPixelSize(15)
         comboBoxLayout.addWidget(comboBoxText)
-        comboBoxLayout.addWidget(_comboBox)
+        comboBoxLayout.addWidget(self._comboBox)
         comboBoxLayout.addStretch()
         comboBoxDisableSwitch = ElaToggleSwitch(self)
         comboBoxDisableText = ElaText("禁用", self)
         comboBoxDisableText.setTextPixelSize(15)
-        comboBoxDisableSwitch.toggled.connect(_comboBox.setDisabled)
+        comboBoxDisableSwitch.toggled.connect(self._comboBox.setDisabled)
         comboBoxLayout.addWidget(comboBoxDisableSwitch)
         comboBoxLayout.addWidget(comboBoxDisableText)
         comboBoxLayout.addSpacing(10)
 
-        _multiSelectComboBox = ElaMultiSelectComboBox(self)
+        self._multiSelectComboBox = ElaMultiSelectComboBox(self)
         multiComboList = [
             "执念的鱼",
             "提着灯闯过远洋的甄选",
@@ -89,56 +91,56 @@ class T_BaseComponents(T_BasePage):
             "无需誓言",
             "我的心像自沉的旧母舰",
         ]
-        _multiSelectComboBox.addItems(multiComboList)
-        _multiSelectComboBox.setCurrentSelection(multiSelectComboList)
+        self._multiSelectComboBox.addItems(multiComboList)
+        self._multiSelectComboBox.setCurrentSelection(multiSelectComboList)
         multiSelectComboBoxArea = ElaScrollPageArea(self)
         multiSelectComboBoxLayout = QHBoxLayout(multiSelectComboBoxArea)
         multiSelectComboBoxText = ElaText("ElaMutilSelectComboBox", self)
         multiSelectComboBoxText.setTextPixelSize(15)
         multiSelectComboBoxLayout.addWidget(multiSelectComboBoxText)
-        multiSelectComboBoxLayout.addWidget(_multiSelectComboBox)
+        multiSelectComboBoxLayout.addWidget(self._multiSelectComboBox)
         multiSelectComboBoxLayout.addStretch()
         multiSelectComboBoxDisableSwitch = ElaToggleSwitch(self)
         multiSelectComboBoxDisableText = ElaText("禁用", self)
         multiSelectComboBoxDisableText.setTextPixelSize(15)
         multiSelectComboBoxDisableSwitch.toggled.connect(
-            _multiSelectComboBox.setDisabled
+            self._multiSelectComboBox.setDisabled
         )
         multiSelectComboBoxLayout.addWidget(multiSelectComboBoxDisableSwitch)
         multiSelectComboBoxLayout.addWidget(multiSelectComboBoxDisableText)
         multiSelectComboBoxLayout.addSpacing(10)
 
-        _messageButton = ElaMessageButton("Success", self)
-        _messageButton.setBarTitle("Success")
-        _messageButton.setBarText(
+        self._messageButton = ElaMessageButton("Success", self)
+        self._messageButton.setBarTitle("Success")
+        self._messageButton.setBarText(
             "点燃星 亲手点燃黑暗森林的火星 蒙昧初醒 而我却 轻声告别这新生的黎明"
         )
 
-        _infoMessageButton = ElaMessageButton("Info", self)
-        _infoMessageButton.setBarTitle("Information")
-        _infoMessageButton.setBarText(
+        self._infoMessageButton = ElaMessageButton("Info", self)
+        self._infoMessageButton.setBarTitle("Information")
+        self._infoMessageButton.setBarText(
             "点燃星 亲手点燃黑暗森林的火星 蒙昧初醒 而我却 轻声告别这新生的黎明"
         )
-        _infoMessageButton.setMessageMode(ElaMessageBarType.MessageMode.Information)
-        _infoMessageButton.setPositionPolicy(ElaMessageBarType.PositionPolicy.TopLeft)
+        self._infoMessageButton.setMessageMode(ElaMessageBarType.MessageMode.Information)
+        self._infoMessageButton.setPositionPolicy(ElaMessageBarType.PositionPolicy.TopLeft)
 
-        _warningMessageButton = ElaMessageButton("Warning", self)
-        _warningMessageButton.setBarTitle("Warning")
-        _warningMessageButton.setBarText(
+        self._warningMessageButton = ElaMessageButton("Warning", self)
+        self._warningMessageButton.setBarTitle("Warning")
+        self._warningMessageButton.setBarText(
             "点燃星 亲手点燃黑暗森林的火星 蒙昧初醒 而我却 轻声告别这新生的黎明"
         )
-        _warningMessageButton.setMessageMode(ElaMessageBarType.MessageMode.Warning)
-        _warningMessageButton.setPositionPolicy(
+        self._warningMessageButton.setMessageMode(ElaMessageBarType.MessageMode.Warning)
+        self._warningMessageButton.setPositionPolicy(
             ElaMessageBarType.PositionPolicy.BottomLeft
         )
 
-        _errorMessageButton = ElaMessageButton("Error", self)
-        _errorMessageButton.setBarTitle("Error")
-        _errorMessageButton.setBarText(
+        self._errorMessageButton = ElaMessageButton("Error", self)
+        self._errorMessageButton.setBarTitle("Error")
+        self._errorMessageButton.setBarText(
             "点燃星 亲手点燃黑暗森林的火星 蒙昧初醒 而我却 轻声告别这新生的黎明"
         )
-        _errorMessageButton.setMessageMode(ElaMessageBarType.MessageMode.Error)
-        _errorMessageButton.setPositionPolicy(
+        self._errorMessageButton.setMessageMode(ElaMessageBarType.MessageMode.Error)
+        self._errorMessageButton.setPositionPolicy(
             ElaMessageBarType.PositionPolicy.BottomRight
         )
 
@@ -147,105 +149,141 @@ class T_BaseComponents(T_BasePage):
         messageButtonText = ElaText("ElaMessageButton", self)
         messageButtonText.setTextPixelSize(15)
         messageButtonLayout.addWidget(messageButtonText)
-        messageButtonLayout.addWidget(_messageButton)
-        messageButtonLayout.addWidget(_infoMessageButton)
-        messageButtonLayout.addWidget(_warningMessageButton)
-        messageButtonLayout.addWidget(_errorMessageButton)
+        messageButtonLayout.addWidget(self._messageButton)
+        messageButtonLayout.addWidget(self._infoMessageButton)
+        messageButtonLayout.addWidget(self._warningMessageButton)
+        messageButtonLayout.addWidget(self._errorMessageButton)
         messageButtonLayout.addStretch()
         messageButtonDisableSwitch = ElaToggleSwitch(self)
         messageButtonDisableText = ElaText("禁用", self)
         messageButtonDisableText.setTextPixelSize(15)
         messageButtonDisableSwitch.toggled.connect(
             lambda checked: (
-                _messageButton.setDisabled(checked),
-                _infoMessageButton.setDisabled(checked),
-                _warningMessageButton.setDisabled(checked),
-                _errorMessageButton.setDisabled(checked),
+                self._messageButton.setDisabled(checked),
+                self._infoMessageButton.setDisabled(checked),
+                self._warningMessageButton.setDisabled(checked),
+                self._errorMessageButton.setDisabled(checked),
             )
         )
         messageButtonLayout.addWidget(messageButtonDisableSwitch)
         messageButtonLayout.addWidget(messageButtonDisableText)
         messageButtonLayout.addSpacing(10)
 
-        _checkBox = ElaCheckBox("CheckBox", self)
+        self._checkBox = ElaCheckBox("CheckBox", self)
         checkBoxArea = ElaScrollPageArea(self)
         checkBoxLayout = QHBoxLayout(checkBoxArea)
         checkBoxText = ElaText("ElacheckBox", self)
         checkBoxText.setTextPixelSize(15)
         checkBoxLayout.addWidget(checkBoxText)
-        checkBoxLayout.addWidget(_checkBox)
+        checkBoxLayout.addWidget(self._checkBox)
         checkBoxLayout.addStretch()
         checkBoxDisableSwitch = ElaToggleSwitch(self)
         checkBoxDisableText = ElaText("禁用", self)
         checkBoxDisableText.setTextPixelSize(15)
-        checkBoxDisableSwitch.toggled.connect(_checkBox.setDisabled)
+        checkBoxDisableSwitch.toggled.connect(self._checkBox.setDisabled)
         checkBoxLayout.addWidget(checkBoxDisableSwitch)
         checkBoxLayout.addWidget(checkBoxDisableText)
         checkBoxLayout.addSpacing(10)
 
-        _spinBox = ElaSpinBox(self)
+        self._spinBox = ElaSpinBox(self)
         spinBoxArea = ElaScrollPageArea(self)
         spinBoxLayout = QHBoxLayout(spinBoxArea)
         spinBoxText = ElaText("ElaSpinBox", self)
         spinBoxText.setTextPixelSize(15)
         spinBoxLayout.addWidget(spinBoxText)
-        spinBoxLayout.addWidget(_spinBox)
+        spinBoxLayout.addWidget(self._spinBox)
         spinBoxLayout.addStretch()
 
-        _slider = ElaSlider(self)
+        inlineButton = ElaRadioButton("Inline", self)
+        compactButton = ElaRadioButton("Compact", self)
+        sideButton = ElaRadioButton("Side", self)
+        pmSideButton = ElaRadioButton("PMSide", self)
+        inlineButton.setChecked(True)
+        buttonModeLayout = QHBoxLayout()
+        buttonModeText = ElaText("按钮模式切换", self)
+        buttonModeText.setWordWrap(False)
+        buttonModeText.setTextPixelSize(15)
+        buttonModeLayout.addWidget(buttonModeText)
+        buttonModeLayout.addWidget(inlineButton)
+        buttonModeLayout.addWidget(compactButton)
+        buttonModeLayout.addWidget(sideButton)
+        buttonModeLayout.addWidget(pmSideButton)
+
+        spinBoxLayout.addLayout(buttonModeLayout)
+
+        spinButtonGroup = QButtonGroup(self)
+        spinButtonGroup.addButton(inlineButton, 0)
+        spinButtonGroup.addButton(compactButton, 1)
+        spinButtonGroup.addButton(sideButton, 2)
+        spinButtonGroup.addButton(pmSideButton, 3)
+        spinButtonModes = [
+            ElaSpinBoxType.ButtonMode.Inline,
+            ElaSpinBoxType.ButtonMode.Compact,
+            ElaSpinBoxType.ButtonMode.Side,
+            ElaSpinBoxType.ButtonMode.PMSide,
+        ]
+        spinButtonGroup.buttonToggled.connect(
+            lambda button, isToggled: (
+                self._spinBox.setButtonMode(spinButtonModes[spinButtonGroup.id(button)])
+                if isToggled
+                else None
+            )
+        )
+
+        self._slider = ElaSlider(self)
         sliderArea = ElaScrollPageArea(self)
         sliderLayout = QHBoxLayout(sliderArea)
         sliderText = ElaText("ElaSlider", self)
         sliderText.setTextPixelSize(15)
         sliderLayout.addWidget(sliderText)
-        sliderLayout.addWidget(_slider)
+        sliderLayout.addWidget(self._slider)
         sliderLayout.addStretch()
 
-        _radioButton = ElaRadioButton("RadioButton", self)
+        self._radioButton = ElaRadioButton("RadioButton", self)
         radioButtonArea = ElaScrollPageArea(self)
         radioButtonLayout = QHBoxLayout(radioButtonArea)
         radioButtonText = ElaText("ElaRadioButton", self)
         radioButtonText.setTextPixelSize(15)
         radioButtonLayout.addWidget(radioButtonText)
-        radioButtonLayout.addWidget(_radioButton)
+        radioButtonLayout.addWidget(self._radioButton)
         radioButtonLayout.addStretch()
 
-        _progressBar = ElaProgressBar(self)
-        _progressBar.setMinimum(0)
-        _progressBar.setMaximum(0)
+        self._progressBar = ElaProgressBar(self)
+        self._progressBar.setMinimum(0)
+        self._progressBar.setMaximum(0)
         progressBarArea = ElaScrollPageArea(self)
         progressBarLayout = QHBoxLayout(progressBarArea)
         progressBarText = ElaText("ElaProgressBar", self)
         progressBarText.setTextPixelSize(15)
         progressBarLayout.addWidget(progressBarText)
-        progressBarLayout.addWidget(_progressBar)
+        progressBarLayout.addWidget(self._progressBar)
         progressBarLayout.addStretch()
 
-        _progressRing = ElaProgressRing(self)
-        _progressRing.setValue(30)
-        _progressPercentRing = ElaProgressRing(self)
-        _progressPercentRing.setValue(50)
-        _progressPercentRing.setValueDisplayMode(
+        self._progressRing = ElaProgressRing(self)
+        self._progressRing.setValue(30)
+        self._progressPercentRing = ElaProgressRing(self)
+        self._progressPercentRing.setValue(50)
+        self._progressPercentRing.setValueDisplayMode(
             ElaProgressRingType.ValueDisplayMode.Percent
         )
-        _progressBusyRing = ElaProgressRing(self)
-        _progressBusyRing.setIsBusying(True)
-        _progressBusyTransparentRing = ElaProgressRing(self)
-        _progressBusyTransparentRing.setIsBusying(True)
-        _progressBusyTransparentRing.setIsTransparent(True)
+        self._progressBusyRing = ElaProgressRing(self)
+        self._progressBusyRing.setIsBusying(True)
+        self._progressBusyTransparentRing = ElaProgressRing(self)
+        self._progressBusyTransparentRing.setIsBusying(True)
+        self._progressBusyTransparentRing.setIsTransparent(True)
         progressRingArea = ElaScrollPageArea(self)
         progressRingArea.setFixedHeight(90)
         progressRingLayout = QHBoxLayout(progressRingArea)
         progressRingText = ElaText("ElaProgressRing", self)
         progressRingText.setTextPixelSize(15)
         progressRingLayout.addWidget(progressRingText)
-        progressRingLayout.addWidget(_progressRing)
+        progressRingLayout.addWidget(self._progressRing)
         progressRingLayout.addSpacing(10)
-        progressRingLayout.addWidget(_progressPercentRing)
+        progressRingLayout.addWidget(self._progressPercentRing)
         progressRingLayout.addSpacing(10)
-        progressRingLayout.addWidget(_progressBusyRing)
+        progressRingLayout.addWidget(self._progressBusyRing)
         progressRingLayout.addSpacing(10)
-        progressRingLayout.addWidget(_progressBusyTransparentRing)
+        progressRingLayout.addWidget(self._progressBusyTransparentRing)
         progressRingLayout.addStretch()
 
         edit = ElaPlainTextEdit(self)
@@ -284,10 +322,9 @@ class T_BaseComponents(T_BasePage):
         self.addCentralWidget(homeStack2)
 
     def mouseReleaseEvent(self, event: QMouseEvent):
-
         if event.button() == Qt.MouseButton.LeftButton:
-            # //ElaMessageBar::success(ElaMessageBarType::TopRight, "Success", "Never Close Your Eyes", 2500);
-            # //ElaMessageBar::success(ElaMessageBarType::TopRight, "Success", "Never Close Your Eyes", 1500);
+            # ElaMessageBar.success(ElaMessageBarType.PositionPolicy.TopRight, "Success", "Never Close Your Eyes", 2500)
+            # ElaMessageBar.success(ElaMessageBarType.PositionPolicy.TopRight, "Success", "Never Close Your Eyes", 1500)
             pass
         elif event.button() == Qt.MouseButton.BackButton:
             self.navigation(0)
@@ -295,4 +332,4 @@ class T_BaseComponents(T_BasePage):
             self.navigation(1)
         elif event.button() == Qt.MouseButton.MiddleButton:
             self.navigation(2)
-        return super().mouseReleaseEvent(event)
+        super().mouseReleaseEvent(event)

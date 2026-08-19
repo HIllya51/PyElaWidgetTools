@@ -1,40 +1,33 @@
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
+
 from PyQt5ElaWidgetTools import *
 
 
 class T_BasePage(ElaScrollPage):
     def __init__(self, parent=None):
         super().__init__(parent)
-        eTheme.themeModeChanged.connect(lambda _: self.update() if parent else None)
+        eTheme.themeModeChanged.connect(lambda _mode: self.update() if not parent else None)
+        self.setContentsMargins(20, 5, 0, 0)
 
     def createCustomWidget(self, desText: str):
         customWidget = QWidget(self)
+
         subTitleText = ElaText(self)
         subTitleText.setText("https://github.com/Liniyous/ElaWidgetTools")
-        subTitleText.setTextInteractionFlags(
-            Qt.TextInteractionFlag.TextSelectableByMouse
-        )
+        subTitleText.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse)
         subTitleText.setTextPixelSize(11)
 
         documentationButton = ElaToolButton(self)
         documentationButton.setFixedHeight(35)
         documentationButton.setIsTransparent(False)
-        documentationButton.setToolButtonStyle(
-            Qt.ToolButtonStyle.ToolButtonTextBesideIcon
-        )
-
+        documentationButton.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextBesideIcon)
         documentationButton.setText("Documentation")
         documentationButton.setElaIcon(ElaIconType.IconName.FileDoc)
         documentationMenu = ElaMenu(self)
-        documentationMenu.addElaIconAction(
-            ElaIconType.IconName.CardsBlank, "CardsBlank"
-        )
-        documentationMenu.addElaIconAction(
-            ElaIconType.IconName.EarthAmericas, "EarthAmericas"
-        )
-        self._documentationMenu = documentationMenu
+        documentationMenu.addElaIconAction(ElaIconType.IconName.CardsBlank, "CardsBlank")
+        documentationMenu.addElaIconAction(ElaIconType.IconName.EarthAmericas, "EarthAmericas")
         documentationButton.setMenu(documentationMenu)
 
         sourceButton = ElaToolButton(self)
@@ -46,7 +39,6 @@ class T_BasePage(ElaScrollPage):
         sourceMenu = ElaMenu(self)
         sourceMenu.addElaIconAction(ElaIconType.IconName.FireBurner, "FireBurner")
         sourceMenu.addElaIconAction(ElaIconType.IconName.Galaxy, "Galaxy~~~~")
-        self._sourceMenu = sourceMenu
         sourceButton.setMenu(sourceMenu)
 
         themeButton = ElaToolButton(self)
@@ -61,12 +53,27 @@ class T_BasePage(ElaScrollPage):
             )
         )
 
+        backtrackButton = ElaToolButton(self)
+        backtrackButton.setFixedSize(35, 35)
+        backtrackButton.setIsTransparent(False)
+        backtrackButton.setElaIcon(ElaIconType.IconName.Timer)
+
+        def __backtrack():
+            w = self.window()
+            key = self.property("ElaPageKey")
+            if key and isinstance(w, ElaWindow):
+                w.backtrackNavigationNode(key)
+
+        backtrackButton.clicked.connect(__backtrack)
+
         buttonLayout = QHBoxLayout()
         buttonLayout.addWidget(documentationButton)
         buttonLayout.addSpacing(5)
         buttonLayout.addWidget(sourceButton)
         buttonLayout.addStretch()
         buttonLayout.addWidget(themeButton)
+        buttonLayout.addSpacing(5)
+        buttonLayout.addWidget(backtrackButton)
         buttonLayout.addSpacing(15)
 
         descText = ElaText(self)
@@ -80,4 +87,4 @@ class T_BasePage(ElaScrollPage):
         topLayout.addLayout(buttonLayout)
         topLayout.addSpacing(5)
         topLayout.addWidget(descText)
-        self.setCustomWidget(customWidget)
+        self.setTopCustomWidget(customWidget)

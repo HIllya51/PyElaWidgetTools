@@ -1,5 +1,6 @@
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
+from _res import *
 
 
 class T_TableViewModel(QAbstractTableModel):
@@ -40,135 +41,41 @@ class T_TableViewModel(QAbstractTableModel):
         self._dataList.append(data6)
         self._dataList.append(data7)
         self._dataList.append(data8)
-        self._iconList = []
-        self._iconList.append(
-            QIcon(
-                QPixmap(
-                    r"C:\Users\11737\Pictures\luna\3d144c38-7128-4154-9440-c2a6d80c1ae1.jpg"
-                ).scaled(
-                    38,
-                    38,
-                    Qt.AspectRatioMode.KeepAspectRatio,
-                    Qt.TransformationMode.SmoothTransformation,
-                )
-            )
-        )
-        self._iconList.append(
-            QIcon(
-                QPixmap(
-                    r"C:\Users\11737\Pictures\luna\3d144c38-7128-4154-9440-c2a6d80c1ae1.jpg"
-                ).scaled(
-                    38,
-                    38,
-                    Qt.AspectRatioMode.KeepAspectRatio,
-                    Qt.TransformationMode.SmoothTransformation,
-                )
-            )
-        )
-        self._iconList.append(
-            QIcon(
-                QPixmap(
-                    r"C:\Users\11737\Pictures\luna\3d144c38-7128-4154-9440-c2a6d80c1ae1.jpg"
-                ).scaled(
-                    38,
-                    38,
-                    Qt.AspectRatioMode.KeepAspectRatio,
-                    Qt.TransformationMode.SmoothTransformation,
-                )
-            )
-        )
-        self._iconList.append(
-            QIcon(
-                QPixmap(
-                    r"C:\Users\11737\Pictures\luna\3d144c38-7128-4154-9440-c2a6d80c1ae1.jpg"
-                ).scaled(
-                    38,
-                    38,
-                    Qt.AspectRatioMode.KeepAspectRatio,
-                    Qt.TransformationMode.SmoothTransformation,
-                )
-            )
-        )
-        self._iconList.append(
-            QIcon(
-                QPixmap(
-                    r"C:\Users\11737\Pictures\luna\3d144c38-7128-4154-9440-c2a6d80c1ae1.jpg"
-                ).scaled(
-                    38,
-                    38,
-                    Qt.AspectRatioMode.KeepAspectRatio,
-                    Qt.TransformationMode.SmoothTransformation,
-                )
-            )
-        )
-        self._iconList.append(
-            QIcon(
-                QPixmap(
-                    r"C:\Users\11737\Pictures\luna\3d144c38-7128-4154-9440-c2a6d80c1ae1.jpg"
-                ).scaled(
-                    38,
-                    38,
-                    Qt.AspectRatioMode.KeepAspectRatio,
-                    Qt.TransformationMode.SmoothTransformation,
-                )
-            )
-        )
-        self._iconList.append(
-            QIcon(
-                QPixmap(
-                    r"C:\Users\11737\Pictures\luna\3d144c38-7128-4154-9440-c2a6d80c1ae1.jpg"
-                ).scaled(
-                    38,
-                    38,
-                    Qt.AspectRatioMode.KeepAspectRatio,
-                    Qt.TransformationMode.SmoothTransformation,
-                )
-            )
-        )
-        self._iconList.append(
-            QIcon(
-                QPixmap(
-                    r"C:\Users\11737\Pictures\luna\3d144c38-7128-4154-9440-c2a6d80c1ae1.jpg"
-                ).scaled(
-                    38,
-                    38,
-                    Qt.AspectRatioMode.KeepAspectRatio,
-                    Qt.TransformationMode.SmoothTransformation,
-                )
-            )
-        )
-        self._iconList.append(
-            QIcon(
-                QPixmap(
-                    r"C:\Users\11737\Pictures\luna\3d144c38-7128-4154-9440-c2a6d80c1ae1.jpg"
-                ).scaled(
-                    38,
-                    38,
-                    Qt.AspectRatioMode.KeepAspectRatio,
-                    Qt.TransformationMode.SmoothTransformation,
-                )
-            )
-        )
 
-    def rowCount(self, *_):
+        self._iconList = []
+        for _ in range(9):
+            self._iconList.append(
+                QIcon(
+                    placeholderPixmap(38, 38).scaled(
+                        38,
+                        38,
+                        Qt.AspectRatioMode.KeepAspectRatio,
+                        Qt.TransformationMode.SmoothTransformation,
+                    )
+                )
+            )
+
+    def rowCount(self, parent=QModelIndex()):
         return 100
 
-    def columnCount(self, *_):
+    def columnCount(self, parent=QModelIndex()):
         return len(self._header)
 
-    def data(self, index: QModelIndex, role: int):
+    def data(self, index, role=Qt.ItemDataRole.DisplayRole):
         if role == Qt.ItemDataRole.DisplayRole and index.column() != 0:
             return self._dataList[index.row() % 9][index.column() - 1]
         elif role == Qt.ItemDataRole.DecorationRole and index.column() == 0:
             return self._iconList[index.row() % 9]
-        elif role == 27:  # Qt.ItemDataRole.DecorationPropertyRole:
+        elif role == 27:  # Qt::DecorationPropertyRole
             return Qt.AlignmentFlag.AlignCenter
         elif role == Qt.ItemDataRole.TextAlignmentRole and index.column() == 4:
             return Qt.AlignmentFlag.AlignCenter
+        return None
 
-    def headerData(self, section, orientation, role):
+    def headerData(self, section, orientation, role=Qt.ItemDataRole.DisplayRole):
         if (
             orientation == Qt.Orientation.Horizontal
             and role == Qt.ItemDataRole.DisplayRole
         ):
             return self._header[section]
+        return super().headerData(section, orientation, role)

@@ -11,20 +11,20 @@ class T_ListView(T_BasePage):
         super().__init__(parent)
         self.setWindowTitle("ElaListView")
 
-        self.createCustomWidget(
-            "列表视图被放置于此，可在此界面体验其效果并按需添加进项目中"
-        )
+        self.createCustomWidget("列表视图被放置于此，可在此界面体验其效果并按需添加进项目中")
 
         listText = ElaText("ElaListView", self)
         listText.setTextPixelSize(18)
-        _listView = ElaListView(self)
-        _listView.setFixedHeight(450)
-        _listView.setModel(T_ListViewModel(self))
-        listViewFloatScrollBar = ElaScrollBar(_listView.verticalScrollBar(), _listView)
+        self._listView = ElaListView(self)
+        self._listView.setFixedHeight(450)
+        self._listView.setModel(T_ListViewModel(self))
+        listViewFloatScrollBar = ElaScrollBar(
+            self._listView.verticalScrollBar(), self._listView
+        )
         listViewFloatScrollBar.setIsAnimation(True)
         listViewLayout = QHBoxLayout()
         listViewLayout.setContentsMargins(0, 0, 10, 0)
-        listViewLayout.addWidget(_listView)
+        listViewLayout.addWidget(self._listView)
 
         centralWidget = QWidget(self)
         centralWidget.setWindowTitle("ElaView")

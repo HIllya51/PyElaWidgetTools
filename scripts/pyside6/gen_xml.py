@@ -337,7 +337,19 @@ elif sys.platform=='darwin':
     __ = os.path.dirname(os.path.dirname(sys.executable))
     pyDir = __ + "/include/"+os.listdir(__ + "/include")[0]
     print(pyDir)
-    sysinclude = f' --system-include-paths="{sdk}/usr/include" -I{pyDir} '
+    # shiboken 6.6.2 内置 libclang 15 解析不了 Xcode 16+ SDK 的 libc++ 头文件
+    # （依赖 clang 18 的 __remove_cv 等内置特性并删除了旧 fallback）。
+    # 用 --compiler-path 指向 homebrew 的 clang++17，让 shiboken 探测其默认 libc++
+    # （LLVM 17，仍带 fallback）作为被解析的 C++ 标准库，从而绕开 SDK 的新 libc++。
+    # 注意：shiboken 的 filterHomebrewHeaderPaths 会在 HOMEBREW_OPT 存在时剔除所有
+    #  homebrew 前缀的 include 路径（包括我们要用的 clang++17 libc++），故必须清掉它。
+    os.environ.pop("HOMEBREW_OPT", None)
+    compiler_path = "/opt/homebrew/opt/llvm@17/bin/clang++"
+    sysinclude = (
+        f' --system-include-paths="{sdk}/usr/include"'
+        f' --compiler-path={compiler_path}'
+        f' -I{pyDir} '
+    )
 
 os.system(
     f"""shiboken6 {sysinclude}

@@ -32,6 +32,9 @@ if sys.platform == "win32":
     platnames = ("win32", "win_amd64")[bit == "64"]
 elif sys.platform == "linux":
     platnames = "manylinux1_x86_64"
+elif sys.platform == "darwin":
+    # bit 在 mac 上传的是 arch（见 dobuild.py），Qt6 官方二进制的最低部署目标为 11.0
+    platnames = ("macosx_11_0_x86_64", "macosx_11_0_arm64")[bit == "arm64"]
 
 setup(
     name=f"{bindingfor}-ElaWidgetTools",

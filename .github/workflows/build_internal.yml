@@ -62,6 +62,26 @@ jobs:
             pythonversion: 3.8.12
             arch: x64
             binding: PySide6
+          # Qt 在线仓库已重构：clang_arm64 包被移除，clang_64 现为 X86_64-ARM64 通用二进制
+          # 用 macos-15 镜像。shiboken 6.6.2 内置 libclang 15 解析不了 Xcode 16+ SDK 的
+          # libc++ 头文件，故下方安装 homebrew llvm@17 并用 --compiler-path 让 shiboken
+          # 探测 clang++17 的（LLVM 17、带 fallback 的）libc++ 头文件来规避
+          - os: macos-15
+            qthost: mac
+            qtarch: clang_64
+            version: 6.6.2
+            pythonversion: 3.9.13
+            arch: arm64
+            binding: PyQt6
+            py312arch: arm64
+          - os: macos-15
+            qthost: mac
+            qtarch: clang_64
+            version: 6.6.2
+            pythonversion: 3.9.13
+            arch: arm64
+            binding: PySide6
+            py312arch: arm64
     permissions:
       id-token: write
       attestations: write
@@ -70,6 +90,14 @@ jobs:
       - uses: actions/checkout@v6
         with:
           submodules: 'recursive'
+      # shiboken 6.6.2 内置 libclang 15（静态链接，无法替换/降级 Xcode 也无 15.x），
+      # 解析不了 Xcode 16+ SDK 的 libc++ 头文件（依赖 clang 18 的 __remove_cv 等内置
+      #  特性并删除了旧 fallback，导致 "remove_reference not implemented!" 级联报错）。
+      # 改让 shiboken 探测 homebrew 的 clang++17：其默认 libc++（LLVM 17，仍带 fallback）
+      #  可被内置 libclang 15 解析（见 gen_xml.py 的 --compiler-path）。
+      # llvm@17 在 sequoia(15) 与 tahoe(26) 上均有预构建 bottle，无需源码编译。
+      - if: matrix.qthost == 'mac'
+        run: brew install llvm@17
       - uses: jurplel/install-qt-action@v4
         with:
           version: ${{matrix.version}}
@@ -84,7 +112,7 @@ jobs:
       - uses: actions/setup-python@v6
         with:
           python-version: 3.12.10
-          architecture: x64
+          architecture: ${{ matrix.py312arch || 'x64' }}
       - if: matrix.qthost == 'windows'
         uses: seanmiddleditch/gha-setup-vsdevenv@master
         with:

@@ -90,7 +90,6 @@ if sys.platform == "win32":
         add_compile_definitions(
             _SILENCE_ALL_MS_EXT_DEPRECATION_WARNINGS
             _HAS_CXX17=1
-            _HAS_CXX20=1
             _CRT_SECURE_NO_WARNINGS
         )
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /std:c++17 /Zc:__cplusplus")

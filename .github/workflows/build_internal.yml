@@ -62,6 +62,22 @@ jobs:
             pythonversion: 3.8.12
             arch: x64
             binding: PySide6
+          - os: macos-latest
+            qthost: mac
+            qtarch: clang_arm64
+            version: 6.6.2
+            pythonversion: 3.9.13
+            arch: arm64
+            binding: PyQt6
+            py312arch: arm64
+          - os: macos-latest
+            qthost: mac
+            qtarch: clang_arm64
+            version: 6.6.2
+            pythonversion: 3.9.13
+            arch: arm64
+            binding: PySide6
+            py312arch: arm64
     permissions:
       id-token: write
       attestations: write
@@ -84,7 +100,7 @@ jobs:
       - uses: actions/setup-python@v6
         with:
           python-version: 3.12.10
-          architecture: x64
+          architecture: ${{ matrix.py312arch || 'x64' }}
       - if: matrix.qthost == 'windows'
         uses: seanmiddleditch/gha-setup-vsdevenv@master
         with:

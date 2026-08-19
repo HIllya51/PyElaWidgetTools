@@ -315,6 +315,14 @@ if sys.platform=='linux':
     pyDir = __ + "/include/"+os.listdir(__ + "/include")[0]
     print(pyDir)
     sysinclude = f' -I{inc} -I{pyDir} '
+elif sys.platform=='darwin':
+    # shiboken 内置 clang 需要显式给出 macOS SDK 的系统头文件路径
+    sdk = os.popen("xcrun --show-sdk-path").read().strip()
+    print(sdk)
+    __ = os.path.dirname(os.path.dirname(sys.executable))
+    pyDir = __ + "/include/"+os.listdir(__ + "/include")[0]
+    print(pyDir)
+    sysinclude = f' --system-include-paths="{sdk}/usr/include" -I{pyDir} '
 
 os.system(
     f"""shiboken6 {sysinclude}

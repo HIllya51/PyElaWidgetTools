@@ -35,6 +35,14 @@ elif sys.platform == "linux":
     qmake = f"{Qtinstallpath}/bin/qmake"
     sipbuild = f"{pyDir}/sip-build"
     bin_app = ".abi3.so"
+elif sys.platform == "darwin":
+    pyPathEx = f"/Users/runner/hostedtoolcache/Python/3.12.10/{arch}/bin/python"
+    pyDir = f"/Users/runner/hostedtoolcache/Python/{pythonversion}/{arch}/bin"
+    pyPath = f"{pyDir}/python"
+    Qtinstallpath = f"/Users/runner/work/PyElaWidgetTools/Qt/{qtversion}/{qtarch}"
+    qmake = f"{Qtinstallpath}/bin/qmake"
+    sipbuild = f"{pyDir}/sip-build"
+    bin_app = ".abi3.so"
 
 
 subprocess.run(f"{pyPath} -m pip install --upgrade pip", shell=True)
@@ -79,6 +87,12 @@ __parsefile(
         "",
     ).replace("Q_DECL_IMPORT", ""),
 )
+if sys.platform == "darwin":
+    # macOS 的 ld 不认识 GNU 特有的 --disable-new-dtags
+    __parsefile(
+        "../ElaWidgetTools/CMakeLists.txt",
+        lambda cml: cml.replace("add_link_options(-Wl,--disable-new-dtags)", ""),
+    )
 if sys.platform == "win32":
     archA = ("win32", "x64")[arch == "x64"]
     flags = f'-G "Visual Studio 18 2026" -A {archA} -T host={arch}'
@@ -104,6 +118,8 @@ if sys.platform == "win32":
             ),
             pr=True,
         )
+elif sys.platform == "darwin":
+    flags = "-DCMAKE_OSX_DEPLOYMENT_TARGET=11.0"
 else:
     flags = ""
 subprocess.run(
@@ -136,7 +152,8 @@ if binding.lower().startswith("pyqt"):
                 '[ "ElaWidgetTools","D3D11", "DXGI", "kernel32" ,"user32", "gdi32", "winspool" ,"comdlg32", "advapi32", "shell32", "ole32", "oleaut32", "uuid", "odbc32", "odbccp32"]',
             ),
         )
-    elif sys.platform == "linux":
+    elif sys.platform == "linux" or sys.platform == "darwin":
+        # 静态库由 makefile 类生成器直接输出到构建目录，不像 MSVC 有 Release 子目录
         __parsefile(
             "pyproject.toml",
             lambda c: c.replace("../ElaWidgetTools/Release", "../ElaWidgetTools"),
@@ -188,7 +205,7 @@ elif binding.lower().startswith("pyside"):
         ELA_LIB_PATH = os.path.abspath(
             f"../ElaWidgetTools/Release/ElaWidgetTools.lib"
         ).replace("\\", "/")
-    elif sys.platform == "linux":
+    elif sys.platform == "linux" or sys.platform == "darwin":
         __ = os.path.dirname(os.path.dirname(sys.executable))
         MY_PYTHON_INCLUDE_PATH = __ + "/include/" + os.listdir(__ + "/include")[0]
         ELA_LIB_PATH = os.path.abspath(f"../ElaWidgetTools/libElaWidgetTools.a")
@@ -196,10 +213,12 @@ elif binding.lower().startswith("pyside"):
     PySide6Lib = "pyside6.abi3.lib"
     shiboken6Lib = "shiboken6.abi3.lib"
     for _ in os.listdir(f"{MY_SITE_PACKAGES_PATH}/PySide6"):
-        if _.startswith("libpyside6.abi3.so"):
+        if _.startswith("libpyside6.abi3.so") or _.startswith("libpyside6.abi3.dylib"):
             PySide6Lib = _
     for _ in os.listdir(f"{MY_SITE_PACKAGES_PATH}/shiboken6"):
-        if _.startswith("libshiboken6.abi3.so"):
+        if _.startswith("libshiboken6.abi3.so") or _.startswith(
+            "libshiboken6.abi3.dylib"
+        ):
             shiboken6Lib = _
 
     subprocess.run(
@@ -210,7 +229,7 @@ elif binding.lower().startswith("pyside"):
         f"cmake --build ./ --config Release -j {os.cpu_count()}",
         shell=True,
     )
-    if sys.platform == "linux":
+    if sys.platform == "linux" or sys.platform == "darwin":
         os.makedirs("Release", exist_ok=True)
 
         shutil.move(f"libElaWidgetTools{bin_app}", f"Release/ElaWidgetTools{bin_app}")
@@ -239,8 +258,10 @@ subprocess.run(f"{pyPathEx} -m pip install setuptools wheel", shell=True)
 req = ""
 if binding.lower().startswith("pyside"):
     req = f"PySide6=={qtversion}"
+# mac 上把 arch 原样传给 setup.py 以区分 x86_64/arm64，其余平台用位数
+bit = arch if sys.platform == "darwin" else ('64', '32')[arch == 'x86']
 subprocess.run(
-    f"{pyPathEx} setup.py bdist_wheel {req} {('64','32')[arch == 'x86']} {binding}",
+    f"{pyPathEx} setup.py bdist_wheel {req} {bit} {binding}",
     shell=True,
 )
 os.chdir("..")

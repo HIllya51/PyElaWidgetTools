@@ -345,12 +345,13 @@ def generate_sip_for_class__1(header_content, filename=""):
 
             sip_prop_type = prop_type_raw
 
-            # V3.0 的 ELA_PROPERTY/ELA_VARIABLE 宏访问器签名是 TYPE const&
-            # 非指针类型写成 const T&（sip 语法要求 const 在最前）；
-            # 指针类型只能写成 T* const&（指向常量的指针的引用），
-            # const T*& 是另一种类型，签名不匹配会链接失败。
+            # V3.0 的 ELA_PROPERTY/ELA_VARIABLE 宏访问器签名是 TYPE const&。
+            # 非指针类型写成 const T&（sip 语法要求 const 在最前）。
+            # 指针类型 sip 不支持 T* const&（"unsupported return type"），按值声明：
+            # sip 不解析 C++ 头，wrapper 只生成对真实方法的调用，T* 与 T* const&
+            # 之间隐式转换，且非模板函数的符号名不含返回类型，不存在链接问题。
             ref_type = (
-                f"{prop_type_raw} const&"
+                prop_type_raw
                 if prop_type_raw.endswith("*")
                 else f"const {prop_type_raw}&"
             )

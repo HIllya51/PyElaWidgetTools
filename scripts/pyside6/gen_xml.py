@@ -378,3 +378,22 @@ with open("OUTPUTDIR/ElaWidgetTools/elamessagebar_wrapper.cpp", "r") as ff:
 with open("OUTPUTDIR/ElaWidgetTools/elamessagebar_wrapper.cpp", "w") as ff:
     #linux这个文件蜜汁不正常。
     ff.write(__.replace("::%CLASS_NAME::", ""))
+
+
+# shiboken 6.6.2 在 --avoid-protected-hack 下，对"返回 const 枚举引用"的方法会生成
+# 非法的函数式转换 const E &(call)（gcc: expected primary-expression before 'const'）。
+# V3.0 的 ELA_PROPERTY/ELA_VARIABLE 宏的枚举类型 getter 全部中招（基本类型/类类型的
+# const 引用返回不受影响）。改写成括号表达式 (call)：const E& 绑定到调用结果，语义不变。
+# 形态有两种：const 方法 const E &(const_cast<...>->m())，非 const 方法 const E &(cppSelf->m())
+badenumcast = re.compile(r"const\s+[\w:]+\s*&\s*\((const_cast<|cppSelf)")
+for _ in os.listdir("OUTPUTDIR/ElaWidgetTools"):
+    if not _.endswith("_wrapper.cpp"):
+        continue
+    _f = f"OUTPUTDIR/ElaWidgetTools/{_}"
+    with open(_f, "r", encoding="utf8") as ff:
+        __ = ff.read()
+    ___ = badenumcast.sub(r"(\1", __)
+    if ___ != __:
+        print(f"fixed const enum-ref functional cast in {_}")
+        with open(_f, "w", encoding="utf8") as ff:
+            ff.write(___)

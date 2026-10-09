@@ -90,7 +90,7 @@ def parse_parameters(param_str):
 def generate_sip_for_class_2(header_content, filename=""):
     sip_lines = []
 
-    is_singleton = "Q_SINGLETON_CREATE_H" in header_content
+    is_singleton = "ELA_SINGLETON_H" in header_content
 
     # Extract class name (works for Q_OBJECT or plain classes)
     class_match = re.search(
@@ -311,8 +311,8 @@ def generate_sip_for_class__1(header_content, filename=""):
     sip_lines.append("%End\n")
 
     # --- Properties ---
-    # Q_PROPERTY_* macros declare a notify signal (pXChanged) + getter/setter.
-    # Q_PRIVATE_* macros declare only getter/setter (no notify signal).
+    # ELA_PROPERTY* macros declare a notify signal (pXChanged) + getter/setter.
+    # ELA_VARIABLE* macros declare only getter/setter (no notify signal).
     # Only scan the class body: property macros that belong to other types in the
     # same header (e.g. ElaSuggestBox's nested SuggestData struct) must not be
     # attributed to this class, or sip will generate accessors that don't exist.
@@ -324,13 +324,10 @@ def generate_sip_for_class__1(header_content, filename=""):
     prop_scan = _class_body_for_props.group(1) if _class_body_for_props else header_content
 
     PROP_MACROS = [
-        ("Q_PROPERTY_CREATE", True),
-        ("Q_PROPERTY_CREATE_Q_H", True),
-        ("Q_PROPERTY_REF_CREATE_Q_H", True),
-        ("Q_PRIVATE_CREATE", False),
-        ("Q_PRIVATE_CREATE_Q_H", False),
-        ("Q_PRIVATE_REF_CREATE", False),
-        ("Q_PRIVATE_REF_CREATE_Q_H", False),
+        ("ELA_PROPERTY", True),
+        ("ELA_PROPERTY_Q_H", True),
+        ("ELA_VARIABLE", False),
+        ("ELA_VARIABLE_Q_H", False),
     ]
     has_public_section_for_props = False  # To add "public:" if props are first
 
@@ -348,6 +345,16 @@ def generate_sip_for_class__1(header_content, filename=""):
 
             sip_prop_type = prop_type_raw
 
+            # V3.0 的 ELA_PROPERTY/ELA_VARIABLE 宏访问器签名是 TYPE const&
+            # 非指针类型写成 const T&（sip 语法要求 const 在最前）；
+            # 指针类型只能写成 T* const&（指向常量的指针的引用），
+            # const T*& 是另一种类型，签名不匹配会链接失败。
+            ref_type = (
+                f"{prop_type_raw} const&"
+                if prop_type_raw.endswith("*")
+                else f"const {prop_type_raw}&"
+            )
+
             # Determine getter/setter names based on convention
             getter_name = f"get{prop_name}"
             setter_name = f"set{prop_name}"
@@ -361,10 +368,10 @@ def generate_sip_for_class__1(header_content, filename=""):
             else:
                 sip_lines.append("public:")
             sip_lines.append(
-                f"  void {setter_name}({(prop_type_raw)} {prop_name});"
+                f"  void {setter_name}({ref_type} {prop_name});"
             )  # Use input version of type
             sip_lines.append(
-                f"  {(prop_type_raw)} {getter_name}() const;"
+                f"  {ref_type} {getter_name}() const;"
             )  # Use return version
 
     # --- Methods ---
@@ -384,7 +391,7 @@ def generate_sip_for_class__1(header_content, filename=""):
         header_content,
         re.DOTALL,
     )
-    if "Q_SINGLETON_CREATE_H" in header_content:
+    if "ELA_SINGLETON_H" in header_content:
         sip_lines.append(f"public: static {class_name}* getInstance();")
     if class_body_match:
         body_content = class_body_match.group(1)
@@ -549,6 +556,8 @@ def cast_h_to_sip(filename):
     # A common pattern is to have a main .sip file that includes others.
     # This script generates the content for a single class.
     # You'd typically wrap this with %Module, %Import, etc.
+    # V3.0 的显式访问器声明带 Q_REQUIRED_RESULT，sip 不认识，需剥离
+    content = content.replace("Q_REQUIRED_RESULT ", "")
     content = content.replace(
         "Q_TAKEOVER_NATIVEEVENT_H",
         f"virtual bool nativeEvent(const QByteArray& eventType, void* message, {('qintptr','long')[forQt5]}* result) override;",

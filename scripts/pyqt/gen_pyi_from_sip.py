@@ -41,9 +41,14 @@ def sip_to_python_type(sip_type, current_namespace_context=None):
         "qintptr": "int",
         "QVariantMap": "map",
     }
-    sip_type = " ".join(mapstring.get(_, _) for _ in sip_type.split(" "))
+    sip_type = " ".join(mapstring.get(_, _) for _ in sip_type.split(" ")).strip()
     if sip_type in TYPE_MAP:
         return TYPE_MAP[sip_type]
+
+    # QList<T> -> List[T]（递归映射内层类型，如 QList<ElaSuggestBox::SuggestData>）
+    qlist_match = re.match(r"QList<(.+)>$", sip_type)
+    if qlist_match:
+        return f"List[{sip_to_python_type(qlist_match.group(1), current_namespace_context)}]"
 
     # Handle Namespace::Type -> Namespace.Type
     if "::" in sip_type:
@@ -126,6 +131,8 @@ def generate_pyi(sip_content):
     in_class = False
     current_class_name = None
     in_enum = False
+    in_struct = False
+    current_struct_name = None
 
     lines = sip_content.splitlines()
 
@@ -196,6 +203,34 @@ def generate_pyi(sip_content):
                 pyi_lines.append(
                     f"{current_indent}{line.split(',')[0].strip()} = ... # type: ignore # Auto-assigned value"
                 )
+            continue
+
+        # Struct（如 ElaSuggestBox 的 SuggestData）：作为嵌套类输出。
+        # 必须在 in_class 的 "};" 判断之前拦截，否则结构体的收尾大括号会把外层类提前终结。
+        if in_struct:
+            if line.startswith("};"):
+                current_indent = current_indent[:-4]
+                in_struct = False
+                pyi_lines.append("")  # Add a blank line after struct
+                continue
+            # 结构体内的构造函数（~Struct() 析构对 pyi 无意义，跳过）
+            struct_ctor_match = re.match(r"explicit\s+(\w+)\s*\((.*)\)\s*;", line)
+            if struct_ctor_match and struct_ctor_match.group(1) == current_struct_name:
+                py_params, _ = parse_parameters(
+                    struct_ctor_match.group(2), current_namespace_name
+                )
+                pyi_lines.append(
+                    f"{current_indent}def __init__(self, {', '.join(py_params)}) -> None:"
+                )
+                pyi_lines.append(f"{current_indent}    ...")
+            continue
+
+        match_struct_start = re.match(r"struct\s+(\w+)\s*\{", line)
+        if match_struct_start:
+            current_struct_name = match_struct_start.group(1)
+            pyi_lines.append(f"{current_indent}class {current_struct_name}:")
+            current_indent += "    "
+            in_struct = True
             continue
 
         # Typedef

@@ -605,6 +605,16 @@ def cast_h_to_sip(filename):
 
 allfiles = []
 
+# 清掉过期的 sip：上游删除组件后（如 ElaReminderCard），旧文件若残留会被
+# gen_pyi_from_sip.py 一并打包，导致绑定里出现已不存在的类。
+# 按头文件是否存在判断；ElaDef.sip 由 gen_Def.sip.py 生成，无对应头文件，不能删
+os.makedirs("sip", exist_ok=True)
+for f in os.listdir("sip"):
+    if not f.endswith(".sip") or f == "ElaDef.sip":
+        continue
+    if not os.path.exists(os.path.join(eladir, f.replace(".sip", ".h"))):
+        os.remove(os.path.join("sip", f))
+
 for f in os.listdir(eladir):
     if f.startswith("ElaWidgetToolsDef"):
         continue

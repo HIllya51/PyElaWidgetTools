@@ -72,7 +72,10 @@ def parse_def_h_to_sip(header_content):
             found_members = []
             for member_line in members_str.splitlines():
                 member_line = member_line.strip()
-                if not member_line or member_line.startswith("//"):
+                # 去掉行内注释：V3.0 的枚举成员带中文注释，进 sip 文件有编码风险且无意义
+                member_line = re.sub(r"//.*$", "", member_line).strip()
+                member_line = re.sub(r"/\*.*?\*/", "", member_line).strip()
+                if not member_line:
                     continue
 
                 # Try to match with value

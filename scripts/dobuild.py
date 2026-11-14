@@ -111,6 +111,15 @@ __parsefile(
         "#include <QPersistentModelIndex>\n#include <QPixmap>",
     ),
 )
+# qdatastream.h 只前向声明 QIODevice，QIODevice::WriteOnly 需要完整定义
+# （同上游缺 include 的问题，MSVC 恰好能过，GCC 报 incomplete type）
+__parsefile(
+    "../ElaWidgetTools/ElaWidgetTools/private/ElaThemePrivate.cpp",
+    lambda cml: cml.replace(
+        "#include <QDataStream>",
+        "#include <QDataStream>\n#include <QIODevice>",
+    ),
+)
 if sys.platform == "darwin":
     # macOS 的 ld 不认识 GNU 特有的 --disable-new-dtags
     __parsefile(

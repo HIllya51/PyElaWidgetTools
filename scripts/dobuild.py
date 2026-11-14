@@ -120,6 +120,21 @@ __parsefile(
         "#include <QDataStream>\n#include <QIODevice>",
     ),
 )
+if sys.platform == "win32" and qtversion.startswith("5"):
+    # Qt 5.15.2 的 QVector<T>::operator== 在 MSVC 下经
+    # QT_MAKE_CHECKED_ARRAY_ITERATOR 使用 stdext::make_checked_array_iterator，
+    # 而 VS2026(MSVC 14.51) 已移除 stdext 命名空间；上游
+    # ElaMultiSelectComboBoxPrivate 对 QVector<bool> 的比较会实例化该模板。
+    # 替换为裸指针展开（Qt6 的 qvector.h 即如此；checked iterator 仅为
+    # 调试期的迭代器越界检查，去掉无语义差异）。Qt6 头文件不再使用该宏，
+    # 无需处理
+    __parsefile(
+        Qtinstallpath + "/include/QtCore/qcompilerdetection.h",
+        lambda cml: cml.replace(
+            "stdext::make_checked_array_iterator(x, size_t(N))",
+            "(x)",
+        ),
+    )
 if sys.platform == "darwin":
     # macOS 的 ld 不认识 GNU 特有的 --disable-new-dtags
     __parsefile(

@@ -1,6 +1,9 @@
+import sys
+
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
+
 from PyQt5ElaWidgetTools import *
 from ExamplePage.T_BasePage import *
 
@@ -8,286 +11,144 @@ from ExamplePage.T_BasePage import *
 class T_Setting(T_BasePage):
     def __init__(self, parent=None):
         super().__init__(parent)
+        window = parent if isinstance(parent, ElaWindow) else None
+        self.setWindowTitle("设置")
+        self.createCustomWidget("调整展示程序的外观、导航与交互效果，设置会即时应用。", "设置")
+        mainLayout = self.createPageLayout()
 
-        # 预览窗口标题
-        window = self.window()
-        self.setWindowTitle("Setting")
-
-        themeText = ElaText("主题设置", self)
-        themeText.setWordWrap(False)
-        themeText.setTextPixelSize(18)
-
-        self._themeComboBox = ElaComboBox(self)
-        self._themeComboBox.addItem("日间模式")
-        self._themeComboBox.addItem("夜间模式")
-        themeSwitchArea = ElaScrollPageArea(self)
-        themeSwitchLayout = QHBoxLayout(themeSwitchArea)
-        themeSwitchText = ElaText("主题切换", self)
-        themeSwitchText.setWordWrap(False)
-        themeSwitchText.setTextPixelSize(15)
-        themeSwitchLayout.addWidget(themeSwitchText)
-        themeSwitchLayout.addStretch()
-        themeSwitchLayout.addWidget(self._themeComboBox)
-        self._themeComboBox.currentIndexChanged.connect(
-            lambda index: (
-                eTheme.setThemeMode(ElaThemeType.ThemeMode.Light)
-                if index == 0
-                else eTheme.setThemeMode(ElaThemeType.ThemeMode.Dark)
-            )
+        # 外观
+        appearanceSection = self.addExampleSection(
+            mainLayout, "外观", "背景绘制与窗口材质可分别调整，系统材质效果取决于平台支持。"
         )
+        self._themeComboBox = ElaComboBox(self)
+        self._themeComboBox.setFixedWidth(200)
+        self._themeComboBox.addItems(["浅色", "深色"])
+        self._themeComboBox.setCurrentIndex(int(eTheme.getThemeMode()))
 
-        def __themeModeChanged(themeMode: ElaThemeType.ThemeMode):
+        def _onThemeChanged(index):
+            eTheme.setThemeMode(
+                ElaThemeType.ThemeMode.Light if index == 0 else ElaThemeType.ThemeMode.Dark
+            )
+
+        self._themeComboBox.currentIndexChanged.connect(_onThemeChanged)
+
+        def _onThemeModeChanged(mode):
             self._themeComboBox.blockSignals(True)
-            if themeMode == ElaThemeType.ThemeMode.Light:
-                self._themeComboBox.setCurrentIndex(0)
-            else:
-                self._themeComboBox.setCurrentIndex(1)
+            self._themeComboBox.setCurrentIndex(int(mode))
             self._themeComboBox.blockSignals(False)
 
-        eTheme.themeModeChanged.connect(__themeModeChanged)
-
-        windowPaintText = ElaText("主窗口绘制设置", self)
-        windowPaintText.setWordWrap(False)
-        windowPaintText.setTextPixelSize(15)
-
-        self._windowNormalButton = ElaRadioButton("Normal", self)
-        self._windowNormalButton.setChecked(True)
-        self._windowPixmapButton = ElaRadioButton("Pixmap", self)
-        self._windowMovieButton = ElaRadioButton("Movie", self)
-
-        windowPaintButtonGroup = QButtonGroup(self)
-        windowPaintButtonGroup.addButton(self._windowNormalButton, 0)
-        windowPaintButtonGroup.addButton(self._windowPixmapButton, 1)
-        windowPaintButtonGroup.addButton(self._windowMovieButton, 2)
-        windowPaintModes = [
-            ElaWindowType.PaintMode.Normal,
-            ElaWindowType.PaintMode.Pixmap,
-            ElaWindowType.PaintMode.Movie,
-        ]
-        windowPaintButtonGroup.buttonToggled.connect(
-            lambda button, isToggled: (
-                window.setWindowPaintMode(
-                    windowPaintModes[windowPaintButtonGroup.id(button)]
-                )
-                if isToggled
-                else None
-            )
+        eTheme.themeModeChanged.connect(_onThemeModeChanged)
+        appearanceSection.addWidget(
+            self.createSettingRow("明暗主题", "为整个展示程序切换主题", self._themeComboBox)
         )
 
-        def __pWindowPaintModeChanged():
-            button = windowPaintButtonGroup.button(window.getWindowPaintMode())
-            elaRadioButton = button
-            if elaRadioButton:
-                elaRadioButton.setChecked(True)
+        paintComboBox = ElaComboBox(self)
+        paintComboBox.setFixedWidth(200)
+        paintComboBox.addItems(["纯色背景", "静态图片", "动态图片"])
+        paintComboBox.setEnabled(window is not None)
+        if window is not None:
+            paintComboBox.setCurrentIndex(int(window.getWindowPaintMode()))
 
-        window.pWindowPaintModeChanged.connect(__pWindowPaintModeChanged)
+            def _onPaintChanged(index):
+                window.setWindowPaintMode(ElaWindowType.PaintMode(index))
 
-        windowPaintModeArea = ElaScrollPageArea(self)
-        windowPaintModeLayout = QHBoxLayout(windowPaintModeArea)
-        windowPaintModeLayout.addWidget(windowPaintText)
-        windowPaintModeLayout.addStretch()
-        windowPaintModeLayout.addWidget(self._windowNormalButton)
-        windowPaintModeLayout.addWidget(self._windowPixmapButton)
-        windowPaintModeLayout.addWidget(self._windowMovieButton)
+            paintComboBox.currentIndexChanged.connect(_onPaintChanged)
 
-        helperText = ElaText("应用程序设置", self)
-        helperText.setWordWrap(False)
-        helperText.setTextPixelSize(18)
+            def _onWindowPaintModeChanged():
+                paintComboBox.blockSignals(True)
+                paintComboBox.setCurrentIndex(int(window.getWindowPaintMode()))
+                paintComboBox.blockSignals(False)
 
-        micaSwitchText = ElaText("窗口效果", self)
-        micaSwitchText.setWordWrap(False)
-        micaSwitchText.setTextPixelSize(15)
-        self._normalButton = ElaRadioButton("Normal", self)
-        self._elaMicaButton = ElaRadioButton("ElaMica", self)
-        # ifdef Q_OS_WIN
-        self._micaButton = ElaRadioButton("Mica", self)
-        self._micaAltButton = ElaRadioButton("Mica-Alt", self)
-        self._acrylicButton = ElaRadioButton("Acrylic", self)
-        self._dwmBlurnormalButton = ElaRadioButton("Dwm-Blur", self)
-        # endif
-        self._normalButton.setChecked(True)
-        displayButtonGroup = QButtonGroup(self)
-        displayButtonGroup.addButton(self._normalButton, 0)
-        displayButtonGroup.addButton(self._elaMicaButton, 1)
-        # ifdef Q_OS_WIN
-        displayButtonGroup.addButton(self._micaButton, 2)
-        displayButtonGroup.addButton(self._micaAltButton, 3)
-        displayButtonGroup.addButton(self._acrylicButton, 4)
-        displayButtonGroup.addButton(self._dwmBlurnormalButton, 5)
-        # endif
-        displayModes = [
-            ElaApplicationType.WindowDisplayMode.Normal,
-            ElaApplicationType.WindowDisplayMode.ElaMica,
-            ElaApplicationType.WindowDisplayMode.Mica,
-            ElaApplicationType.WindowDisplayMode.MicaAlt,
-            ElaApplicationType.WindowDisplayMode.Acrylic,
-            ElaApplicationType.WindowDisplayMode.DWMBlur,
-        ]
-        displayButtonGroup.buttonToggled.connect(
-            lambda button, isToggled: (
-                eApp.setWindowDisplayMode(displayModes[displayButtonGroup.id(button)])
-                if isToggled
-                else None
-            )
+            window.pWindowPaintModeChanged.connect(_onWindowPaintModeChanged)
+        appearanceSection.addWidget(
+            self.createSettingRow("窗口背景", "在普通背景、图片和动图之间切换", paintComboBox)
         )
 
-        def __pWindowDisplayModeChanged():
-            button = displayButtonGroup.button(eApp.getWindowDisplayMode())
-            elaRadioButton = button
-            if elaRadioButton:
-                elaRadioButton.setChecked(True)
+        materialComboBox = ElaComboBox(self)
+        materialComboBox.setFixedWidth(200)
+        materialComboBox.addItems(["默认材质", "Ela 云母"])
+        if sys.platform == "win32":
+            materialComboBox.addItems(["系统云母", "替代云母", "亚克力", "窗口模糊"])
+        materialComboBox.setCurrentIndex(int(eApp.getWindowDisplayMode()))
 
-        eApp.pWindowDisplayModeChanged.connect(__pWindowDisplayModeChanged)
+        def _onMaterialChanged(index):
+            eApp.setWindowDisplayMode(ElaApplicationType.WindowDisplayMode(index))
 
-        micaSwitchArea = ElaScrollPageArea(self)
-        micaSwitchLayout = QHBoxLayout(micaSwitchArea)
-        micaSwitchLayout.addWidget(micaSwitchText)
-        micaSwitchLayout.addStretch()
-        micaSwitchLayout.addWidget(self._normalButton)
-        micaSwitchLayout.addWidget(self._elaMicaButton)
-        # ifdef Q_OS_WIN
-        micaSwitchLayout.addWidget(self._micaButton)
-        micaSwitchLayout.addWidget(self._micaAltButton)
-        micaSwitchLayout.addWidget(self._acrylicButton)
-        micaSwitchLayout.addWidget(self._dwmBlurnormalButton)
-        # endif
+        materialComboBox.currentIndexChanged.connect(_onMaterialChanged)
 
-        self._logSwitchButton = ElaToggleSwitch(self)
-        logSwitchArea = ElaScrollPageArea(self)
-        logSwitchLayout = QHBoxLayout(logSwitchArea)
-        logSwitchText = ElaText("启用日志功能", self)
-        logSwitchText.setWordWrap(False)
-        logSwitchText.setTextPixelSize(15)
-        logSwitchLayout.addWidget(logSwitchText)
-        logSwitchLayout.addStretch()
-        logSwitchLayout.addWidget(self._logSwitchButton)
+        def _onWindowDisplayModeChanged():
+            materialComboBox.blockSignals(True)
+            materialComboBox.setCurrentIndex(int(eApp.getWindowDisplayMode()))
+            materialComboBox.blockSignals(False)
 
-        def __logSwitchToggled(checked: bool):
-            ElaLog.getInstance().initMessageLog(checked)
-            if checked:
-                print("日志已启用!")
-            else:
-                print("日志已关闭!")
-
-        self._logSwitchButton.toggled.connect(__logSwitchToggled)
-
-        self._userCardSwitchButton = ElaToggleSwitch(self)
-        userCardSwitchArea = ElaScrollPageArea(self)
-        userCardSwitchLayout = QHBoxLayout(userCardSwitchArea)
-        userCardSwitchText = ElaText("隐藏用户卡片", self)
-        userCardSwitchText.setWordWrap(False)
-        userCardSwitchText.setTextPixelSize(15)
-        userCardSwitchLayout.addWidget(userCardSwitchText)
-        userCardSwitchLayout.addStretch()
-        userCardSwitchLayout.addWidget(self._userCardSwitchButton)
-        self._userCardSwitchButton.toggled.connect(
-            lambda checked: window.setUserInfoCardVisible(not checked)
+        eApp.pWindowDisplayModeChanged.connect(_onWindowDisplayModeChanged)
+        appearanceSection.addWidget(
+            self.createSettingRow("窗口材质", "选择应用背景的材质效果", materialComboBox)
         )
 
-        self._minimumButton = ElaRadioButton("Minimum", self)
-        self._compactButton = ElaRadioButton("Compact", self)
-        self._maximumButton = ElaRadioButton("Maximum", self)
-        self._autoButton = ElaRadioButton("Auto", self)
-        self._autoButton.setChecked(True)
-        displayModeArea = ElaScrollPageArea(self)
-        displayModeLayout = QHBoxLayout(displayModeArea)
-        displayModeText = ElaText("导航栏模式选择", self)
-        displayModeText.setWordWrap(False)
-        displayModeText.setTextPixelSize(15)
-        displayModeLayout.addWidget(displayModeText)
-        displayModeLayout.addStretch()
-        displayModeLayout.addWidget(self._minimumButton)
-        displayModeLayout.addWidget(self._compactButton)
-        displayModeLayout.addWidget(self._maximumButton)
-        displayModeLayout.addWidget(self._autoButton)
+        # 导航与页面
+        navigationSection = self.addExampleSection(
+            mainLayout, "导航与页面", "控制侧边栏的展开方式和页面切换动画。"
+        )
+        navigationComboBox = ElaComboBox(self)
+        navigationComboBox.setFixedWidth(200)
+        navigationComboBox.addItems(["自动适应", "最小化", "紧凑", "完整展开"])
+        navigationComboBox.setEnabled(window is not None)
+        transitionComboBox = ElaComboBox(self)
+        transitionComboBox.setFixedWidth(200)
+        transitionComboBox.addItems(["无动画", "滑入", "缩放", "翻转", "模糊"])
+        transitionComboBox.setEnabled(window is not None)
+        if window is not None:
+            navigationComboBox.setCurrentIndex(int(window.getNavigationBarDisplayMode()))
+            transitionComboBox.setCurrentIndex(int(window.getStackSwitchMode()))
 
-        navigationGroup = QButtonGroup(self)
-        navigationGroup.addButton(self._autoButton, 0)
-        navigationGroup.addButton(self._minimumButton, 1)
-        navigationGroup.addButton(self._compactButton, 2)
-        navigationGroup.addButton(self._maximumButton, 3)
-        navigationModes = [
-            ElaNavigationType.NavigationDisplayMode.Auto,
-            ElaNavigationType.NavigationDisplayMode.Minimal,
-            ElaNavigationType.NavigationDisplayMode.Compact,
-            ElaNavigationType.NavigationDisplayMode.Maximal,
-        ]
-        navigationGroup.buttonToggled.connect(
-            lambda button, isToggled: (
+            def _onNavigationModeChanged(index):
                 window.setNavigationBarDisplayMode(
-                    navigationModes[navigationGroup.id(button)]
+                    ElaNavigationType.NavigationDisplayMode(index)
                 )
-                if isToggled
-                else None
-            )
+
+            def _onTransitionChanged(index):
+                window.setStackSwitchMode(ElaWindowType.StackSwitchMode(index))
+
+            navigationComboBox.currentIndexChanged.connect(_onNavigationModeChanged)
+            transitionComboBox.currentIndexChanged.connect(_onTransitionChanged)
+
+            def _onNavigationBarDisplayModeChanged():
+                navigationComboBox.blockSignals(True)
+                navigationComboBox.setCurrentIndex(int(window.getNavigationBarDisplayMode()))
+                navigationComboBox.blockSignals(False)
+
+            def _onStackSwitchModeChanged():
+                transitionComboBox.blockSignals(True)
+                transitionComboBox.setCurrentIndex(int(window.getStackSwitchMode()))
+                transitionComboBox.blockSignals(False)
+
+            window.pNavigationBarDisplayModeChanged.connect(_onNavigationBarDisplayModeChanged)
+            window.pStackSwitchModeChanged.connect(_onStackSwitchModeChanged)
+        self._userCardSwitchButton = ElaToggleSwitch(self)
+        self._userCardSwitchButton.setIsToggled(True)
+        self._userCardSwitchButton.setEnabled(window is not None)
+        if window is not None:
+            self._userCardSwitchButton.toggled.connect(window.setUserInfoCardVisible)
+        navigationSection.addWidget(
+            self.createSettingRow("导航栏模式", "让侧边栏适应当前窗口宽度", navigationComboBox)
+        )
+        navigationSection.addWidget(
+            self.createSettingRow("页面切换", "选择页面之间的过渡方式", transitionComboBox)
+        )
+        navigationSection.addWidget(
+            self.createSettingRow("显示用户卡片", "显示导航栏顶部的用户信息", self._userCardSwitchButton)
         )
 
-        self._noneButton = ElaRadioButton("None", self)
-        self._popupButton = ElaRadioButton("Popup", self)
-        self._popupButton.setChecked(True)
-        self._scaleButton = ElaRadioButton("Scale", self)
-        self._flipButton = ElaRadioButton("Flip", self)
-        self._blurButton = ElaRadioButton("Blur", self)
-        stackSwitchModeArea = ElaScrollPageArea(self)
-        stackSwitchModeLayout = QHBoxLayout(stackSwitchModeArea)
-        stackSwitchModeText = ElaText("堆栈切换模式选择", self)
-        stackSwitchModeText.setWordWrap(False)
-        stackSwitchModeText.setTextPixelSize(15)
-        stackSwitchModeLayout.addWidget(stackSwitchModeText)
-        stackSwitchModeLayout.addStretch()
-        stackSwitchModeLayout.addWidget(self._noneButton)
-        stackSwitchModeLayout.addWidget(self._popupButton)
-        stackSwitchModeLayout.addWidget(self._scaleButton)
-        stackSwitchModeLayout.addWidget(self._flipButton)
-        stackSwitchModeLayout.addWidget(self._blurButton)
+        # 应用
+        applicationSection = self.addExampleSection(mainLayout, "应用", "控制展示程序的日志记录。")
+        self._logSwitchButton = ElaToggleSwitch(self)
 
-        stackSwitchGroup = QButtonGroup(self)
-        stackSwitchGroup.addButton(self._noneButton, 0)
-        stackSwitchGroup.addButton(self._popupButton, 1)
-        stackSwitchGroup.addButton(self._scaleButton, 2)
-        stackSwitchGroup.addButton(self._flipButton, 3)
-        stackSwitchGroup.addButton(self._blurButton, 4)
-        stackSwitchModes = [
-            ElaWindowType.StackSwitchMode.None_,
-            ElaWindowType.StackSwitchMode.Popup,
-            ElaWindowType.StackSwitchMode.Scale,
-            ElaWindowType.StackSwitchMode.Flip,
-            ElaWindowType.StackSwitchMode.Blur,
-        ]
-        stackSwitchGroup.buttonToggled.connect(
-            lambda button, isToggled: (
-                window.setStackSwitchMode(
-                    stackSwitchModes[stackSwitchGroup.id(button)]
-                )
-                if isToggled
-                else None
-            )
+        def _onLogToggled(checked):
+            ElaLog.getInstance().initMessageLog(checked)
+            print("日志已启用!" if checked else "日志已关闭!")
+
+        self._logSwitchButton.toggled.connect(_onLogToggled)
+        applicationSection.addWidget(
+            self.createSettingRow("启用日志功能", "日志会显示在日志面板并写入文件", self._logSwitchButton)
         )
-
-        def __pStackSwitchModeChanged():
-            button = stackSwitchGroup.button(window.getStackSwitchMode())
-            elaRadioButton = button
-            if elaRadioButton:
-                elaRadioButton.setChecked(True)
-
-        window.pStackSwitchModeChanged.connect(__pStackSwitchModeChanged)
-
-        centralWidget = QWidget(self)
-        centralWidget.setWindowTitle("Setting")
-        centerLayout = QVBoxLayout(centralWidget)
-        centerLayout.addSpacing(30)
-        centerLayout.addWidget(themeText)
-        centerLayout.addSpacing(10)
-        centerLayout.addWidget(themeSwitchArea)
-        centerLayout.addSpacing(15)
-        centerLayout.addWidget(helperText)
-        centerLayout.addSpacing(10)
-        centerLayout.addWidget(logSwitchArea)
-        centerLayout.addWidget(userCardSwitchArea)
-        centerLayout.addWidget(windowPaintModeArea)
-        centerLayout.addWidget(micaSwitchArea)
-        centerLayout.addWidget(displayModeArea)
-        centerLayout.addWidget(stackSwitchModeArea)
-        centerLayout.addStretch()
-        centerLayout.setContentsMargins(0, 0, 0, 0)
-        self.addCentralWidget(centralWidget, True, True, 0)

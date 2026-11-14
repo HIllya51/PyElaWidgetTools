@@ -23,6 +23,7 @@ if QT_VERSION_STR < "6.0.0":
 
 app = QApplication(sys.argv)
 eApp.init()
+ElaLog.getInstance().initMessageLog(False)
 w = MainWindow()
 w.show()
 app.exec()

@@ -1,6 +1,7 @@
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
+
 from PyQt5ElaWidgetTools import *
 from ExamplePage.T_BasePage import *
 from _res import *
@@ -9,71 +10,80 @@ from _res import *
 class T_Card(T_BasePage):
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.setWindowTitle("ElaCard")
+        self.setWindowTitle("卡片展示")
+        self.createCustomWidget("组合图片、标题和操作入口，体验卡片悬停、轮播与数字显示。", "卡片与内容展示")
+        mainLayout = self.createPageLayout()
 
-        self.createCustomWidget("一些常用的卡片组件被放置于此，可在此界面体验其效果并按需添加进项目中")
-
-        self._lcdNumber = ElaLCDNumber(self)
-        self._lcdNumber.setIsUseAutoClock(True)
-        self._lcdNumber.setIsTransparent(False)
-        # self._lcdNumber.setAutoClockFormat("hh:mm:ss")
-        self._lcdNumber.setFixedHeight(100)
-
+        # 推广卡片
+        promotionSection = self.addExampleSection(
+            mainLayout, "推广卡片 · ElaPromotionCard", "移动指针或点击卡片，观察图片上的光效。"
+        )
         self._promotionCard = ElaPromotionCard(self)
-        self._promotionCard.setFixedSize(600, 300)
-        self._promotionCard.setCardPixmap(placeholderPixmap(600, 300))
-        self._promotionCard.setCardTitle("MiKu")
-        self._promotionCard.setPromotionTitle("SONG~")
-        self._promotionCard.setTitle("STYX HELIX")
-        self._promotionCard.setSubTitle("Never close your eyes, Searching for a true fate")
+        self._promotionCard.setMinimumWidth(0)
+        self._promotionCard.setFixedHeight(260)
+        self._promotionCard.setCardPixmap(placeholderPixmap(600, 260))
+        self._promotionCard.setCardTitle("Ela 组件展示")
+        self._promotionCard.setPromotionTitle("精选内容")
+        self._promotionCard.setTitle("发现更好的界面")
+        self._promotionCard.setSubTitle("图片与文字组成内容入口")
+        promotionSection.addWidget(self._promotionCard)
 
+        # 链接与交互卡片
+        linkSection = self.addExampleSection(
+            mainLayout,
+            "链接与交互卡片",
+            "ElaAcrylicUrlCard 用于链接入口，ElaInteractiveCard 用于可点击的内容项。",
+        )
+        linkLayout = ElaFlowLayout(0, 24, 16)
+        repositoryCard = ElaAcrylicUrlCard(self)
+        repositoryCard.setFixedSize(210, 210)
+        repositoryCard.setCardPixmap(placeholderPixmap(210, 210))
+        repositoryCard.setTitle("项目源码")
+        repositoryCard.setSubTitle("浏览 ElaWidgetTools 的组件与示例")
+        repositoryCard.setUrl("https://github.com/Liniyous/ElaWidgetTools")
+        projectCard = ElaInteractiveCard(self)
+        projectCard.setFixedSize(300, 100)
+        projectCard.setCardPixmap(placeholderPixmap(300, 100))
+        projectCard.setTitle("示例项目")
+        projectCard.setSubTitle("点击选择此项目")
+        cardResultText = ElaText("尚未选择项目", self)
+        projectCard.clicked.connect(lambda: cardResultText.setText("已选择：示例项目"))
+        linkLayout.addWidget(repositoryCard)
+        linkLayout.addWidget(self.createLabeledControl("内容入口", projectCard))
+        linkSection.addLayout(linkLayout)
+        linkSection.addWidget(cardResultText)
+
+        # 卡片轮播
+        carouselSection = self.addExampleSection(
+            mainLayout, "卡片轮播 · ElaPromotionView", "点击两侧卡片或滚动鼠标滚轮切换，也可以启用自动轮播。"
+        )
         self._promotionView = ElaPromotionView(self)
+        self._promotionView.setFixedHeight(260)
+        titles = ["灵感画廊", "海边时光", "梦境色彩", "学习空间"]
+        for index, title in enumerate(titles):
+            card = ElaPromotionCard(self)
+            card.setCardPixmap(placeholderPixmap(600, 260))
+            card.setCardTitle("精选 {}".format(index + 1))
+            card.setTitle(title)
+            card.setSubTitle("点击切换当前卡片")
+            card.setTitlePixelSize(22)
+            self._promotionView.appendPromotionCard(card)
+        self._promotionView.setCardExpandWidth(360)
+        self._promotionView.setCardCollapseWidth(170)
+        autoScrollCheckBox = ElaCheckBox("自动轮播", self)
+        autoScrollCheckBox.toggled.connect(self._promotionView.setIsAutoScroll)
+        carouselSection.addWidget(autoScrollCheckBox)
+        carouselSection.addWidget(self._promotionView)
 
-        exampleCard1 = ElaPromotionCard(self)
-        exampleCard1.setCardPixmap(placeholderPixmap(600, 300))
-        exampleCard1.setCardTitle("MiKu")
-        exampleCard1.setPromotionTitle("SONG~")
-        exampleCard1.setTitle("STYX HELIX")
-        exampleCard1.setSubTitle("Never close your eyes, Searching for a true fate")
-
-        exampleCard2 = ElaPromotionCard(self)
-        exampleCard2.setCardPixmap(placeholderPixmap(600, 300))
-        exampleCard2.setCardTitle("Beach")
-        exampleCard2.setPromotionTitle("SONG~")
-        exampleCard2.setTitle("STYX HELIX")
-        exampleCard2.setSubTitle("Never close your eyes, Searching for a true fate")
-
-        exampleCard3 = ElaPromotionCard(self)
-        exampleCard3.setCardPixmap(placeholderPixmap(600, 300))
-        exampleCard3.setCardTitle("Dream")
-        exampleCard3.setPromotionTitle("SONG~")
-        exampleCard3.setTitle("STYX HELIX")
-        exampleCard3.setSubTitle("Never close your eyes, Searching for a true fate")
-
-        exampleCard4 = ElaPromotionCard(self)
-        exampleCard4.setCardPixmap(placeholderPixmap(600, 300))
-        exampleCard4.setCardTitle("Classroom")
-        exampleCard4.setPromotionTitle("SONG~")
-        exampleCard4.setTitle("STYX HELIX")
-        exampleCard4.setSubTitle("Never close your eyes, Searching for a true fate")
-
-        self._promotionView.appendPromotionCard(exampleCard1)
-        self._promotionView.appendPromotionCard(exampleCard2)
-        self._promotionView.appendPromotionCard(exampleCard3)
-        self._promotionView.appendPromotionCard(exampleCard4)
-        self._promotionView.setIsAutoScroll(True)
-        # keep appended cards referenced to avoid GC
-        self._ref = [exampleCard1, exampleCard2, exampleCard3, exampleCard4]
-
-        centralWidget = QWidget(self)
-        centralWidget.setWindowTitle("ElaCard")
-        centerLayout = QVBoxLayout(centralWidget)
-        centerLayout.setContentsMargins(0, 0, 0, 0)
-        centerLayout.addWidget(self._lcdNumber)
-        centerLayout.addSpacing(20)
-        centerLayout.addWidget(self._promotionCard)
-        centerLayout.addSpacing(20)
-        centerLayout.addWidget(self._promotionView)
-        centerLayout.addSpacing(100)
-        centerLayout.addStretch()
-        self.addCentralWidget(centralWidget, True, True, 0)
+        # 数字显示
+        clockSection = self.addExampleSection(
+            mainLayout, "数字显示 · ElaLCDNumber", "使用自动时钟显示当前时间，可切换为透明背景。"
+        )
+        self._lcdNumber = ElaLCDNumber(self)
+        self._lcdNumber.setFixedSize(300, 86)
+        self._lcdNumber.setIsUseAutoClock(True)
+        self._lcdNumber.setAutoClockFormat("hh:mm:ss")
+        transparentCheckBox = ElaCheckBox("透明背景", self)
+        transparentCheckBox.toggled.connect(self._lcdNumber.setIsTransparent)
+        clockSection.addWidget(self._lcdNumber, 0, Qt.AlignmentFlag.AlignLeft)
+        clockSection.addWidget(transparentCheckBox)

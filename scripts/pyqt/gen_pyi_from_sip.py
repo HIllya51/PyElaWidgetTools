@@ -357,7 +357,7 @@ def generate_pyi(sip_content):
             # bool getIsStayTop() const;
             # ElaNavigationType::NodeResult addExpanderNode(QString expanderTitle, QString & expanderKey /Out/, ElaIconType::IconName awesome = ElaIconType::None) const ;
             method_match = re.match(
-                r"([\w:*&\s]+?)\s+"  # Return type (can include *, &, ::)
+                r"([\w:*&\s<>]+?)\s+"  # Return type (can include *, &, ::, QList<...>)
                 r"(\w+)\s*"  # Method name
                 r"\(([^)]*)\)\s*"  # Parameters
                 r"(const)?\s*"  # Optional const

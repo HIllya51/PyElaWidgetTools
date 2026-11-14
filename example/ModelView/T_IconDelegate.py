@@ -28,48 +28,30 @@ class T_IconDelegate(QStyledItemDelegate):
         iconValue = iconList[1]
 
         painter.save()
-        painter.setRenderHints(QPainter.RenderHint.Antialiasing | QPainter.RenderHint.SmoothPixmapTransform)
-
-        painter.save()
+        painter.setRenderHints(QPainter.RenderHint.Antialiasing | QPainter.RenderHint.TextAntialiasing)
         iconFont = QFont("ElaAwesome")
-        iconFont.setPixelSize(22)
+        iconFont.setPixelSize(28)
         painter.setFont(iconFont)
         painter.setPen(ElaThemeColor(self._themeMode, ElaThemeType.ThemeColor.BasicText))
         painter.drawText(
-            option.rect.x() + option.rect.width() // 2 - 11,
-            option.rect.y() + option.rect.height() // 2 - 11,
+            QRect(option.rect.x(), option.rect.y() + 12, option.rect.width(), 36),
+            Qt.AlignmentFlag.AlignCenter,
             iconValue,
+        )
+        labelFont = option.font
+        labelFont.setPixelSize(12)
+        painter.setFont(labelFont)
+        labelRect = QRect(
+            option.rect.x() + 6, option.rect.y() + 58, option.rect.width() - 12, 20
+        )
+        painter.drawText(
+            labelRect,
+            Qt.AlignmentFlag.AlignCenter,
+            painter.fontMetrics().elidedText(
+                iconName, Qt.TextElideMode.ElideRight, labelRect.width()
+            ),
         )
         painter.restore()
 
-        # 文字绘制
-        painter.setPen(ElaThemeColor(self._themeMode, ElaThemeType.ThemeColor.BasicText))
-        titlefont = painter.font()
-        titlefont.setPixelSize(13)
-        painter.setFont(titlefont)
-        rowTextWidth = option.rect.width() * 0.8
-        subTitleRow = int(painter.fontMetrics().horizontalAdvance(iconName) / rowTextWidth)
-        if subTitleRow > 0:
-            subTitleText = iconName
-            for i in range(subTitleRow + 1):
-                text = painter.fontMetrics().elidedText(
-                    subTitleText, Qt.TextElideMode.ElideRight, int(rowTextWidth)
-                )
-                if "…" in text[-3:]:
-                    text = text.replace("…", subTitleText[len(text) - 1:len(text)])
-                subTitleText = subTitleText[len(text):]
-                painter.drawText(
-                    option.rect.x() + option.rect.width() // 2 - painter.fontMetrics().horizontalAdvance(text) // 2,
-                    option.rect.y() + option.rect.height() - 10 * (subTitleRow + 1 - i),
-                    text,
-                )
-        else:
-            painter.drawText(
-                option.rect.x() + option.rect.width() // 2 - painter.fontMetrics().horizontalAdvance(iconName) // 2,
-                option.rect.y() + option.rect.height() - 20,
-                iconName,
-            )
-        painter.restore()
-
     def sizeHint(self, option, index):
-        return QSize(100, 100)
+        return QSize(104, 88)

@@ -1,5 +1,3 @@
-import sys
-
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
@@ -19,8 +17,7 @@ from ExamplePage.T_Setting import *
 from ExamplePage.T_About import *
 from ExamplePage.T_LogWidget import *
 from ExamplePage.T_UpdateWidget import *
-if sys.platform == "win32":
-    from ExamplePage.T_ElaScreen import *
+from ExamplePage.T_ElaScreen import *
 
 
 class MainWindow(ElaWindow):
@@ -46,7 +43,7 @@ class MainWindow(ElaWindow):
         self.setWindowIcon(QIcon(placeholderPixmap(64, 64)))
         self.resize(1200, 740)
         self.setUserInfoCardPixmap(QPixmap(placeholderPixmap(64, 64)))
-        self.setUserInfoCardTitle("Ela Tool")
+        self.setUserInfoCardTitle("Ela 工具")
         self.setUserInfoCardSubTitle("Liniyous@gmail.com")
         self.setWindowTitle("ElaWidgetTool")
 
@@ -199,7 +196,7 @@ class MainWindow(ElaWindow):
         tb = ElaToolButton(self)
         tb.setElaIcon(ElaIconType.IconName.Bluetooth)
         tb.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextBesideIcon)
-        tb.setText("Bluetooth")
+        tb.setText("蓝牙")
         toolBar.addWidget(tb)
         tb = ElaToolButton(self)
         tb.setElaIcon(ElaIconType.IconName.BringFront)
@@ -218,7 +215,7 @@ class MainWindow(ElaWindow):
         tb = ElaToolButton(self)
         tb.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextBesideIcon)
         tb.setElaIcon(ElaIconType.IconName.AlarmPlus)
-        tb.setText("AlarmPlus")
+        tb.setText("添加闹钟")
         toolBar.addWidget(tb)
         tb = ElaToolButton(self)
         tb.setElaIcon(ElaIconType.IconName.Crown)
@@ -252,9 +249,7 @@ class MainWindow(ElaWindow):
 
     def initContent(self):
         self._homePage = T_Home(self)
-        self._elaScreenPage = None
-        if sys.platform == "win32" and T_ElaScreen is not None:
-            self._elaScreenPage = T_ElaScreen(self)
+        self._elaScreenPage = T_ElaScreen(self)
         self._iconPage = T_Icon(self)
         self._baseComponentsPage = T_BaseComponents(self)
         self._navigationPage = T_Navigation(self)
@@ -265,62 +260,53 @@ class MainWindow(ElaWindow):
         self._treeViewPage = T_TreeView(self)
         self._settingPage = T_Setting(self)
 
-        self.addPageNode("HOME", self._homePage, ElaIconType.IconName.House)
+        self.addPageNode("首页", self._homePage, ElaIconType.IconName.House)
+        self.addPageNode("屏幕采集", self._elaScreenPage, ElaIconType.IconName.TvMusic)
 
-        self._elaDxgiKey = None
-        if sys.platform == "win32" and self._elaScreenPage is not None:
-            _, self._elaDxgiKey = self.addExpanderNode("ElaDxgi", ElaIconType.IconName.TvMusic)
-            self.addCategoryNode("Windows-DXGI", self._elaDxgiKey)
-            self.addPageNodeKeyPoints(
-                "ElaScreen", self._elaScreenPage, self._elaDxgiKey, 3, ElaIconType.IconName.ObjectGroup
-            )
+        self.addCategoryNode("组件")
+        self.addPageNode("基础控件", self._baseComponentsPage, ElaIconType.IconName.CabinetFiling)
 
-        self.addCategoryNode("Controls")
-        self.addPageNode("ElaBaseComponents", self._baseComponentsPage, ElaIconType.IconName.CabinetFiling)
-
-        _, _viewKey = self.addExpanderNode("ElaView", ElaIconType.IconName.CameraViewfinder)
-        self.addCategoryNode("View Content", _viewKey)
-        self.addPageNodeKeyPoints("ElaListView", self._listViewPage, _viewKey, 9, ElaIconType.IconName.List)
-        self.addPageNode("ElaTableView", self._tableViewPage, _viewKey, ElaIconType.IconName.Table)
-        self.addPageNode("ElaTreeView", self._treeViewPage, _viewKey, ElaIconType.IconName.ListTree)
+        _, _viewKey = self.addExpanderNode("数据视图", ElaIconType.IconName.CameraViewfinder)
+        self.addCategoryNode("视图内容", _viewKey)
+        self.addPageNodeKeyPoints("列表视图", self._listViewPage, _viewKey, 9, ElaIconType.IconName.List)
+        self.addPageNode("表格视图", self._tableViewPage, _viewKey, ElaIconType.IconName.Table)
+        self.addPageNode("树形视图", self._treeViewPage, _viewKey, ElaIconType.IconName.ListTree)
         self.expandNavigationNode(_viewKey)
 
-        self.addPageNode("ElaCard", self._cardPage, ElaIconType.IconName.Cards)
+        self.addPageNode("卡片展示", self._cardPage, ElaIconType.IconName.Cards)
 
-        self.addCategoryNode("Custom")
-        self.addPageNode("ElaNavigation", self._navigationPage, ElaIconType.IconName.LocationArrow)
-        self.addPageNode("ElaPopup", self._popupPage, ElaIconType.IconName.Envelope)
-        self.addPageNodeKeyPoints("ElaIcon", self._iconPage, 99, ElaIconType.IconName.FontCase)
+        self.addCategoryNode("交互与资源")
+        self.addPageNode("导航与标签", self._navigationPage, ElaIconType.IconName.LocationArrow)
+        self.addPageNode("弹出与选择", self._popupPage, ElaIconType.IconName.Envelope)
+        self.addPageNodeKeyPoints("图标资源", self._iconPage, 99, ElaIconType.IconName.FontCase)
 
-        _, testKey_1 = self.addExpanderNode("TEST_EXPAND_NODE1", ElaIconType.IconName.Acorn)
-        _, testKey_2 = self.addExpanderNode("TEST_EXPAND_NODE2", testKey_1, ElaIconType.IconName.Acorn)
-        self.addPageNode("TEST_NODE3", QWidget(self), testKey_2, ElaIconType.IconName.Acorn)
+        _, testKey_1 = self.addExpanderNode("工作空间", ElaIconType.IconName.Acorn)
+        _, testKey_2 = self.addExpanderNode("项目资源", testKey_1, ElaIconType.IconName.Acorn)
+        self.addPageNode("资源概览", QWidget(self), testKey_2, ElaIconType.IconName.Acorn)
         for i in range(10):
-            self.addExpanderNode(f"TEST_EXPAND_NODE{i + 4}", testKey_2, ElaIconType.IconName.Acorn)
-        self.addExpanderNode("TEST_EXPAND_NODE14", ElaIconType.IconName.Acorn)
-        self.addExpanderNode("TEST_EXPAND_NODE5", ElaIconType.IconName.Acorn)
-        self.addExpanderNode("TEST_EXPAND_NODE16", ElaIconType.IconName.Acorn)
+            self.addExpanderNode(f"资源分组 {i + 1}", testKey_2, ElaIconType.IconName.Acorn)
+        self.addExpanderNode("数据管理", testKey_1, ElaIconType.IconName.Acorn)
+        self.addExpanderNode("运行监控", testKey_1, ElaIconType.IconName.Acorn)
+        self.addExpanderNode("开发资源", testKey_1, ElaIconType.IconName.Acorn)
 
-        _, self._aboutKey = self.addFooterNode("About", None, 0, ElaIconType.IconName.User)
+        _, self._aboutKey = self.addFooterNode("关于", None, 0, ElaIconType.IconName.User)
         self._aboutPage = T_About()
         self._aboutPage.hide()
 
         def __onNavigationNodeClicked(nodeType: ElaNavigationType.NavigationNodeType, nodeKey: str):
             if self._aboutKey == nodeKey:
-                self._aboutPage.setFixedSize(400, 400)
                 self._aboutPage.moveToCenter()
                 self._aboutPage.show()
 
         self.navigationNodeClicked.connect(__onNavigationNodeClicked)
 
-        _, self._settingKey = self.addFooterNode("Setting", self._settingPage, 0, ElaIconType.IconName.GearComplex)
+        _, self._settingKey = self.addFooterNode("设置", self._settingPage, 0, ElaIconType.IconName.GearComplex)
 
         self.userInfoCardClicked.connect(lambda: self.navigation(self._homePage.property("ElaPageKey")))
 
-        if sys.platform == "win32" and self._elaScreenPage is not None:
-            self._homePage.elaScreenNavigation.connect(
-                lambda: self.navigation(self._elaScreenPage.property("ElaPageKey"))
-            )
+        self._homePage.elaScreenNavigation.connect(
+            lambda: self.navigation(self._elaScreenPage.property("ElaPageKey"))
+        )
         self._homePage.elaBaseComponentNavigation.connect(
             lambda: self.navigation(self._baseComponentsPage.property("ElaPageKey"))
         )

@@ -1,6 +1,7 @@
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
+
 from PyQt5ElaWidgetTools import *
 from _res import *
 
@@ -8,62 +9,54 @@ from _res import *
 class T_About(ElaDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.setFixedSize(400, 400)
-        self.setWindowTitle("关于..")
+        self.setFixedSize(460, 440)
+        self.setWindowTitle("关于 ElaWidgetTools")
         self.setWindowIcon(QIcon(placeholderPixmap(60, 60)))
         self.setIsFixedSize(True)
         self.setWindowModality(Qt.WindowModality.ApplicationModal)
         self.setWindowButtonFlags(ElaAppBarType.ButtonType.CloseButtonHint)
 
-        pixCard = ElaImageCard(self)
-        pixCard.setFixedSize(60, 60)
-        pixCard.setIsPreserveAspectCrop(False)
-        pixCard.setCardImage(placeholderImage(60, 60))
-
-        pixCardLayout = QVBoxLayout()
-        pixCardLayout.addWidget(pixCard)
-        pixCardLayout.addStretch()
-
-        versionText = ElaText("ElaWidgetTools-LK-2024", self)
-        versionTextFont = versionText.font()
-        versionTextFont.setWeight(QFont.Weight.Bold)
-        versionText.setFont(versionTextFont)
-        versionText.setWordWrap(False)
-        versionText.setTextPixelSize(18)
-
-        licenseText = ElaText("MIT授权协议", self)
-        licenseText.setWordWrap(False)
-        licenseText.setTextPixelSize(14)
-        supportText = ElaText("Windows支持版本: QT5.12以上\nLinux支持版本: Qt5.14以上", self)
-        supportText.setWordWrap(False)
-        supportText.setTextPixelSize(14)
-        contactText = ElaText("作者: 80985@qq.com\n交流群: 850243692(QQ)", self)
-        contactText.setWordWrap(False)
+        imageCard = ElaImageCard(self)
+        imageCard.setFixedSize(64, 64)
+        imageCard.setIsPreserveAspectCrop(False)
+        imageCard.setCardImage(placeholderImage(64, 64))
+        titleText = ElaText("ElaWidgetTools", self)
+        titleText.setTextPixelSize(24)
+        titleText.setIsBold(True)
+        subtitleText = ElaText("Fluent 风格的 Qt Widgets 通用组件库", self)
+        titleLayout = QVBoxLayout()
+        titleLayout.setSpacing(6)
+        titleLayout.addWidget(titleText)
+        titleLayout.addWidget(subtitleText)
+        identityLayout = QHBoxLayout()
+        identityLayout.setSpacing(20)
+        identityLayout.addWidget(imageCard)
+        identityLayout.addLayout(titleLayout, 1)
+        runtimeText = ElaText(
+            "当前运行环境\nQt {} · {}".format(qVersion(), QSysInfo.buildCpuArchitecture()), self
+        )
+        licenseText = ElaText(
+            "开源许可 · MIT\n可在项目中使用、修改和分发，具体条款请参阅项目许可证。", self
+        )
+        contactText = ElaText("联系作者 · 80985@qq.com\n交流社区 · 850243692（QQ）", self)
         contactText.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse)
-        contactText.setTextPixelSize(14)
-        helperText = ElaText("用户手册及API文档付费提供\n提供额外的专业技术支持", self)
-        helperText.setWordWrap(False)
-        helperText.setTextPixelSize(14)
-        copyrightText = ElaText("版权所有 © 2024 Liniyous", self)
-        copyrightText.setWordWrap(False)
-        copyrightText.setTextPixelSize(14)
-
-        textLayout = QVBoxLayout()
-        textLayout.setSpacing(15)
-        textLayout.addWidget(versionText)
-        textLayout.addWidget(licenseText)
-        textLayout.addWidget(supportText)
-        textLayout.addWidget(contactText)
-        textLayout.addWidget(helperText)
-        textLayout.addWidget(copyrightText)
-        textLayout.addStretch()
-
-        contentLayout = QHBoxLayout()
-        contentLayout.addSpacing(30)
-        contentLayout.addLayout(pixCardLayout)
-        contentLayout.addSpacing(30)
-        contentLayout.addLayout(textLayout)
-
+        repositoryButton = ElaPushButton("打开项目主页", self)
+        repositoryButton.setIsAccent(True)
+        repositoryButton.clicked.connect(
+            lambda: QDesktopServices.openUrl(QUrl("https://github.com/Liniyous/ElaWidgetTools"))
+        )
+        copyrightText = ElaText("© 2026 Liniyous", self)
+        copyrightText.setTextPixelSize(12)
         mainLayout = QVBoxLayout(self)
-        mainLayout.setContentsMargins(0, 25, 0, 0)
-        mainLayout.addLayout(contentLayout)
+        mainLayout.setContentsMargins(28, 52, 28, 24)
+        mainLayout.setSpacing(20)
+        mainLayout.addLayout(identityLayout)
+        mainLayout.addWidget(runtimeText)
+        mainLayout.addWidget(licenseText)
+        mainLayout.addWidget(contactText)
+        mainLayout.addStretch()
+        actionLayout = QHBoxLayout()
+        actionLayout.addWidget(copyrightText)
+        actionLayout.addStretch()
+        actionLayout.addWidget(repositoryButton)
+        mainLayout.addLayout(actionLayout)

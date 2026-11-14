@@ -67,6 +67,10 @@ class T_IconModel(QAbstractListModel):
         return [name for name, _ in self._icons]
 
     def data(self, index, role=Qt.ItemDataRole.DisplayRole):
+        if not index.isValid() or not (0 <= index.row() < self._rowCount):
+            return None
+        if role == Qt.ItemDataRole.ToolTipRole:
+            return self.getIconNameFromModelIndex(index)
         if role == Qt.ItemDataRole.UserRole:
             if not self._pIsSearchMode:
                 if index.row() >= len(self._icons):

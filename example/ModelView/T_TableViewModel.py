@@ -56,13 +56,19 @@ class T_TableViewModel(QAbstractTableModel):
             )
 
     def rowCount(self, parent=QModelIndex()):
-        return 100
+        return 0 if parent.isValid() else 100
 
     def columnCount(self, parent=QModelIndex()):
-        return len(self._header)
+        return 0 if parent.isValid() else len(self._header)
 
     def data(self, index, role=Qt.ItemDataRole.DisplayRole):
-        if role == Qt.ItemDataRole.DisplayRole and index.column() != 0:
+        if not index.isValid() or not (0 <= index.row() < self.rowCount()) or not (
+            0 <= index.column() < self.columnCount()
+        ):
+            return None
+        if (
+            role == Qt.ItemDataRole.DisplayRole or role == Qt.ItemDataRole.ToolTipRole
+        ) and index.column() != 0:
             return self._dataList[index.row() % 9][index.column() - 1]
         elif role == Qt.ItemDataRole.DecorationRole and index.column() == 0:
             return self._iconList[index.row() % 9]
@@ -79,3 +85,15 @@ class T_TableViewModel(QAbstractTableModel):
         ):
             return self._header[section]
         return super().headerData(section, orientation, role)
+
+
+class T_MusicFilterModel(QSortFilterProxyModel):
+    """音乐资料库筛选与排序代理模型"""
+
+    def lessThan(self, sourceLeft, sourceRight):
+        if super().lessThan(sourceLeft, sourceRight):
+            return True
+        if super().lessThan(sourceRight, sourceLeft):
+            return False
+        # 主排序值相等或为空时按源模型行号保持稳定顺序
+        return sourceLeft.row() < sourceRight.row()

@@ -10,18 +10,18 @@ class T_TreeViewModel(QAbstractItemModel):
         self._itemsMap = {}
         self._rootItem = T_TreeItem("root")
         for i in range(20):
-            level1Item = T_TreeItem("Lv1--TreeItem{}".format(i + 1), self._rootItem)
+            level1Item = T_TreeItem("项目 {}".format(i + 1), self._rootItem)
             for j in range(6):
                 level2Item = T_TreeItem(
-                    "Lv2--TreeItem{}".format(j + 1), level1Item
+                    "资源分组 {}".format(j + 1), level1Item
                 )
                 for k in range(6):
                     level3Item = T_TreeItem(
-                        "Lv3--TreeItem{}".format(k + 1), level2Item
+                        "文档目录 {}".format(k + 1), level2Item
                     )
                     for l in range(6):
                         level4Item = T_TreeItem(
-                            "Lv4--TreeItem{}".format(l + 1), level3Item
+                            "示例文件 {}".format(l + 1), level3Item
                         )
                         level3Item.appendChildItem(level4Item)
                         self._itemsMap[level4Item.getItemKey()] = level4Item
@@ -103,7 +103,7 @@ class T_TreeViewModel(QAbstractItemModel):
             orientation == Qt.Orientation.Horizontal
             and role == Qt.ItemDataRole.DisplayRole
         ):
-            return "ElaTreeView-Example-4Level"
+            return "项目资源"
         return super().headerData(section, orientation, role)
 
     def getItemCount(self):

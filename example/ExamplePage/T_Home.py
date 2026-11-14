@@ -17,13 +17,13 @@ class T_Home(T_BasePage):
         super().__init__(parent)
 
         # 预览窗口标题
-        self.setWindowTitle("Home")
+        self.setWindowTitle("首页")
 
         self.setTitleVisible(False)
         self.setContentsMargins(2, 2, 0, 0)
 
         # 标题卡片区域
-        desText = ElaText("FluentUI For QWidget", self)
+        desText = ElaText("面向 Qt Widgets 的 Fluent 风格通用组件库", self)
         desText.setTextPixelSize(18)
         titleText = ElaText("ElaWidgetTools", self)
         titleText.setTextPixelSize(35)
@@ -46,8 +46,8 @@ class T_Home(T_BasePage):
         urlCard1.setSubTitleSpacing(13)
         urlCard1.setUrl("https://github.com/Liniyous/ElaWidgetTools")
         urlCard1.setCardPixmap(placeholderPixmap(62, 62))
-        urlCard1.setTitle("ElaTool Github")
-        urlCard1.setSubTitle("Use ElaWidgetTools To Create A Cool Project")
+        urlCard1.setTitle("项目源码")
+        urlCard1.setSubTitle("使用 ElaWidgetTools 构建出色的项目")
         urlCard1ToolTip = ElaToolTip(urlCard1)
         urlCard1ToolTip.setToolTip("https://github.com/Liniyous/ElaWidgetTools")
 
@@ -112,7 +112,7 @@ class T_Home(T_BasePage):
 
         homeCard1 = ElaPopularCard(self)
         homeCard1.popularCardButtonClicked.connect(self.elaScreenNavigation)
-        homeCard1.setTitle("ElaScreen")
+        homeCard1.setTitle("屏幕采集")
         homeCard1.setSubTitle("5.0⭐ 实用程序与工具")
         homeCard1.setCardPixmap(placeholderPixmap(120, 120))
         homeCard1.setInteractiveTips("免费使用")
@@ -123,7 +123,7 @@ class T_Home(T_BasePage):
 
         homeCard2 = ElaPopularCard(self)
         homeCard2.popularCardButtonClicked.connect(self.elaSceneNavigation)
-        homeCard2.setTitle("ElaScene")
+        homeCard2.setTitle("拓扑绘图")
         homeCard2.setSubTitle("5.0⭐ 实用程序与工具")
         homeCard2.setCardPixmap(placeholderPixmap(120, 120))
         homeCard2.setInteractiveTips("免费使用")
@@ -134,7 +134,7 @@ class T_Home(T_BasePage):
 
         homeCard3 = ElaPopularCard(self)
         homeCard3.popularCardButtonClicked.connect(self.elaBaseComponentNavigation)
-        homeCard3.setTitle("ElaBaseComponent")
+        homeCard3.setTitle("基础控件")
         homeCard3.setSubTitle("5.0⭐ 实用程序与工具")
         homeCard3.setCardPixmap(placeholderPixmap(120, 120))
         homeCard3.setInteractiveTips("免费使用")
@@ -145,7 +145,7 @@ class T_Home(T_BasePage):
 
         homeCard4 = ElaPopularCard(self)
         homeCard4.popularCardButtonClicked.connect(self.elaCardNavigation)
-        homeCard4.setTitle("ElaCard")
+        homeCard4.setTitle("卡片展示")
         homeCard4.setSubTitle("5.0⭐ 实用程序与工具")
         homeCard4.setCardPixmap(placeholderPixmap(120, 120))
         homeCard4.setInteractiveTips("免费使用")
@@ -156,7 +156,7 @@ class T_Home(T_BasePage):
 
         homeCard5 = ElaPopularCard(self)
         homeCard5.popularCardButtonClicked.connect(self.elaIconNavigation)
-        homeCard5.setTitle("ElaIcon")
+        homeCard5.setTitle("图标资源")
         homeCard5.setSubTitle("5.0⭐ 实用程序与工具")
         homeCard5.setCardPixmap(placeholderPixmap(120, 120))
         homeCard5.setInteractiveTips("免费使用")
@@ -215,7 +215,7 @@ class T_Home(T_BasePage):
         )
 
         centralWidget = QWidget(self)
-        centralWidget.setWindowTitle("Home")
+        centralWidget.setWindowTitle("首页")
         centerVLayout = QVBoxLayout(centralWidget)
         centerVLayout.setSpacing(0)
         centerVLayout.setContentsMargins(0, 0, 0, 0)
@@ -230,7 +230,7 @@ class T_Home(T_BasePage):
         # 初始化提示
         ElaMessageBar.success(
             ElaMessageBarType.PositionPolicy.BottomRight,
-            "Success",
+            "成功",
             "初始化成功!",
             2000,
         )

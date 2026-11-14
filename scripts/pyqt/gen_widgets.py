@@ -6,7 +6,7 @@ forQt5 = len(sys.argv) >= 2 and int(sys.argv[1])
 eladir = "../../ElaWidgetTools/ElaWidgetTools"
 
 
-def parse_parameters(param_str):
+def parse_parameters(param_str, is_ctor=False):
     params = []
     if not param_str.strip():
         return params
@@ -62,10 +62,15 @@ def parse_parameters(param_str):
 
         sip_param_type = param_type
 
-        # Heuristic for /TransferThisPointer/ for QWidget* parent
+        # Heuristic for /TransferThis/ for QWidget* parent（sip 的标准注解；
+        # 注意 param_type 形如 "QWidget *"，比较前需去掉空格。
+        # 仅构造函数可用——静态方法（如 ElaMessageBar::success）或普通方法
+        # 带 parent 形参时加此注解是非法/错误语义）
         transfer_this = (
-            "/TransferThisPointer/"
-            if "QWidget*" in param_type and "parent" in param_name.lower()
+            "/TransferThis/"
+            if is_ctor
+            and param_type.replace(" ", "") == "QWidget*"
+            and "parent" in param_name.lower()
             else ""
         )
 
@@ -230,7 +235,7 @@ def generate_sip_for_class_2(header_content, filename=""):
             explicit_kw = match.group(2) or ""
             name = match.group(3)  # ~ClassName or ClassName
             params_str = match.group(4)
-            parsed_params = parse_parameters(params_str)
+            parsed_params = parse_parameters(params_str, is_ctor=True)
             sip_lines.append(f"  {explicit_kw}{name}({', '.join(parsed_params)});")
 
         # Regular methods
@@ -438,7 +443,7 @@ def generate_sip_for_class__1(header_content, filename=""):
                 Q_INVOKABLE = ""  # match.group(1) or ""
                 explicit_kw = match.group(2) or ""
                 params_str = match.group(3)
-                parsed_params = parse_parameters(params_str)
+                parsed_params = parse_parameters(params_str, is_ctor=True)
                 sip_lines.append(
                     f"  {Q_INVOKABLE} {explicit_kw}{class_name}({', '.join(parsed_params)});"
                 )
@@ -599,6 +604,14 @@ def cast_h_to_sip(filename):
         "virtual void redo() ;",
         "virtual void redo() = 0;",
     )
+    # C++ 侧 appendPromotionCard 内部 setParent(this) 接管卡片所有权，
+    # sip 需 /Transfer/ 同步语义，否则无父构造的卡片在 Python 引用消失后
+    # 会被析构，留下悬空指针（use-after-free）
+    if filename == "ElaPromotionView":
+        final_output = final_output.replace(
+            "void appendPromotionCard(ElaPromotionCard * card) ;",
+            "void appendPromotionCard(ElaPromotionCard * card /Transfer/) ;",
+        )
     with open(output_sip_file, "w", encoding="utf-8") as f:
         f.write(final_output)
 

@@ -118,6 +118,53 @@ def specialfuns(const=True):
     return ___
 
 
+def _normalize_param_type(param):
+    """C++ 形参声明 -> shiboken modify-function 签名里的类型片段。
+    去掉默认值与形参名；const T& 折叠为 T（与 specialfuns 的签名风格一致），
+    非 const 引用保留为 T&amp;，XML 中 & 需转义。"""
+    param = param.split("=")[0].strip()
+    if not param:
+        return None
+    toks = param.split()
+    if len(toks) == 1:
+        return None  # 只有类型没有名字，不常见，跳过
+    name = toks[-1]
+    ptype = " ".join(toks[:-1])
+    if not re.fullmatch(r"\w+", name):
+        return None  # 形参名不是普通标识符（解析失败），跳过
+    if ptype.startswith("const "):
+        ptype = ptype[len("const "):]
+        if ptype.endswith("&"):
+            ptype = ptype[:-1].strip()
+    return ptype.replace("&", "&amp;")
+
+
+def _ctor_parent_mods(content, class_name):
+    """为带 QWidget* parent 形参的构造函数生成 shiboken 所有权注解。
+    缺少 <parent index="this" action="add"/> 时，Python 侧持有对象所有权，
+    引用消失即析构 C++ 对象，被组件以裸指针保存的控件将成为悬空指针。"""
+    mods = ""
+    for m in re.finditer(r"\bexplicit\s+" + class_name + r"\s*\(([^)]*)\)", content):
+        params = m.group(1).strip()
+        if not params:
+            continue
+        plist = [p.strip() for p in re.split(r",(?![^<]*>)(?![^\(]*\))", params) if p.strip()]
+        types = [_normalize_param_type(p) for p in plist]
+        if any(t is None for t in types):
+            continue
+        for idx, (p, t) in enumerate(zip(plist, types), 1):
+            name = p.split("=")[0].strip().split()[-1]
+            if t == "QWidget*" and "parent" in name.lower():
+                mods += (
+                    f'<modify-function signature="{class_name}({",".join(types)})">'
+                    f'<modify-argument index="{idx}">'
+                    f'<parent index="this" action="add"/>'
+                    f"</modify-argument></modify-function>"
+                )
+                break
+    return mods
+
+
 def cast_h_to_sip(filename):
     with open(filename, "r", encoding="utf-8") as f:
         content = f.read()
@@ -128,6 +175,16 @@ def cast_h_to_sip(filename):
         # ElaFlowLayout::itemAt
         # ElaFlowLayout::addItem
         ___ += f'<object-type name="{__}" >'
+        ___ += _ctor_parent_mods(content, __)
+        if __ == "ElaPromotionView":
+            # C++ 侧 appendPromotionCard 内部 setParent(this) 接管卡片所有权，
+            # 与 PyQt 侧 gen_widgets 的 /Transfer/ 特例对齐，避免悬空指针
+            ___ += (
+                '<modify-function signature="appendPromotionCard(ElaPromotionCard*)">'
+                '<modify-argument index="1">'
+                '<parent index="this" action="add"/>'
+                "</modify-argument></modify-function>"
+            )
         if "ElaNavigationBar" in filename or "ElaWindow" in filename:
             ___ += specialfuns("ElaWindow" in filename)
         # if signals:

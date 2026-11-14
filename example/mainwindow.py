@@ -47,7 +47,7 @@ class MainWindow(ElaWindow):
         self.setUserInfoCardSubTitle("Liniyous@gmail.com")
         self.setWindowTitle("ElaWidgetTool")
 
-        centralStack = ElaText("这是一个主窗口堆栈页面", self)
+        self._centralStack = centralStack = ElaText("这是一个主窗口堆栈页面", self)
         centralStack.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
         centralStack.setTextPixelSize(32)
         centralStack.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -58,7 +58,7 @@ class MainWindow(ElaWindow):
         self.setWindowPixmap(ElaThemeType.ThemeMode.Dark, QPixmap(placeholderPixmap(64, 64)))
 
         # 自定义 AppBar 菜单
-        appBarMenu = ElaMenu(self)
+        self._appBarMenu = appBarMenu = ElaMenu(self)
         appBarMenu.setMenuItemHeight(27)
         appBarMenu.addAction("跳转到一级主要堆栈").triggered.connect(lambda: self.setCurrentStackIndex(0))
         appBarMenu.addAction("跳转到二级主要堆栈").triggered.connect(lambda: self.setCurrentStackIndex(1))
@@ -180,7 +180,7 @@ class MainWindow(ElaWindow):
             menuBar.addMenu(title).addElaIconAction(ElaIconType.IconName.ArrowRotateRight, "样例选项")
 
         # 工具栏
-        toolBar = ElaToolBar("工具栏", self)
+        self._toolBar = toolBar = ElaToolBar("工具栏", self)
         toolBar.setAllowedAreas(Qt.ToolBarArea.TopToolBarArea | Qt.ToolBarArea.BottomToolBarArea)
         toolBar.setToolBarSpacing(3)
         toolBar.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonIconOnly)
@@ -230,18 +230,18 @@ class MainWindow(ElaWindow):
         self.addToolBar(Qt.ToolBarArea.TopToolBarArea, toolBar)
 
         # 停靠窗口
-        logDockWidget = ElaDockWidget("日志信息", self)
+        self._logDockWidget = logDockWidget = ElaDockWidget("日志信息", self)
         logDockWidget.setWidget(T_LogWidget(self))
         self.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, logDockWidget)
         self.resizeDocks([logDockWidget], [200], Qt.Orientation.Horizontal)
 
-        updateDockWidget = ElaDockWidget("更新内容", self)
+        self._updateDockWidget = updateDockWidget = ElaDockWidget("更新内容", self)
         updateDockWidget.setWidget(T_UpdateWidget(self))
         self.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, updateDockWidget)
         self.resizeDocks([updateDockWidget], [200], Qt.Orientation.Horizontal)
 
         # 状态栏
-        statusBar = ElaStatusBar(self)
+        self._statusBar = statusBar = ElaStatusBar(self)
         statusText = ElaText("初始化成功！", self)
         statusText.setTextPixelSize(14)
         statusBar.addWidget(statusText)

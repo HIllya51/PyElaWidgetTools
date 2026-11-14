@@ -76,10 +76,13 @@ class T_Navigation(T_BasePage):
         self._tabWidget.setFixedHeight(280)
         self._tabWidget.setIsTabTransparent(True)
         self._tabWidget.setIsTabWidthAdaptive(True)
+        # 页面控件需保持强引用（见 T_Card 的说明：旧 wheel 未转移所有权）
+        self._tabPages = []
         for title in ["项目概览", "界面设计", "开发记录"]:
             pageText = ElaText(title + "\n\n这是一个可以独立切换的文档页面", self)
             pageText.setTextPixelSize(18)
             pageText.setAlignment(Qt.AlignmentFlag.AlignCenter)
+            self._tabPages.append(pageText)
             self._tabWidget.addTab(pageText, title)
 
         def _onAddClicked():
@@ -87,6 +90,7 @@ class T_Navigation(T_BasePage):
             pageText = ElaText(title, self)
             pageText.setTextPixelSize(18)
             pageText.setAlignment(Qt.AlignmentFlag.AlignCenter)
+            self._tabPages.append(pageText)
             self._tabWidget.setCurrentIndex(self._tabWidget.addTab(pageText, title))
 
         addButton.clicked.connect(_onAddClicked)

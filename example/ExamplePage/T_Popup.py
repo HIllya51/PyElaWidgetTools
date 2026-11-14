@@ -24,7 +24,8 @@ class T_Popup(T_BasePage):
         self._toolButton.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextBesideIcon)
         self._toolButton.setText("文件操作")
         self._toolButton.setElaIcon(ElaIconType.IconName.FolderOpen)
-        menu = ElaMenu(self)
+        # 旧 wheel 不转移所有权：被 Ela 接口保存的控件需挂到 self 上
+        self._toolMenu = menu = ElaMenu(self)
         for text in ["新建项目", "保存项目", "导出副本"]:
             menu.addAction(text).triggered.connect(
                 lambda _checked=False, t=text: menuResultText.setText("菜单选择：" + t)
@@ -32,7 +33,7 @@ class T_Popup(T_BasePage):
         self._toolButton.setMenu(menu)
 
         confirmButton = ElaPushButton("显示确认对话框", self)
-        confirmDialog = ElaContentDialog(self)
+        self._confirmDialog = confirmDialog = ElaContentDialog(self)
         confirmWidget = QWidget(confirmDialog)
         confirmLayout = QVBoxLayout(confirmWidget)
         confirmLayout.setContentsMargins(24, 24, 24, 16)
@@ -69,7 +70,9 @@ class T_Popup(T_BasePage):
         transientTipButton = ElaPushButton("轻量提示", self)
         teachingResultText = ElaText("提示中的按钮和自定义控件可直接交互。", self)
 
+        self._teachingTips = []
         teachingTip = ElaTeachingTip(self)
+        self._teachingTips.append(teachingTip)
         teachingTip.setTargetWidget(teachingButton)
         teachingTip.setTitle("试试新的工作方式")
         teachingTip.setSubTitle("提示会指向相关控件，\n帮助你了解功能和操作方式。")
@@ -84,6 +87,7 @@ class T_Popup(T_BasePage):
         )
 
         customTip = ElaTeachingTip(self)
+        self._teachingTips.append(customTip)
         customTip.setTargetWidget(customTipButton)
         customTip.setTitle("调整提示内容")
         customTip.setSubTitle("可以在提示中直接使用输入框和选项。")
@@ -112,6 +116,7 @@ class T_Popup(T_BasePage):
         )
 
         transientTip = ElaTeachingTip(self)
+        self._teachingTips.append(transientTip)
         transientTip.setTargetWidget(transientTipButton)
         transientTip.setTitle("点击其他位置即可关闭")
         transientTip.setSubTitle("点击或滚动提示外部区域，浮层会自动收起。")

@@ -60,8 +60,12 @@ class T_Card(T_BasePage):
         self._promotionView = ElaPromotionView(self)
         self._promotionView.setFixedHeight(260)
         titles = ["灵感画廊", "海边时光", "梦境色彩", "学习空间"]
+        # 0.14.0 及更早的 wheel 中构造函数未转移所有权（Python 侧持有），
+        # 轮播卡片必须保持强引用，否则被 GC 后视图内留下悬空指针
+        self._carouselCards = []
         for index, title in enumerate(titles):
             card = ElaPromotionCard(self)
+            self._carouselCards.append(card)
             card.setCardPixmap(placeholderPixmap(600, 260))
             card.setCardTitle("精选 {}".format(index + 1))
             card.setTitle(title)

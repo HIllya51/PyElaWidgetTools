@@ -41,21 +41,24 @@ jobs:
             pythonversion: 3.8.10
             arch: x64
             binding: PySide6
-          - os: ubuntu-latest
+          # ubuntu-latest 已滚动到 26.04，setup-python 在其上没有 Python 3.8 的
+          # 构建（最低 3.10.20），固定 24.04 以保持 cp37/cp38-abi3 轮子的构建
+          # Python 版本不变（3.8.12 在 24.04 镜像仍可用）
+          - os: ubuntu-24.04
             qthost: linux
             qtarch: gcc_64
             version: 5.15.2
             pythonversion: 3.8.12
             arch: x64
             binding: PyQt5
-          - os: ubuntu-latest
+          - os: ubuntu-24.04
             qthost: linux
             qtarch: gcc_64
             version: 6.6.2
             pythonversion: 3.8.12
             arch: x64
             binding: PyQt6
-          - os: ubuntu-latest
+          - os: ubuntu-24.04
             qthost: linux
             qtarch: gcc_64
             version: 6.6.2

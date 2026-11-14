@@ -88,6 +88,29 @@ __parsefile(
         "",
     ).replace("Q_DECL_IMPORT", ""),
 )
+# 上游 cfb7612 的三个头文件以值类型作成员字段/默认实参，但未包含对应头，
+# MSVC 下靠传递包含恰好能编过，GCC/Clang 报 incomplete type，构建前补上
+__parsefile(
+    "../ElaWidgetTools/ElaWidgetTools/private/ElaAppBarPrivate.h",
+    lambda cml: cml.replace(
+        '#include "ElaWidgetToolsDef.h"',
+        '#include "ElaWidgetToolsDef.h"\n#include <QPoint>',
+    ),
+)
+__parsefile(
+    "../ElaWidgetTools/ElaWidgetTools/private/ElaTeachingTipPrivate.h",
+    lambda cml: cml.replace(
+        "#include <QMargins>",
+        "#include <QMargins>\n#include <QPointF>\n#include <QRectF>",
+    ),
+)
+__parsefile(
+    "../ElaWidgetTools/ElaWidgetTools/Development/ElaNavigationView.h",
+    lambda cml: cml.replace(
+        "#include <QPixmap>",
+        "#include <QPersistentModelIndex>\n#include <QPixmap>",
+    ),
+)
 if sys.platform == "darwin":
     # macOS 的 ld 不认识 GNU 特有的 --disable-new-dtags
     __parsefile(

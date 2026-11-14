@@ -286,7 +286,12 @@ wrapperbase = """
 #endif
 """
 
-H_internal = """#include <ElaWidgetToolsDef.h>"""
+# QPainterPath/QMargins 是 ElaTheme::drawEffectShadow 新重载的参数类型，
+# ElaTheme.h 里只有前向声明；shiboken 解析需要完整定义，否则 Internal Error:
+# Class "QPainterPath" ... not found
+H_internal = """#include <ElaWidgetToolsDef.h>
+#include <QMargins>
+#include <QPainterPath>"""
 with open("wrapper.hpp", "w", encoding="utf8") as ff:
     ff.write(wrapperbase.format(internal=H_internal + "\n" + h))
 

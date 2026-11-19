@@ -24,7 +24,7 @@ class T_BasePage(ElaScrollPage):
         titleText.setSizePolicy(QSizePolicy.Policy.Ignored, QSizePolicy.Policy.Preferred)
 
         themeButton = ElaToolButton(self)
-        themeButton.setFixedSize(32, 32)
+        themeButton.setFixedWidth(32)
         themeButton.setIsTransparent(False)
         themeButton.setElaIcon(ElaIconType.IconName.MoonStars)
         themeButton.setToolTip("切换浅色与深色主题")

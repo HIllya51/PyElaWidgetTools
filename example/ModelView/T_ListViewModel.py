@@ -18,7 +18,7 @@ class T_ListViewModel(QAbstractListModel):
             "项目资源树",
             "卡片与布局",
             "键盘与焦点",
-            "屏幕采集",
+            "录制与回放",
             "窗口与布局",
             "发布检查清单",
         ]

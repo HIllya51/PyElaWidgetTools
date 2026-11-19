@@ -40,10 +40,11 @@ class MainWindow(ElaWindow):
 
     def initWindow(self):
         self.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
+        self.setAppBarHeight(45)
         self.setWindowIcon(QIcon(placeholderPixmap(64, 64)))
         self.resize(1200, 740)
         self.setUserInfoCardPixmap(QPixmap(placeholderPixmap(64, 64)))
-        self.setUserInfoCardTitle("Ela 工具")
+        self.setUserInfoCardTitle("ElaWidgetTools")
         self.setUserInfoCardSubTitle("Liniyous@gmail.com")
         self.setWindowTitle("ElaWidgetTool")
 
@@ -112,7 +113,6 @@ class MainWindow(ElaWindow):
         self._windowSuggestBox = None
         try:
             self._windowSuggestBox = ElaSuggestBox(self)
-            self._windowSuggestBox.setFixedHeight(32)
             self._windowSuggestBox.setPlaceholderText("搜索关键字")
 
             def __onSuggestionClicked(suggestData):

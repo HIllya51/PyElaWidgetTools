@@ -35,7 +35,7 @@ class T_TreeView(T_BasePage):
         optionsLayout = ElaFlowLayout(0, 24, 16)
         heightSpinBox = ElaSpinBox(self)
         heightSpinBox.setRange(24, 60)
-        heightSpinBox.setValue(35)
+        heightSpinBox.setValue(self._treeView.getItemHeight())
         heightSpinBox.setFixedWidth(120)
         marginSpinBox = ElaSpinBox(self)
         marginSpinBox.setRange(0, 20)

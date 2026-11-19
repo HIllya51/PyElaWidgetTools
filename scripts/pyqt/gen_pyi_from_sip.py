@@ -85,7 +85,9 @@ def parse_parameters(param_str, current_namespace_context):
     for p_full in param_list:
         p_full = p_full.strip()
         is_out_param = "/Out/" in p_full
-        p_full = p_full.replace("/Out/", "").strip()
+        # 剥离全部 sip 注解 token（/Out/ /TransferThis/ /Transfer/ 等），
+        # 否则形如 "QWidget * parent /TransferThis/" 会把注解当成参数名
+        p_full = re.sub(r"\s*/[A-Za-z]+/\s*", " ", p_full).strip()
 
         _, default_value = (p_full + "=").split("=")[:2]
         default_value = default_value.strip()

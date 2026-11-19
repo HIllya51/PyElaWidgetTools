@@ -29,14 +29,12 @@ class T_BaseComponents(T_BasePage):
         iconButton.setIsTransparent(False)
         iconButton.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextBesideIcon)
         self._toggleButton = ElaToggleButton("固定到顶部", self)
-        self._toggleButton.setFixedSize(
+        self._toggleButton.setFixedWidth(
             max(
                 100,
                 self._toggleButton.fontMetrics().horizontalAdvance(self._toggleButton.getText()) + 24,
-            ),
-            normalButton.height(),
+            )
         )
-        iconButton.setFixedHeight(normalButton.height())
         for button in [normalButton, accentButton, disabledButton]:
             button.setMinimumWidth(100)
             buttonLayout.addWidget(button)
